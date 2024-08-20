@@ -3,37 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OakLang</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Oaklang Editor</title>
+    <link rel="stylesheet" href="/Proyecto1/frontend/styles.css">
 </head>
 <body>
     <div class="container">
-        <!-- Navbar -->
-        <nav class="navbar">
-            <button id="ejecutar-btn" class="navbar-btn">Ejecutar</button>
-            <button id="archivo-btn" class="navbar-btn">Archivo</button>
-            <input type="file" id="file-input" accept=".oak" style="display: none;">
-            <button id="archivo-nuevo-btn" class="navbar-btn">Nuevo Archivo</button>
-            <button id="guardar-btn" class="navbar-btn">Guardar</button>
-            <button class="navbar-btn">Reportes</button>
-        </nav>
-
-        <!-- Contenido principal -->
-        <div class="main-content">
-            <div id="tabs" class="tabs"></div>
-            <div id="editors-container"></div>
-        </div>
+        <header class="navbar">
+            
+            <div class="navbar-botones">
+                <button id="ejecutar" class="navbar-btn">Ejecutar</button>
+                <button id="NuevoArchivo" class="navbar-btn">Nuevo Archivo</button>
+                <button id="abrir" class="navbar-btn">Abrir</button>
+                <button id="guardar" class="navbar-btn">Guardar</button>
+                <button id="reporte-errores" class="navbar-btn">Reportes</button>
+            </div>
+        </header>
+        <main class="main-content">
+            <aside>
+                <div class="tabs">
+                    
+                </div>
+            </aside>
+            <section class="editors">
+                <h2>Entrada</h2>
+                <div class="input-area">
+                    
+                    <textarea id="codigofuente" class="code-editor" placeholder="Escribe tu código aquí..."></textarea>
+                </div>
+                <h2>Consola</h2>
+                <div class="console-area">
+                    
+                    <textarea id="consola" readonly class="console"></textarea>
+                </div>
+            </section>
+        </main>
+        <footer class="footer">
+            <div class="programador-info">
+                <h2>Luis Jolon</h2>
+                <p>Estoy estudiando ingeniería en ciencias y sistemas, 6to semestre 2024</p>
+                <p>Contacto: <a href="mailto:jespinozajolon@gmail.com">jespinozajolon@gmail.com</a></p>
+                <p>GitHub: <a href="https://github.com/EspinozaJolon01" target="_blank" rel="noopener noreferrer">EspinozaJolon01</a></p>
+            </div>
+        </footer>
     </div>
-
-    <footer class="footer">
-        <div class="programador-info">
-            <h2>Luis Jolon</h2>
-            <p>Estoy estudiando ingeniería en ciencias y sistemas, 6to semestre 2024</p>
-            <p>Contacto: <a href="mailto:jespinozajolon@gmail.com">jespinozajolon@gmail.com</a></p>
-            <p>GitHub: <a href="https://github.com/EspinozaJolon01" target="_blank" rel="noopener noreferrer">EspinozaJolon01</a></p>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
+    <script src="/Proyecto1/frontend/script.js"></script>
+    <script type="module" src="/Proyecto1/Compilador/compilador.js"></script>
 </body>
 </html>

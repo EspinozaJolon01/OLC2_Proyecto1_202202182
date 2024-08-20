@@ -1,0 +1,152 @@
+/* styles.css */
+
+body {
+    background-color: #16161a;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Ajuste de la barra de navegación */
+.navbar {
+    background-color: #72757e;
+    padding: 10px 20px; /* Añadir más espaciado interno */
+    display: flex;
+    justify-content: center; /* Centra los botones */
+    align-items: center;
+    width: 100%;
+}
+
+/* Ajustar la barra de navegación para que no sea tan ancha */
+.navbar-botones {
+    display: flex;
+}
+
+/* Estilo de los botones de la barra de navegación */
+.navbar-btn {
+    background-color: #72757e;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.navbar-btn:hover {
+    transform: scale(1.05);
+}
+
+.navbar-btn:active {
+    transform: scale(0.95);
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Estilo para las pestañas */
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.tab {
+    background-color: #72757e; /* Color de fondo de las pestañas no activas */
+    color: #fff; /* Color del texto */
+    padding: 10px 15px;
+    margin-right: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s; /* Transiciones suaves */
+    text-align: center;
+    flex-grow: 1; /* Permite que las pestañas se expandan uniformemente */
+}
+
+.tab:hover {
+    background-color: #5a5c6a; /* Color de fondo al pasar el ratón */
+    transform: scale(1.02); /* Efecto de aumento al pasar el ratón */
+}
+
+.tab.active {
+    background-color: #fff; /* Color de fondo de la pestaña activa */
+    color: #16161a; /* Color del texto de la pestaña activa */
+    font-weight: bold; /* Texto en negrita para la pestaña activa */
+    transform: scale(1.05); /* Efecto de aumento en la pestaña activa */
+}
+
+/* Estilo para el área de entrada y consola */
+.editors {
+    display: flex;
+    flex-direction: column;
+    width: 70%; /* Ajustar el ancho */
+}
+
+.input-area, .console-area {
+    background-color: #242629;
+    border: 1px solid #72757e;
+    padding: 15px; /* Aumentar el espaciado interno */
+    margin-bottom: 20px; /* Espaciado entre entrada y consola */
+    border-radius: 5px;
+    color: #fff;
+}
+
+/* Estilo de las etiquetas */
+.editors label {
+    display: block;
+    font-size: 18px; /* Aumentar el tamaño de las etiquetas */
+    margin-bottom: 10px; /* Espacio debajo de las etiquetas */
+}
+
+/* Estilo del área del editor de código y consola */
+.code-editor {
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    width: 100%;
+    height: 300px; /* Altura del área de entrada */
+    resize: none;
+}
+
+.console {
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    width: 100%;
+    height: 150px; /* Altura de la consola */
+    resize: none;
+}
+
+textarea:focus {
+    outline: none;
+}
+
+.footer {
+    background-color: #242629;
+    color: #72757e;
+    text-align: center;
+    padding: 20px;
+    margin-top: auto;
+}
+
+.footer a {
+    color: #72757e;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
