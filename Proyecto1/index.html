@@ -3,23 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JL OakLang</title>
+    <title>OakLang</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <div class="sidebar">
-            <button id="ejecutar-btn">Ejecutar</button>
-            <button id="archivo-btn">Archivo</button>
+        <!-- Navbar -->
+        <nav class="navbar">
+            <button id="ejecutar-btn" class="navbar-btn">Ejecutar</button>
+            <button id="archivo-btn" class="navbar-btn">Archivo</button>
             <input type="file" id="file-input" accept=".oak" style="display: none;">
-            <button>Reportes</button>
-        </div>
+            <button id="archivo-nuevo-btn" class="navbar-btn">Nuevo Archivo</button>
+            <button id="guardar-btn" class="navbar-btn">Guardar</button>
+            <button class="navbar-btn">Reportes</button>
+        </nav>
+
+        <!-- Contenido principal -->
         <div class="main-content">
-            <div class="header">JL OakLang</div>
             <div id="tabs" class="tabs"></div>
             <div id="editors-container"></div>
         </div>
     </div>
+
+    <footer class="footer">
+        <div class="programador-info">
+            <h2>Luis Jolon</h2>
+            <p>Estoy estudiando ingeniería en ciencias y sistemas, 6to semestre 2024</p>
+            <p>Contacto: <a href="mailto:jespinozajolon@gmail.com">jespinozajolon@gmail.com</a></p>
+            <p>GitHub: <a href="https://github.com/EspinozaJolon01" target="_blank" rel="noopener noreferrer">EspinozaJolon01</a></p>
+        </div>
+    </footer>
+
     <script src="script.js"></script>
 </body>
 </html>
