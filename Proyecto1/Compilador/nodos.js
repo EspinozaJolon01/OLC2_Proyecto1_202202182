@@ -405,4 +405,53 @@ export class While extends expression  {
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While }
+export class For extends expression  {
+
+    /**
+    * @param {Object} options
+    * @param {expression } options.inicializacion iniciar el for
+ * @param {expression } options.condicion la condicion que tiene el for
+ * @param {expression } options.incremento el incremento del for
+ * @param {expression } options.stmt Cuerpo del for
+    */
+    constructor({ inicializacion, condicion, incremento, stmt }) {
+        super();
+        
+        /**
+         * iniciar el for
+         * @type {expression }
+        */
+        this.inicializacion = inicializacion;
+
+
+        /**
+         * la condicion que tiene el for
+         * @type {expression }
+        */
+        this.condicion = condicion;
+
+
+        /**
+         * el incremento del for
+         * @type {expression }
+        */
+        this.incremento = incremento;
+
+
+        /**
+         * Cuerpo del for
+         * @type {expression }
+        */
+        this.stmt = stmt;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitFor(this);
+    }
+}
+    
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For }

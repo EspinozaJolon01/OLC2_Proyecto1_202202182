@@ -48,6 +48,13 @@ export class InterpreterVisitor extends BaseVisitor {
         switch (node.op) {
             case '-':
                 return -exp;
+
+            case '++':
+                return exp + 1;
+            
+            case '--':
+                return exp - 1;
+
             default:
                 throw new Error(`Operador no soportado: ${node.op}`);
         }
@@ -151,5 +158,28 @@ export class InterpreterVisitor extends BaseVisitor {
         while (node.cond.accept(this)) {
             node.stmt.accept(this);
         }
+    }
+
+    /**
+     * @type {BaseVisitor['visitFor']}
+     */
+    visitFor(node){
+        const entornoAnterior = this.entornoActual;
+        this.entornoActual = new Entorno(entornoAnterior);
+
+        //inicio 
+
+        node.inicializacion.accept(this)
+
+
+        while (node.condicion.accept(this)) {
+            node.stmt.accept(this);
+
+            node.incremento.accept(this)
+        }
+        
+
+        this.entornoActual = entornoAnterior;
+
     }
 }

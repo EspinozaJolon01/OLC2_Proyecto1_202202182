@@ -39,6 +39,9 @@
 
  * @typedef {import('./nodos').While} While
 
+
+ * @typedef {import('./nodos').For} For
+
  */
 
 
@@ -163,6 +166,15 @@ export class BaseVisitor {
      */
     visitWhile(node) {
         throw new Error('Metodo visitWhile no implementado');
+    }
+    
+
+    /**
+     * @param {For} node
+     * @returns {any}
+     */
+    visitFor(node) {
+        throw new Error('Metodo visitFor no implementado');
     }
     
 }
