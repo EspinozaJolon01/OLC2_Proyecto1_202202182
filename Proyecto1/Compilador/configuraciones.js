@@ -1,4 +1,7 @@
 module.exports = {
     format: 'es',
-    input: './Compilador/gramatica.pegjs',
+    input: './gramatica.pegjs',
+    dependencies: {
+        'nodos' : './nodos.js'
+    }
 }
