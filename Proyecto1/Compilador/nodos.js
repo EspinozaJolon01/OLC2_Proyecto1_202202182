@@ -495,4 +495,104 @@ export class For extends expression  {
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For }
+export class BoolT extends expression  {
+
+    /**
+    * @param {Object} options
+    * @param {expression } options.valor expression  bool de true
+    */
+    constructor({ valor }) {
+        super();
+        
+        /**
+         * expression  bool de true
+         * @type {expression }
+        */
+        this.valor = valor;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitBoolT(this);
+    }
+}
+    
+export class BoolF extends expression  {
+
+    /**
+    * @param {Object} options
+    * @param {expression } options.valor expression  bool de false
+    */
+    constructor({ valor }) {
+        super();
+        
+        /**
+         * expression  bool de false
+         * @type {expression }
+        */
+        this.valor = valor;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitBoolF(this);
+    }
+}
+    
+export class CadenaString extends expression  {
+
+    /**
+    * @param {Object} options
+    * @param {expression } options.valor expression  de cadena de un strign
+    */
+    constructor({ valor }) {
+        super();
+        
+        /**
+         * expression  de cadena de un strign
+         * @type {expression }
+        */
+        this.valor = valor;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitCadenaString(this);
+    }
+}
+    
+export class Caracter extends expression  {
+
+    /**
+    * @param {Object} options
+    * @param {expression } options.valor expression  de cadena de un caracter
+    */
+    constructor({ valor }) {
+        super();
+        
+        /**
+         * expression  de cadena de un caracter
+         * @type {expression }
+        */
+        this.valor = valor;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitCaracter(this);
+    }
+}
+    
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, BoolT, BoolF, CadenaString, Caracter }

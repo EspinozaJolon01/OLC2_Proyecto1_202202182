@@ -1,6 +1,11 @@
 import { Entorno } from "./entornos.js";
 import { BaseVisitor } from "./Visitor.js";
 
+import { DeclaSinArgumen } from "./DeclaSinArgum.js";
+
+
+
+
 
 export class InterpreterVisitor extends BaseVisitor {
 
@@ -83,101 +88,65 @@ export class InterpreterVisitor extends BaseVisitor {
         const nombreVariable = node.id;
         const valorVariable = node.exp.accept(this);
 
-
-        let valorValidado;
-        switch (tipoVariable) {
-            case 'int':
-                if (typeof valorVariable !== 'number' || !Number.isInteger(valorVariable)) {
-                    throw new Error(`Error: Se esperaba un valor entero para la variable ${nombreVariable}`);
-                }
-                valorValidado = valorVariable;
-                break;
-            case  'float':
-                if(typeof valorVariable !== 'number'){
-                    throw new Error(`Error: Se esperaba un valor flotante para la variable ${nombreVariable}`);
-                }
-                valorValidado = valorVariable;
-                break;
-
-            case 'boolean':
-                
-                if (typeof valorVariable !== 'boolean') {
-                    throw new Error(`Error: Se esperaba un valor booleano para la variable ${nombreVariable}`);
-                }
-                valorValidado = valorVariable; 
-                break;
-
-            case 'var':
-                
-                valorValidado = valorVariable;
-                break;
-
-            case 'char':
-                if (typeof valorVariable !== 'string' || valorVariable.length !== 1) {
-                    throw new Error(`Error: Se esperaba un valor 'char', pero se recibió: ${valor}`);
-                }
-                valorValidado = valorVariable;  
-                break;
-
-            case 'string':
-                if (typeof valorVariable !== 'string') {
-                    throw new Error(`Error: Se esperaba un valor 'string', pero se recibió: ${valorVariable}`);
-                }
-                valorValidado = valorVariable;
-                break;
-
         
-            default:
-                throw new Error(`Error: Tipo desconocido ${tipoVariable} para la variable ${nombreVariable}`);;
+        switch (tipoVariable) {
+            case "int":
+                const datoInt = parseInt(valorVariable, 10);
+                if (!Number.isInteger(datoInt)) {
+                    throw new Error(`El valor asignado a la variable ${nombreVariable} no es de tipo int`);
+                }
+                if (datoInt.toString() !== valorVariable.toString()) {
+                    throw new Error(`El valor asignado a la variable ${nombreVariable} no es de tipo int`);
+                }
+                break;
+    
+            case "float":
+                const valorConvertidoFloat = parseFloat(valorVariable);
+                if (isNaN(valorConvertidoFloat)) {
+                    throw new Error(`El valor asignado a la variable ${nombreVariable} no es de tipo float`);
+                }
+                // Verifica que el valor convertido sea numérico y mantenga la precisión
+                if (valorConvertidoFloat.toString() !== valorVariable.toString()) {
+                    throw new Error(`El valor asignado a la variable ${nombreVariable} no es de tipo float`);
+                }
+                break;
+    
+            case "string":
+                if (typeof valorVariable !== 'string') {
+                    throw new Error(`El valor asignado a la variable ${nombreVariable} no es de tipo string`);
+                }
+                break;
+    
+            case "char":
+                if (typeof valorVariable !== 'string' || valorVariable.length !== 1) {
+                    throw new Error(`El valor asignado a la variable ${nombreVariable} no es de tipo char`);
+                }
+                break;
+    
+            case "bool":
+                if (typeof valorVariable !== 'boolean') {
+                    throw new Error(`El valor asignado a la variable ${nombreVariable} no es de tipo boolean`);
+                }
+                break;
         }
 
 
 
-
-        this.entornoActual.setVariable(nombreVariable, valorValidado);
+        this.entornoActual.setVariable(nombreVariable, valorVariable);
     }
 
 /**
       * @type {BaseVisitor['visitDeclaracionSinAargumn']}
       */
     visitDeclaracionSinAargumn(node){
-        const tipoVariable =  node.tipo;
+        const tipoVariable = node.tipo;
         const nombreVariable = node.id;
-        //const valorVariable = node.exp.accept(this);
-
-        let valorValidado;
-        switch (tipoVariable) {
-            case 'int':
-                
-                valorValidado = 0;
-                break;
-            case  'float':
-                valorValidado = 0.0;
-                break;
-
-            case 'boolean':
-                valorValidado = true; 
-                break;
-
-            case 'var':
-
-                valorValidado = null;
-                break;
-
-            case 'char':
-
-                valorValidado = '\0';  
-                break;
-            case 'string':
-                valorValidado = "";
-
-        
-            default:
-                throw new Error(`Error: Tipo desconocido ${tipoVariable} para la variable ${nombreVariable}`);;
-        }
-
-        this.entornoActual.setVariable(nombreVariable, valorValidado);
-
+    
+        // Llama a la función DeclaSinArgumen para obtener el tipo y valor
+        const { valor } = DeclaSinArgumen(tipoVariable, nombreVariable);
+    
+        // Asigna el valor por defecto en el entorno actual
+        this.entornoActual.setVariable(nombreVariable, valor);
 
     }
     
@@ -279,4 +248,39 @@ export class InterpreterVisitor extends BaseVisitor {
         this.entornoActual = entornoAnterior;
 
     }
+
+    /**
+     * @type {BaseVisitor['visitBoolF']}
+     */
+    visitBoolF(node){
+        return node.valor
+    }
+
+        /**
+     * @type {BaseVisitor['visitBoolT']}
+     */
+    visitBoolT(node){
+        return node.valor
+    }
+
+            /**
+     * @type {BaseVisitor['visitCadenaString']}
+     */
+
+    visitCadenaString(node){
+        return node.valor
+    }
+
+    
+            /**
+     * @type {BaseVisitor['visitCaracter']}
+     */
+
+
+    visitCaracter(node){
+        return node.valor
+
+    }
+
+    
 }

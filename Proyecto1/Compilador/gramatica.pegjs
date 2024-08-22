@@ -15,7 +15,11 @@
       'if': nodos.If,
       'while': nodos.While,
       'for' : nodos.For,
-      'declaracionSinAargumn' : nodos.DeclaracionSinAargumn
+      'declaracionSinAargumn' : nodos.DeclaracionSinAargumn,
+      'boolT' : nodos.BoolT,
+      'boolF' : nodos.BoolF,
+      'cadenaString' : nodos.CadenaString,
+      'caracter' : nodos.Caracter
       
     }
 
@@ -34,12 +38,12 @@ VarDcl = tipo:Tipo _ id:Identify _ "=" _ exp:Expresion _ ";" { return crearNodo(
       / tipo:Tipo _ id:Identify _ ";" { return crearNodo('declaracionSinAargumn', {tipo, id})}
 
 
-Tipo = "int" {return 'int';}
-  / "float" { return 'float'; }
-  / "boolean" { return 'boolean'; }
-  / "var" { return 'var'; }
-  / "char" {return 'char';}
-  / "string" {return 'string';}
+Tipo = "int" {return text()}
+        / "float" {return text()}    
+        / "string" {return text()}
+        / "bool"  {return text()}
+        / "char" {return text()}
+        / "var" {return text()}
 
 
 Stmt = "print(" _ exp:Expresion _ ")" _ ";" { return crearNodo('print', { exp }) }
@@ -53,7 +57,8 @@ Stmt = "print(" _ exp:Expresion _ ")" _ ";" { return crearNodo('print', { exp })
     / "for" _ "(" _ inicializacion:Declaracion _ condicion:Expresion _ ";" _ incremento:Expresion _ ")" _ stmt:Stmt {return crearNodo('for', {inicializacion,condicion,incremento,stmt})}
 
 Identify = [a-zA-Z][a-zA-Z0-9]* { return text() }
-
+    / '"' content:([a-zA-Z0-9 ]*) '"' { return content.join('');
+}
 Expresion = Asignacion
 
 Asignacion = id:Identify _ "=" _ asgn:Asignacion { return crearNodo('asignacion', { id, asgn }) }
@@ -97,9 +102,20 @@ Multiplicacion = izq:Unaria expansion:(
 }
 
 Unaria = "-" _ num:Numero { return crearNodo('unaria', { op: '-', exp: num }) }
-/ id: Identify "++" { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "++", exp: crearNodo('referenciaVariable', { id }) }) }) }
-/ id: Identify "--" { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "--", exp: crearNodo('referenciaVariable', { id }) }) }) }
-/ Numero
+  /Bool
+  /CadeString 
+  /Caracter
+  / id: Identify "++" { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "++", exp: crearNodo('referenciaVariable', { id }) }) }) }
+  / id: Identify "--" { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "--", exp: crearNodo('referenciaVariable', { id }) }) }) }
+  / Numero
+
+Bool = "true" { return crearNodo('boolT', { valor: true }) }
+          / "false" { return crearNodo('boolF', { valor: false }) }
+
+
+CadeString = "\"" chars:([^"]*) "\"" { return crearNodo('cadenaString', { valor: chars.join("") }) }
+
+Caracter = "'" char:[^'] "'" { return crearNodo('caracter', { valor: char }) }
 
 
 // { return{ tipo: "numero", valor: parseFloat(text(), 10) } }
@@ -108,4 +124,8 @@ Numero = [0-9]+( "." [0-9]+ )? {return crearNodo('numero', { valor: parseFloat(t
   / id:Identify { return crearNodo('referenciaVariable', { id }) }
 
 
-_ = [ \t\n\r]*
+// Definición de comentarios para omitirlos
+Comentario = "//" [^\n]* { /* Ignora comentarios de una línea */ }
+          / "/*" (!"*/" .)* "*/" { /* Ignora comentarios multilínea */ }
+
+_ = (Comentario / [ \t\n\r])* // Actualiza la regla _ para incluir comentarios

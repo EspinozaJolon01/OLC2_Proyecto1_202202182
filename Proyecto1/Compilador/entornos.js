@@ -1,9 +1,7 @@
-
-
 export class Entorno {
 
     /**
-        * @param {Entorno} padre
+     * @param {Entorno} padre
      */
     constructor(padre = undefined) {
         this.valores = {};
@@ -15,7 +13,10 @@ export class Entorno {
      * @param {any} valor
      */
     setVariable(nombre, valor) {
-        // TODO: si algo ya está definido, lanzar error
+        // Verificar si la variable ya está definida en el entorno actual o en sus padres
+        if (this.existeVariable(nombre)) {
+            throw new Error(`Error: La variable ${nombre} ya está definida`);
+        }
         this.valores[nombre] = valor;
     }
 
@@ -23,34 +24,48 @@ export class Entorno {
      * @param {string} nombre
      */
     getVariable(nombre) {
-        const valorActual = this.valores[nombre];
+        if (nombre in this.valores) {
+            return this.valores[nombre];
+        }
 
-        if (valorActual != undefined) return valorActual;
-
-        if (!valorActual && this.padre) {
+        if (this.padre) {
             return this.padre.getVariable(nombre);
         }
 
-        throw new Error(`xd Variable ${nombre} no definida`);
+        throw new Error(`Variable ${nombre} no definida`);
     }
 
     /**
-   * @param {string} nombre
-   * @param {any} valor
-   */
+     * @param {string} nombre
+     * @param {any} valor
+     */
     assignVariable(nombre, valor) {
-        const valorActual = this.valores[nombre];
-
-        if (valorActual != undefined) {
+        if (nombre in this.valores) {
             this.valores[nombre] = valor;
             return;
         }
 
-        if (!valorActual && this.padre) {
+        if (this.padre) {
             this.padre.assignVariable(nombre, valor);
             return;
         }
 
         throw new Error(`Variable ${nombre} no definida`);
+    }
+
+    /**
+     * @param {string} nombre
+     * @returns {boolean}
+     */
+    existeVariable(nombre) {
+        if (nombre in this.valores) {
+            return true;
+        }
+
+        if (this.padre) {
+            return this.padre.existeVariable(nombre);
+        }
+
+        return false;
     }
 }
