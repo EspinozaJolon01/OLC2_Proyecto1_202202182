@@ -19,6 +19,9 @@
  * @typedef {import('./nodos').DeclaracionVariable} DeclaracionVariable
 
 
+ * @typedef {import('./nodos').DeclaracionSinAargumn} DeclaracionSinAargumn
+
+
  * @typedef {import('./nodos').ReferenciaVariable} ReferenciaVariable
 
 
@@ -103,6 +106,15 @@ export class BaseVisitor {
      */
     visitDeclaracionVariable(node) {
         throw new Error('Metodo visitDeclaracionVariable no implementado');
+    }
+    
+
+    /**
+     * @param {DeclaracionSinAargumn} node
+     * @returns {any}
+     */
+    visitDeclaracionSinAargumn(node) {
+        throw new Error('Metodo visitDeclaracionSinAargumn no implementado');
     }
     
 

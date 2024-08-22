@@ -169,12 +169,20 @@ export class DeclaracionVariable extends expression  {
 
     /**
     * @param {Object} options
-    * @param {string} options.id Identificador de la variable
+    * @param {string} options.tipo Identificador de la variable
+ * @param {string} options.id Identificador de la variable
  * @param {expression } options.exp expression  de la variable
     */
-    constructor({ id, exp }) {
+    constructor({ tipo, id, exp }) {
         super();
         
+        /**
+         * Identificador de la variable
+         * @type {string}
+        */
+        this.tipo = tipo;
+
+
         /**
          * Identificador de la variable
          * @type {string}
@@ -195,6 +203,39 @@ export class DeclaracionVariable extends expression  {
      */
     accept(visitor) {
         return visitor.visitDeclaracionVariable(this);
+    }
+}
+    
+export class DeclaracionSinAargumn extends expression  {
+
+    /**
+    * @param {Object} options
+    * @param {string} options.tipo Identificador de la variable
+ * @param {string} options.id Identificador de la variable
+    */
+    constructor({ tipo, id }) {
+        super();
+        
+        /**
+         * Identificador de la variable
+         * @type {string}
+        */
+        this.tipo = tipo;
+
+
+        /**
+         * Identificador de la variable
+         * @type {string}
+        */
+        this.id = id;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitDeclaracionSinAargumn(this);
     }
 }
     
@@ -454,4 +495,4 @@ export class For extends expression  {
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For }
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For }

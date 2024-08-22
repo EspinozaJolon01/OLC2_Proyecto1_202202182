@@ -79,11 +79,108 @@ export class InterpreterVisitor extends BaseVisitor {
      * @type {BaseVisitor['visitDeclaracionVariable']}
      */
     visitDeclaracionVariable(node) {
+        const tipoVariable =  node.tipo;
         const nombreVariable = node.id;
         const valorVariable = node.exp.accept(this);
 
-        this.entornoActual.setVariable(nombreVariable, valorVariable);
+
+        let valorValidado;
+        switch (tipoVariable) {
+            case 'int':
+                if (typeof valorVariable !== 'number' || !Number.isInteger(valorVariable)) {
+                    throw new Error(`Error: Se esperaba un valor entero para la variable ${nombreVariable}`);
+                }
+                valorValidado = valorVariable;
+                break;
+            case  'float':
+                if(typeof valorVariable !== 'number'){
+                    throw new Error(`Error: Se esperaba un valor flotante para la variable ${nombreVariable}`);
+                }
+                valorValidado = valorVariable;
+                break;
+
+            case 'boolean':
+                
+                if (typeof valorVariable !== 'boolean') {
+                    throw new Error(`Error: Se esperaba un valor booleano para la variable ${nombreVariable}`);
+                }
+                valorValidado = valorVariable; 
+                break;
+
+            case 'var':
+                
+                valorValidado = valorVariable;
+                break;
+
+            case 'char':
+                if (typeof valorVariable !== 'string' || valorVariable.length !== 1) {
+                    throw new Error(`Error: Se esperaba un valor 'char', pero se recibió: ${valor}`);
+                }
+                valorValidado = valorVariable;  
+                break;
+
+            case 'string':
+                if (typeof valorVariable !== 'string') {
+                    throw new Error(`Error: Se esperaba un valor 'string', pero se recibió: ${valorVariable}`);
+                }
+                valorValidado = valorVariable;
+                break;
+
+        
+            default:
+                throw new Error(`Error: Tipo desconocido ${tipoVariable} para la variable ${nombreVariable}`);;
+        }
+
+
+
+
+        this.entornoActual.setVariable(nombreVariable, valorValidado);
     }
+
+/**
+      * @type {BaseVisitor['visitDeclaracionSinAargumn']}
+      */
+    visitDeclaracionSinAargumn(node){
+        const tipoVariable =  node.tipo;
+        const nombreVariable = node.id;
+        //const valorVariable = node.exp.accept(this);
+
+        let valorValidado;
+        switch (tipoVariable) {
+            case 'int':
+                
+                valorValidado = 0;
+                break;
+            case  'float':
+                valorValidado = 0.0;
+                break;
+
+            case 'boolean':
+                valorValidado = true; 
+                break;
+
+            case 'var':
+
+                valorValidado = null;
+                break;
+
+            case 'char':
+
+                valorValidado = '\0';  
+                break;
+            case 'string':
+                valorValidado = "";
+
+        
+            default:
+                throw new Error(`Error: Tipo desconocido ${tipoVariable} para la variable ${nombreVariable}`);;
+        }
+
+        this.entornoActual.setVariable(nombreVariable, valorValidado);
+
+
+    }
+    
 
 
     /**
