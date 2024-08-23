@@ -1,5 +1,4 @@
 export class Entorno {
-
     /**
      * @param {Entorno} padre
      */
@@ -12,27 +11,29 @@ export class Entorno {
      * @param {string} nombre
      * @param {any} valor
      */
-    setVariable(nombre, valor) {
+    setVariable(tipo, nombre, valor) {
         // Verificar si la variable ya está definida en el entorno actual o en sus padres
-        if (this.existeVariable(nombre)) {
+        if (this.valores[nombre]) {
             throw new Error(`Error: La variable ${nombre} ya está definida`);
         }
-        this.valores[nombre] = valor;
+        this.valores[nombre] = { valor, tipo };
     }
 
     /**
      * @param {string} nombre
      */
     getVariable(nombre) {
-        if (nombre in this.valores) {
-            return this.valores[nombre];
+        const bandera = this.valores[nombre]
+
+        if (bandera != undefined) {
+            return bandera;
         }
 
-        if (this.padre) {
+        if (!bandera && this.padre) {
             return this.padre.getVariable(nombre);
         }
 
-        throw new Error(`Variable ${nombre} no definida`);
+        
     }
 
     /**
@@ -40,12 +41,38 @@ export class Entorno {
      * @param {any} valor
      */
     assignVariable(nombre, valor) {
-        if (nombre in this.valores) {
-            this.valores[nombre] = valor;
+        const bandera = this.valores[nombre]
+
+        if (bandera != undefined) {
+
+            if (bandera.tipo === "string" && valor.tipo !== "string") {
+                throw new Error(`El tipo de la variable ${nombre} es 'string', y no coincide con el tipo del valor asignado`);
+            }
+
+            if (bandera.tipo === "int" && valor.tipo !== "int") {
+                throw new Error(`El tipo de la variable ${nombre} es 'int' y no coincide con el tipo del valor asignado.`);
+            }
+
+
+            if (bandera.tipo === "float" && (valor.tipo !== "float" && valor.tipo !== "int")) {
+                throw new Error(`El tipo de la variable ${nombre} es 'float' y no coincide con el tipo del valor asignado.`);
+            }
+    
+
+            if (bandera.tipo === "char" && valor.tipo !== "char") {
+                throw new Error(`El tipo de la variable ${nombre} es 'char' y no coincide con el tipo del valor asignado.`);
+            }
+
+            if (bandera.tipo === "boolean" && valor.tipo !== "boolean") {
+                throw new Error(`El tipo de la variable ${nombre} es 'boolean'  y no coincide con el tipo del valor asignado.`);
+            }
+    
+            this.valores[nombre].valor = valor.valor;
+            this.valores[nombre].tipo = valor.tipo; 
             return;
         }
 
-        if (this.padre) {
+        if (!bandera && this.padre) {
             this.padre.assignVariable(nombre, valor);
             return;
         }
@@ -53,19 +80,21 @@ export class Entorno {
         throw new Error(`Variable ${nombre} no definida`);
     }
 
+
     /**
+     * Busca la variable por nombre y devuelve su tipo.
      * @param {string} nombre
-     * @returns {boolean}
+     * @returns {string} El tipo de la variable.
      */
-    existeVariable(nombre) {
+    getVariableType(nombre) {
         if (nombre in this.valores) {
-            return true;
+            return this.valores[nombre].tipo;
         }
 
         if (this.padre) {
-            return this.padre.existeVariable(nombre);
+            return this.padre.getVariableType(nombre);
         }
 
-        return false;
+        throw new Error(`Tipo de la variable ${nombre} no definido`);
     }
 }

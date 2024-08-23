@@ -46,16 +46,16 @@
  * @typedef {import('./nodos').For} For
 
 
- * @typedef {import('./nodos').BoolT} BoolT
-
-
- * @typedef {import('./nodos').BoolF} BoolF
+ * @typedef {import('./nodos').Boolena} Boolena
 
 
  * @typedef {import('./nodos').CadenaString} CadenaString
 
 
  * @typedef {import('./nodos').Caracter} Caracter
+
+
+ * @typedef {import('./nodos').Typeof1} Typeof1
 
  */
 
@@ -203,20 +203,11 @@ export class BaseVisitor {
     
 
     /**
-     * @param {BoolT} node
+     * @param {Boolena} node
      * @returns {any}
      */
-    visitBoolT(node) {
-        throw new Error('Metodo visitBoolT no implementado');
-    }
-    
-
-    /**
-     * @param {BoolF} node
-     * @returns {any}
-     */
-    visitBoolF(node) {
-        throw new Error('Metodo visitBoolF no implementado');
+    visitBoolena(node) {
+        throw new Error('Metodo visitBoolena no implementado');
     }
     
 
@@ -235,6 +226,15 @@ export class BaseVisitor {
      */
     visitCaracter(node) {
         throw new Error('Metodo visitCaracter no implementado');
+    }
+    
+
+    /**
+     * @param {Typeof1} node
+     * @returns {any}
+     */
+    visitTypeof1(node) {
+        throw new Error('Metodo visitTypeof1 no implementado');
     }
     
 }

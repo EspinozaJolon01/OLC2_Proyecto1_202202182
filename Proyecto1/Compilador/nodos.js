@@ -145,8 +145,9 @@ export class Numero extends expression  {
     /**
     * @param {Object} options
     * @param {number} options.valor Valor del numero
+ * @param {string} options.tipo Valor del numero
     */
-    constructor({ valor }) {
+    constructor({ valor, tipo }) {
         super();
         
         /**
@@ -154,6 +155,13 @@ export class Numero extends expression  {
          * @type {number}
         */
         this.valor = valor;
+
+
+        /**
+         * Valor del numero
+         * @type {string}
+        */
+        this.tipo = tipo;
 
     }
 
@@ -269,8 +277,9 @@ export class Print extends expression  {
     /**
     * @param {Object} options
     * @param {expression } options.exp expression  a imprimir
+ * @param {expression[] } options.expM expression  a imprimir
     */
-    constructor({ exp }) {
+    constructor({ exp, expM }) {
         super();
         
         /**
@@ -278,6 +287,13 @@ export class Print extends expression  {
          * @type {expression }
         */
         this.exp = exp;
+
+
+        /**
+         * expression  a imprimir
+         * @type {expression[] }
+        */
+        this.expM = expM;
 
     }
 
@@ -495,45 +511,28 @@ export class For extends expression  {
     }
 }
     
-export class BoolT extends expression  {
+export class Boolena extends expression  {
 
     /**
     * @param {Object} options
-    * @param {expression } options.valor expression  bool de true
+    * @param {booleana } options.valor expression  bool de true
+ * @param {string } options.tipo expression  de tipo bool
     */
-    constructor({ valor }) {
+    constructor({ valor, tipo }) {
         super();
         
         /**
          * expression  bool de true
-         * @type {expression }
+         * @type {booleana }
         */
         this.valor = valor;
 
-    }
 
-    /**
-     * @param {BaseVisitor} visitor
-     */
-    accept(visitor) {
-        return visitor.visitBoolT(this);
-    }
-}
-    
-export class BoolF extends expression  {
-
-    /**
-    * @param {Object} options
-    * @param {expression } options.valor expression  bool de false
-    */
-    constructor({ valor }) {
-        super();
-        
         /**
-         * expression  bool de false
-         * @type {expression }
+         * expression  de tipo bool
+         * @type {string }
         */
-        this.valor = valor;
+        this.tipo = tipo;
 
     }
 
@@ -541,7 +540,7 @@ export class BoolF extends expression  {
      * @param {BaseVisitor} visitor
      */
     accept(visitor) {
-        return visitor.visitBoolF(this);
+        return visitor.visitBoolena(this);
     }
 }
     
@@ -549,16 +548,24 @@ export class CadenaString extends expression  {
 
     /**
     * @param {Object} options
-    * @param {expression } options.valor expression  de cadena de un strign
+    * @param {string } options.valor expression  de cadena de un strign
+ * @param {string } options.tipo expression  verificar el tipo
     */
-    constructor({ valor }) {
+    constructor({ valor, tipo }) {
         super();
         
         /**
          * expression  de cadena de un strign
-         * @type {expression }
+         * @type {string }
         */
         this.valor = valor;
+
+
+        /**
+         * expression  verificar el tipo
+         * @type {string }
+        */
+        this.tipo = tipo;
 
     }
 
@@ -574,16 +581,24 @@ export class Caracter extends expression  {
 
     /**
     * @param {Object} options
-    * @param {expression } options.valor expression  de cadena de un caracter
+    * @param {string } options.valor expression  de cadena de un caracter
+ * @param {string } options.tipo expression  de cadena de un caracter
     */
-    constructor({ valor }) {
+    constructor({ valor, tipo }) {
         super();
         
         /**
          * expression  de cadena de un caracter
-         * @type {expression }
+         * @type {string }
         */
         this.valor = valor;
+
+
+        /**
+         * expression  de cadena de un caracter
+         * @type {string }
+        */
+        this.tipo = tipo;
 
     }
 
@@ -595,4 +610,29 @@ export class Caracter extends expression  {
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, BoolT, BoolF, CadenaString, Caracter }
+export class Typeof1 extends expression  {
+
+    /**
+    * @param {Object} options
+    * @param {expression } options.id Esta función retorna el tipo de dato asociado
+    */
+    constructor({ id }) {
+        super();
+        
+        /**
+         * Esta función retorna el tipo de dato asociado
+         * @type {expression }
+        */
+        this.id = id;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitTypeof1(this);
+    }
+}
+    
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Typeof1 }

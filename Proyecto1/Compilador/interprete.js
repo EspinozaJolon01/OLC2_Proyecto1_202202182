@@ -1,7 +1,7 @@
 import { Entorno } from "./entornos.js";
 import { BaseVisitor } from "./Visitor.js";
 
-import { DeclaSinArgumen } from "./DeclaSinArgum.js";
+import { DatoSinArgu } from "./DeclaSinArgum.js";
 
 
 
@@ -29,15 +29,385 @@ export class InterpreterVisitor extends BaseVisitor {
 
         switch (node.op) {
             case '+':
-                return izq + der;
+
+                if(izq.tipo == "int"){
+                    switch (der.tipo){
+                        case 'int':
+
+                            return {valor:izq.valor + der.valor , tipo: "int"};
+                        case 'float':
+                            return {valor:izq.valor + der.valor , tipo: "float"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+
+                    }
+                }
+
+                if(izq.tipo == "float"){
+                    switch (der.tipo){
+                        case 'flot':
+                            return {valor:izq.valor + der.valor , tipo: "float"};
+                        case 'int':
+                            return {valor:izq.valor + der.valor , tipo: "float"};
+                            
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+                if(izq.tipo == "string"){
+                    switch (der.tipo){
+                        case 'string':
+                            return {valor:izq.valor + der.valor , tipo: "string"};
+                    
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+
             case '-':
-                return izq - der;
+                if(izq.tipo == "int"){
+                    switch (der.tipo){
+                        case 'int':
+
+                            return {valor:izq.valor - der.valor , tipo: "int"};
+                        case 'float':
+                            return {valor:izq.valor - der.valor , tipo: "float"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+                if(izq.tipo == "float"){
+                    switch (der.tipo){
+                        case 'float':
+                            return {valor:izq.valor - der.valor , tipo: "float"};
+                        case 'int':
+                            return {valor:izq.valor - der.valor , tipo: "float"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
             case '*':
-                return izq * der;
+                if(izq.tipo == "int"){
+                    switch (der.tipo){
+                        case 'int':
+                            return {valor:izq.valor * der.valor , tipo: "int"};
+                        case 'float':
+                            return {valor:izq.valor * der.valor , tipo: "float"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+                if(izq.tipo == "float"){
+                    switch (der.tipo){
+                        case 'float':
+                            return {valor:izq.valor * der.valor , tipo: "float"};
+                        case 'int':
+                            return {valor:izq.valor * der.valor , tipo: "float"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
             case '/':
-                return izq / der;
+                if(der != 0){
+                    if(izq.tipo == "int"){
+                        switch (der.tipo){
+                            case 'int':
+                                return {valor:izq.valor / der.valor , tipo: "int"};
+                            case 'float':
+                                return {valor:izq.valor / der.valor , tipo: "float"};
+                            
+                            default:
+                                throw new Error('No es valida esa operacion');
+                        }
+                    }
+
+                    if(izq.tipo == "float"){
+                        switch (der.tipo){
+                            case 'float':
+                                return {valor:izq.valor / der.valor , tipo: "float"};
+                            case 'int':
+                                return {valor:izq.valor / der.valor , tipo: "float"};
+                            
+                            default:
+                                throw new Error('No es valida esa operacion');
+                        }
+                    }
+                }else{
+                    alert("No se puede divir dentro de 0")
+                    return null
+                }
+                
             case '<=':
-                return izq <= der;
+                
+                if(izq.tipo == "int"){
+                    switch (der.tipo){
+                        case 'int':
+                            return {valor:izq.valor <= der.valor , tipo: "boolean"};
+                        case 'float':
+                            return {valor:izq.valor <= der.valor , tipo: "boolean"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+
+                if(izq.tipo == "float"){
+                    switch (der.tipo){
+                        case 'float':
+                            return {valor:izq.valor <= der.valor , tipo: "boolean"};
+                        case 'int':
+                            return {valor:izq.valor <= der.valor , tipo: "boolean"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+
+                if(izq.tipo == "char"){
+                    switch (der.tipo){
+                        case 'char':
+                            return {valor:izq.valor <= der.valor , tipo: "boolean"};
+
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+            case '%':
+                if(der != 0){
+                    if(izq.tipo == "int"){
+                        switch (der.tipo){
+                            case 'int':
+                                return {valor:izq.valor % der.valor , tipo: "int"};
+    
+                            default:
+                                throw new Error('No es valida esa operacion');
+                        }
+                    }
+                }else{
+                    alert("no puede divir entre un 0")
+                }
+                
+            case '>=' : 
+                if(izq.tipo == "int"){
+                    switch (der.tipo){
+                        case 'int':
+                            return {valor:izq.valor >= der.valor , tipo: "boolean"};
+                        case 'float':
+                            return {valor:izq.valor >= der.valor , tipo: "boolean"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+
+                if(izq.tipo == "float"){
+                    switch (der.tipo){
+                        case 'float':
+                            return {valor:izq.valor >= der.valor , tipo: "boolean"};
+                        case 'int':
+                            return {valor:izq.valor >= der.valor , tipo: "boolean"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+
+                if(izq.tipo == "char"){
+                    switch (der.tipo){
+                        case 'char':
+                            return {valor:izq.valor >= der.valor , tipo: "boolean"};
+
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+                
+            case '>' :
+                if(izq.tipo == "int"){
+                    switch (der.tipo){
+                        case 'int':
+                            return {valor:izq.valor > der.valor , tipo: "boolean"};
+                        case 'float':
+                            return {valor:izq.valor > der.valor , tipo: "boolean"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+
+                if(izq.tipo == "float"){
+                    switch (der.tipo){
+                        case 'float':
+                            return {valor:izq.valor > der.valor , tipo: "boolean"};
+                        case 'int':
+                            return {valor:izq.valor > der.valor , tipo: "boolean"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+
+                if(izq.tipo == "char"){
+                    switch (der.tipo){
+                        case 'char':
+                            return {valor:izq.valor > der.valor , tipo: "boolean"};
+
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+            case '<':
+                if(izq.tipo == "int"){
+                    switch (der.tipo){
+                        case 'int':
+                            return {valor:izq.valor < der.valor , tipo: "boolean"};
+                        case 'float':
+                            return {valor:izq.valor < der.valor , tipo: "boolean"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+
+                if(izq.tipo == "float"){
+                    switch (der.tipo){
+                        case 'float':
+                            return {valor:izq.valor < der.valor , tipo: "boolean"};
+                        case 'int':
+                            return {valor:izq.valor < der.valor , tipo: "boolean"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+
+                if(izq.tipo == "char"){
+                    switch (der.tipo){
+                        case 'char':
+                            return {valor:izq.valor < der.valor , tipo: "boolean"};
+
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+            case '&&"':
+                if(izq.tipo == "boolean"){
+                    switch (der.tipo){
+                        case 'boolean':
+                            return {valor:izq.valor && der.valor , tipo: "boolean"};
+
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+            case '!=':
+                if(izq.tipo == "int"){
+                    switch (der.tipo){
+                        case 'int':
+                            return {valor:izq.valor != der.valor , tipo: "boolean"};
+                        case 'float':
+                            return {valor:izq.valor != der.valor , tipo: "boolean"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+
+                if(izq.tipo == "float"){
+                    switch (der.tipo){
+                        case 'float':
+                            return {valor:izq.valor != der.valor , tipo: "boolean"};
+                        case 'int':
+                            return {valor:izq.valor != der.valor , tipo: "boolean"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+
+                if(izq.tipo == "boolean"){
+                    switch (der.tipo){
+                        case 'boolean':
+                            return {valor:izq.valor != der.valor , tipo: "boolean"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+
+
+                if(izq.tipo == "char"){
+                    switch (der.tipo){
+                        case 'char':
+                            return {valor:izq.valor != der.valor , tipo: "boolean"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+
+            case '==':
+                if(izq.tipo == "int"){
+                    switch (der.tipo){
+                        case 'int':
+                            return {valor:izq.valor == der.valor , tipo: "boolean"};
+                        case 'float':
+                            return {valor:izq.valor == der.valor , tipo: "boolean"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+
+                if(izq.tipo == "float"){
+                    switch (der.tipo){
+                        case 'float':
+                            return {valor:izq.valor == der.valor , tipo: "boolean"};
+                        case 'int':
+                            return {valor:izq.valor == der.valor , tipo: "boolean"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+
+                if(izq.tipo == "boolean"){
+                    switch (der.tipo){
+                        case 'boolean':
+                            return {valor:izq.valor == der.valor , tipo: "boolean"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+
+
+                if(izq.tipo == "char"){
+                    switch (der.tipo){
+                        case 'char':
+                            return {valor:izq.valor == der.valor , tipo: "boolean"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+            case '||':
+                if(izq.tipo == "boolean"){
+                    switch (der.tipo){
+                        case 'boolean':
+                            return {valor:izq.valor || der.valor , tipo: "boolean"};
+
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+
+
             default:
                 throw new Error(`Operador no soportado: ${node.op}`);
         }
@@ -52,13 +422,39 @@ export class InterpreterVisitor extends BaseVisitor {
 
         switch (node.op) {
             case '-':
-                return -exp;
+                if(exp.tipo == "int"){
+                    return {valor:-exp.valor , tipo: exp.tipo};
+                }else if(exp.tipo == "float"){
+                    return {valor:-exp.valor , tipo: exp.tipo};
+                }else{
+                    throw new Error('No es valida esa operacion');
+                }
+                
 
             case '++':
-                return exp + 1;
+                if(exp.tipo == "int"){
+                    return {valor:exp.valor + 1, tipo: exp.tipo};
+                }else if(exp.tipo == "float"){
+                    return {valor:-exp.valor + 1 , tipo: exp.tipo};
+                }else{
+                    throw new Error('No es valida esa operacion');
+                }
+                
             
             case '--':
-                return exp - 1;
+                if(exp.tipo == "int"){
+                    return {valor:exp.valor - 1, tipo: exp.tipo};
+                }else if(exp.tipo == "float"){
+                    return {valor:exp.valor - 1 , tipo: exp.tipo};
+                }else{
+                    throw new Error('No es valida esa operacion');
+                }
+                
+            
+            case '+=':
+                return exp + exp;
+            case '-=':
+                return exp - exp;
 
             default:
                 throw new Error(`Operador no soportado: ${node.op}`);
@@ -76,7 +472,7 @@ export class InterpreterVisitor extends BaseVisitor {
       * @type {BaseVisitor['visitNumero']}
       */
     visitNumero(node) {
-        return node.valor;
+        return {valor:node.valor, tipo:node.tipo};
     }
 
 
@@ -84,72 +480,100 @@ export class InterpreterVisitor extends BaseVisitor {
      * @type {BaseVisitor['visitDeclaracionVariable']}
      */
     visitDeclaracionVariable(node) {
-        const tipoVariable =  node.tipo;
+        let tipoVariable =  node.tipo;
         const nombreVariable = node.id;
-        const valorVariable = node.exp.accept(this);
 
         
-        switch (tipoVariable) {
-            case "int":
-                const datoInt = parseInt(valorVariable, 10);
-                if (!Number.isInteger(datoInt)) {
-                    throw new Error(`El valor asignado a la variable ${nombreVariable} no es de tipo int`);
-                }
-                if (datoInt.toString() !== valorVariable.toString()) {
-                    throw new Error(`El valor asignado a la variable ${nombreVariable} no es de tipo int`);
-                }
-                break;
-    
-            case "float":
-                const valorConvertidoFloat = parseFloat(valorVariable);
-                if (isNaN(valorConvertidoFloat)) {
-                    throw new Error(`El valor asignado a la variable ${nombreVariable} no es de tipo float`);
-                }
-                // Verifica que el valor convertido sea numérico y mantenga la precisión
-                if (valorConvertidoFloat.toString() !== valorVariable.toString()) {
-                    throw new Error(`El valor asignado a la variable ${nombreVariable} no es de tipo float`);
-                }
-                break;
-    
-            case "string":
-                if (typeof valorVariable !== 'string') {
-                    throw new Error(`El valor asignado a la variable ${nombreVariable} no es de tipo string`);
-                }
-                break;
-    
-            case "char":
-                if (typeof valorVariable !== 'string' || valorVariable.length !== 1) {
-                    throw new Error(`El valor asignado a la variable ${nombreVariable} no es de tipo char`);
-                }
-                break;
-    
-            case "bool":
-                if (typeof valorVariable !== 'boolean') {
-                    throw new Error(`El valor asignado a la variable ${nombreVariable} no es de tipo boolean`);
-                }
-                break;
+
+        console.log(tipoVariable)
+
+        if (tipoVariable === "bool") {
+            tipoVariable = "boolean";
+        } else {
+            tipoVariable = tipoVariable;
         }
 
 
+        if(node.exp){
 
-        this.entornoActual.setVariable(nombreVariable, valorVariable);
+            const valor = node.exp.accept(this)
+
+            switch (tipoVariable) {
+                case "int":
+                    if(tipoVariable != valor.tipo) {
+                        throw new Error(`El tipo del valor es incompatible con el tipo requerido. ${tipo}`)
+                    }
+                    
+                    break;
+        
+                case "float":
+                    if(valor.tipo != "int" &&  tipoVariable != valor.tipo){
+                        throw new Error(`El tipo del valor es incompatible con el tipo requerido. ${tipo}`)
+                    }
+                    break;
+                case "string":
+                    if (tipoVariable != valor.tipo) {
+                        throw new Error(`El tipo del valor es incompatible con el tipo requerido. ${tipo}`);
+                    }
+                    break;
+        
+                case "char":
+                    if (tipoVariable != valor.tipo) {
+                        throw new Error(`El tipo del valor es incompatible con el tipo requerido. ${tipo}`);
+                    }
+                    break;
+        
+                case "boolean":
+                    if (tipoVariable != valor.tipo) {
+                        throw new Error(`El tipo del valor es incompatible con el tipo requerido. ${tipo}`);
+                    }
+                    break;
+    
+                    case "var":
+                        // Determinar el tipo dinámicamente basado en el valor
+                        if (typeof valor.valor === 'number') {
+                            if (Number.isInteger(valor.valor)) {
+                                tipoVariable = "int";
+                            } else {
+                                tipoVariable = "float";
+                            }
+                        } else if (typeof valor.valor === 'string') {
+                            if (valor.valor.length === 1) {
+                                tipoVariable = "char";
+                            } else {
+                                tipoVariable = "string";
+                            }
+                        } else if (typeof valor.valor === 'boolean') {
+                            tipoVariable = "bool";
+                        } else {
+                            throw new Error(`Tipo no soportado para la variable ${nombreVariable}`);
+                        }
+                        break;;
+                default:
+                    throw new Error(`Operador no soportado: ${node.op}`);
+            }
+
+
+
+            this.entornoActual.setVariable(tipoVariable,nombreVariable, valor.valor);
+            return
+
+        }
+
     }
-
 /**
-      * @type {BaseVisitor['visitDeclaracionSinAargumn']}
+      * @type {BaseVisitor['visitReferenciaVariable']}
       */
+
     visitDeclaracionSinAargumn(node){
-        const tipoVariable = node.tipo;
-        const nombreVariable = node.id;
-    
-        // Llama a la función DeclaSinArgumen para obtener el tipo y valor
-        const { valor } = DeclaSinArgumen(tipoVariable, nombreVariable);
-    
-        // Asigna el valor por defecto en el entorno actual
-        this.entornoActual.setVariable(nombreVariable, valor);
+        var tipo = node.tipo
+        const nombreVarible = node.id
+        const valorDefino = DatoSinArgu(node.tipo)
+
+        this.entornoActual.setVariable(tipo, nombreVarible, valorDefino)
 
     }
-    
+
 
 
     /**
@@ -157,7 +581,9 @@ export class InterpreterVisitor extends BaseVisitor {
       */
     visitReferenciaVariable(node) {
         const nombreVariable = node.id;
-        return this.entornoActual.getVariable(nombreVariable);
+
+        const varible = this.entornoActual.getVariable(nombreVariable)
+        return {valor:varible.valor, tipo:varible.tipo}
     }
 
 
@@ -166,7 +592,10 @@ export class InterpreterVisitor extends BaseVisitor {
       */
     visitPrint(node) {
         const valor = node.exp.accept(this);
-        this.consola += valor + '\n';
+        this.consola += valor.valor + ' ';
+        node.expM.forEach(exp => this.consola += exp.accept(this).valor +  ' ')
+        this.consola += '\n'
+        
     }
 
 
@@ -183,6 +612,7 @@ export class InterpreterVisitor extends BaseVisitor {
     visitAsignacion(node) {
         // const valor = this.interpretar(node.asgn);
         const valor = node.asgn.accept(this);
+        console.log("aqui estoy "  + valor)
         this.entornoActual.assignVariable(node.id, valor);
 
         return valor;
@@ -250,17 +680,11 @@ export class InterpreterVisitor extends BaseVisitor {
     }
 
     /**
-     * @type {BaseVisitor['visitBoolF']}
+     * @type {BaseVisitor['visitBoolena']}
      */
-    visitBoolF(node){
-        return node.valor
-    }
+    visitBoolena(node){
+        return {valor:node.valor,tipo:node.tipo}
 
-        /**
-     * @type {BaseVisitor['visitBoolT']}
-     */
-    visitBoolT(node){
-        return node.valor
     }
 
             /**
@@ -268,7 +692,7 @@ export class InterpreterVisitor extends BaseVisitor {
      */
 
     visitCadenaString(node){
-        return node.valor
+        return {valor:node.valor ,tipo:node.tipo}
     }
 
     
@@ -278,7 +702,20 @@ export class InterpreterVisitor extends BaseVisitor {
 
 
     visitCaracter(node){
-        return node.valor
+        return {valor:node.valor, tipo:node.tipo}
+
+    }
+
+            /**
+     * @type {BaseVisitor['visitTypeof1']}
+     */
+
+    visitTypeof1(node){
+        const variable =  node.id
+        console.log(variable)
+        const tipoVairbale = this.entornoActual.getVariableType(variable)
+        console.log(tipoVairbale)
+        return tipoVairbale
 
     }
 

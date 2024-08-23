@@ -15,12 +15,11 @@
       'if': nodos.If,
       'while': nodos.While,
       'for' : nodos.For,
-      'declaracionSinAargumn' : nodos.DeclaracionSinAargumn,
-      'boolT' : nodos.BoolT,
-      'boolF' : nodos.BoolF,
+      'boolT' : nodos.Boolena,
       'cadenaString' : nodos.CadenaString,
-      'caracter' : nodos.Caracter
-      
+      'caracter' : nodos.Caracter,
+      'typeof1' : nodos.Typeof1,
+      'declaracionSinAargumn' : nodos.DeclaracionSinAargumn
     }
 
     const nodo = new tipos[tipoNodo](props)
@@ -35,7 +34,7 @@ Declaracion = dcl:VarDcl _ { return dcl }
             / stmt:Stmt _ { return stmt }
 
 VarDcl = tipo:Tipo _ id:Identify _ "=" _ exp:Expresion _ ";" { return crearNodo('declaracionVariable', { tipo, id, exp }) }
-      / tipo:Tipo _ id:Identify _ ";" { return crearNodo('declaracionSinAargumn', {tipo, id})}
+      / tipo:Tipo _ id:Identify _ ";" { return crearNodo('DeclaracionSinAargumn', {tipo, id})}
 
 
 Tipo = "int" {return text()}
@@ -46,7 +45,7 @@ Tipo = "int" {return text()}
         / "var" {return text()}
 
 
-Stmt = "print(" _ exp:Expresion _ ")" _ ";" { return crearNodo('print', { exp }) }
+Stmt = "print(" _ exp: Expresion _ expM: ("," _ expM: Expresion { return expM } )* _ ")" _ ";" { return crearNodo('print', { exp, expM }) }
     / exp:Expresion _ ";" { return crearNodo('expresionStmt', { exp }) }
     / "{" _ dcls:Declaracion* _ "}" { return crearNodo('bloque', { dcls }) }
     / "if" _ "(" _ cond:Expresion _ ")" _ stmtTrue:Stmt 
@@ -55,6 +54,7 @@ Stmt = "print(" _ exp:Expresion _ ")" _ ";" { return crearNodo('print', { exp })
       )? { return crearNodo('if', { cond, stmtTrue, stmtFalse }) }
     / "while" _ "(" _ cond:Expresion _ ")" _ stmt:Stmt { return crearNodo('while', { cond, stmt }) }
     / "for" _ "(" _ inicializacion:Declaracion _ condicion:Expresion _ ";" _ incremento:Expresion _ ")" _ stmt:Stmt {return crearNodo('for', {inicializacion,condicion,incremento,stmt})}
+    
 
 Identify = [a-zA-Z][a-zA-Z0-9]* { return text() }
     / '"' content:([a-zA-Z0-9 ]*) '"' { return content.join('');
@@ -62,10 +62,38 @@ Identify = [a-zA-Z][a-zA-Z0-9]* { return text() }
 Expresion = Asignacion
 
 Asignacion = id:Identify _ "=" _ asgn:Asignacion { return crearNodo('asignacion', { id, asgn }) }
-          / Comparacion
+          /  id:Identify _ "+=" _ asgn:Expresion { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "+=", exp: crearNodo('referenciaVariable', { id }) }) })} 
+          /  id:Identify _ "-=" _ asgn:Expresion { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "-=", exp: crearNodo('referenciaVariable', { id }) }) })} 
+          / "typeof" _ id:Identify { return crearNodo('typeof1', {id}) }
+          / Log
+
+Log = izq:Igualacion expansion:(
+  _ op:("&&" / "||") _ der:Igualacion { return { tipo: op, der } })* 
+  { 
+  return expansion.reduce(
+    (operacionAnterior, operacionActual) => {
+      const { tipo, der } = operacionActual
+      return crearNodo('binaria', { op:tipo, izq: operacionAnterior, der })
+    },
+    izq
+  )
+}
+
+Igualacion = izq:Comparacion expansion:(
+  _ op:("!=" / "==") _ der:Comparacion { return { tipo: op, der } })* 
+  { 
+  return expansion.reduce(
+    (operacionAnterior, operacionActual) => {
+      const { tipo, der } = operacionActual
+      return crearNodo('binaria', { op:tipo, izq: operacionAnterior, der })
+    },
+    izq
+  )
+}
+
 
 Comparacion = izq:Suma expansion:(
-  _ op:("<=") _ der:Suma { return { tipo: op, der } })* 
+  _ op:("<=" / ">=" / "<" / ">") _ der:Suma { return { tipo: op, der } })* 
   { 
   return expansion.reduce(
     (operacionAnterior, operacionActual) => {
@@ -90,7 +118,7 @@ Suma = izq:Multiplicacion expansion:(
 }
 
 Multiplicacion = izq:Unaria expansion:(
-  _ op:("*" / "/") _ der:Unaria { return { tipo: op, der } }
+  _ op:("*" / "/" / "%") _ der:Unaria { return { tipo: op, der } }
 )* {
     return expansion.reduce(
       (operacionAnterior, operacionActual) => {
@@ -109,17 +137,17 @@ Unaria = "-" _ num:Numero { return crearNodo('unaria', { op: '-', exp: num }) }
   / id: Identify "--" { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "--", exp: crearNodo('referenciaVariable', { id }) }) }) }
   / Numero
 
-Bool = "true" { return crearNodo('boolT', { valor: true }) }
-          / "false" { return crearNodo('boolF', { valor: false }) }
+Bool = "true" { return crearNodo('boolena', { valor: true , tipo : "boolean" }) }
+          / "false" { return crearNodo('boolena', { valor: false ,  tipo : "boolean"  }) }
 
 
-CadeString = "\"" chars:([^"]*) "\"" { return crearNodo('cadenaString', { valor: chars.join("") }) }
+CadeString = "\"" chars:([^"]*) "\"" { return crearNodo('cadenaString', { valor: chars.join("") , tipo :"string"}) }
 
-Caracter = "'" char:[^'] "'" { return crearNodo('caracter', { valor: char }) }
+Caracter = "'" char:[^'] "'" { return crearNodo('caracter', { valor: char, tipo: "char" }) }
 
 
 // { return{ tipo: "numero", valor: parseFloat(text(), 10) } }
-Numero = [0-9]+( "." [0-9]+ )? {return crearNodo('numero', { valor: parseFloat(text(), 10) })}
+Numero = [0-9]+( "." [0-9]+ )? { return text().includes('.') ? crearNodo('numero', { valor: parseFloat(text(), 10), tipo:"float"}) : crearNodo('numero', { valor: parseInt(text(), 10), tipo:"int"})	 }
   / "(" _ exp:Expresion _ ")" { return crearNodo('agrupacion', { exp }) }
   / id:Identify { return crearNodo('referenciaVariable', { id }) }
 
