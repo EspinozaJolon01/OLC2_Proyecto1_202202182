@@ -19,7 +19,8 @@
       'cadenaString' : nodos.CadenaString,
       'caracter' : nodos.Caracter,
       'typeof1' : nodos.Typeof1,
-      'declaracionSinAargumn' : nodos.DeclaracionSinAargumn
+      'declaracionSinAargumn' : nodos.DeclaracionSinAargumn,
+      'embebidas' : nodos.Embebidas
     }
 
     const nodo = new tipos[tipoNodo](props)
@@ -64,7 +65,6 @@ Expresion = Asignacion
 Asignacion = id:Identify _ "=" _ asgn:Asignacion { return crearNodo('asignacion', { id, asgn }) }
           /  id:Identify _ "+=" _ asgn:Expresion { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "+=", exp: crearNodo('referenciaVariable', { id }) }) })} 
           /  id:Identify _ "-=" _ asgn:Expresion { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "-=", exp: crearNodo('referenciaVariable', { id }) }) })} 
-          / "typeof" _ id:Identify { return crearNodo('typeof1', {id}) }
           / Log
 
 Log = izq:Igualacion expansion:(
@@ -129,8 +129,13 @@ Multiplicacion = izq:Unaria expansion:(
     )
 }
 
-Unaria = "-" _ num:Numero { return crearNodo('unaria', { op: '-', exp: num }) }
-  /Bool
+Unaria = "-" _ num:Valores { return crearNodo('unaria', { op: '-', exp: num }) }
+  /  Embe:("typeof") _ dat:Valores { return crearNodo('embebidas', {Embe, exp: dat }) }
+  / Embe: ("toUpperCase" /"toLowerCase" /"parsefloat"/"parseInt") "(" _ dat:Valores _ ")" _ { return crearNodo('embebidas', {Embe, exp: dat }) }
+  / Valores
+
+
+Valores =  Bool
   /CadeString 
   /Caracter
   / id: Identify "++" { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "++", exp: crearNodo('referenciaVariable', { id }) }) }) }

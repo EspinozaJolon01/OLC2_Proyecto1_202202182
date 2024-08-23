@@ -700,24 +700,108 @@ export class InterpreterVisitor extends BaseVisitor {
      * @type {BaseVisitor['visitCaracter']}
      */
 
-
+    
     visitCaracter(node){
         return {valor:node.valor, tipo:node.tipo}
 
     }
 
             /**
-     * @type {BaseVisitor['visitTypeof1']}
+     * @type {BaseVisitor['visitEmbebidas']}
      */
 
-    visitTypeof1(node){
-        const variable =  node.id
-        console.log(variable)
-        const tipoVairbale = this.entornoActual.getVariableType(variable)
-        console.log(tipoVairbale)
-        return tipoVairbale
+        visitEmbebidas(node){
+        const exp = node.exp.accept(this)
+
+        switch(node.Embe){
+            case 'typeof':
+                switch(exp.tipo){
+                    case "int":
+                        console.log("aqui inicio" + exp.valor)
+                        console.log(node.Embe)
+                        console.log(exp.tipo)
+                        return {valor: exp.tipo, tipo: "string"}
+                    case "float":
+                        return {valor: exp.tipo, tipo: "string"}
+                    case "string":
+                        return {valor: exp.tipo, tipo: "string"}
+                    case "boolean":
+                        return {valor: exp.tipo, tipo: "string"}
+                    case "char":
+                        return {valor: exp.tipo, tipo: "string"}
+                    default:
+                        throw new Error(`No valido ese tipo de dato en typeof`);
+                }
+            case 'toUpperCase':
+                switch(exp.tipo){
+                    case "string":
+                        console.log("aqui inicio" + exp.valor)
+                        const manuysucla = exp.valor.toUpperCase();                        
+                        
+                        
+                        return {valor: manuysucla, tipo: "string"}
+
+                    default:
+                        throw new Error(`No valido ese tipo de dato en typeof`);
+                }
+
+            case 'toLowerCase':
+                switch(exp.tipo){
+                    case "string":
+                        console.log("aqui inicio" + exp.valor)
+                        const minuscula = exp.valor.toLowerCase();                        
+                        
+                        
+                        return {valor: minuscula, tipo: "string"}
+
+                    default:
+                        throw new Error(`No valido ese tipo de dato en typeof`);
+                }
+
+            case 'parsefloat':
+                switch(exp.tipo){
+                    case "string":
+                        console.log("aquí inicio: " + exp.valor);
+            
+                        // Validar que el string contenga solo números, opcionalmente con un punto decimal
+                        const regex = /^[+-]?(\d+(\.\d*)?|\.\d+)$/;
+            
+                        if (regex.test(exp.valor)) {
+                            const valorFloat = parseFloat(exp.valor);
+                            return { valor: valorFloat, tipo: "float" };
+                        } else {
+                            throw new Error(`El valor '${exp.valor}' no es un número válido.`);
+                        }
+
+                    default:
+                        throw new Error(`No valido ese tipo de dato en typeof`);
+                }
+            case 'parseInt':
+                switch(exp.tipo){
+                    case "string":
+                        console.log("aquí inicio: " + exp.valor);
+            
+                        // Validar que el string contenga solo números, opcionalmente con un punto decimal
+                        const regex = /^[+-]?(\d+(\.\d*)?|\.\d+)$/;
+            
+                        if (regex.test(exp.valor)) {
+                            const valorFloat = parseInt(exp.valor);
+                            return { valor: valorFloat, tipo: "int" };
+                        } else {
+                            throw new Error(`El valor '${exp.valor}' no es un número válido.`);
+                        }
+
+                    default:
+                        throw new Error(`No valido ese tipo de dato en typeof`);
+                }
+
+            default:
+                throw new Error(`Operacion embebedia no encontrada`);
+
+        }
 
     }
+
 
     
 }

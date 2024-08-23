@@ -55,7 +55,7 @@
  * @typedef {import('./nodos').Caracter} Caracter
 
 
- * @typedef {import('./nodos').Typeof1} Typeof1
+ * @typedef {import('./nodos').Embebidas} Embebidas
 
  */
 
@@ -230,11 +230,11 @@ export class BaseVisitor {
     
 
     /**
-     * @param {Typeof1} node
+     * @param {Embebidas} node
      * @returns {any}
      */
-    visitTypeof1(node) {
-        throw new Error('Metodo visitTypeof1 no implementado');
+    visitEmbebidas(node) {
+        throw new Error('Metodo visitEmbebidas no implementado');
     }
     
 }

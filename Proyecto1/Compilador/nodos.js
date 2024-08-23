@@ -610,20 +610,28 @@ export class Caracter extends expression  {
     }
 }
     
-export class Typeof1 extends expression  {
+export class Embebidas extends expression  {
 
     /**
     * @param {Object} options
-    * @param {expression } options.id Esta función retorna el tipo de dato asociado
+    * @param {expression } options.exp Esta función retorna el tipo de dato asociado
+ * @param {string } options.Embe Esta función retorna el tipo de dato asociado
     */
-    constructor({ id }) {
+    constructor({ exp, Embe }) {
         super();
         
         /**
          * Esta función retorna el tipo de dato asociado
          * @type {expression }
         */
-        this.id = id;
+        this.exp = exp;
+
+
+        /**
+         * Esta función retorna el tipo de dato asociado
+         * @type {string }
+        */
+        this.Embe = Embe;
 
     }
 
@@ -631,8 +639,8 @@ export class Typeof1 extends expression  {
      * @param {BaseVisitor} visitor
      */
     accept(visitor) {
-        return visitor.visitTypeof1(this);
+        return visitor.visitEmbebidas(this);
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Typeof1 }
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas }
