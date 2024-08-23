@@ -487,11 +487,7 @@ export class InterpreterVisitor extends BaseVisitor {
 
         console.log(tipoVariable)
 
-        if (tipoVariable === "bool") {
-            tipoVariable = "boolean";
-        } else {
-            tipoVariable = tipoVariable;
-        }
+
 
 
         if(node.exp){
@@ -533,18 +529,18 @@ export class InterpreterVisitor extends BaseVisitor {
                         // Determinar el tipo dinámicamente basado en el valor
                         if (typeof valor.valor === 'number') {
                             if (Number.isInteger(valor.valor)) {
-                                tipoVariable = "int";
+                                tipoVariable = valor.tipo;
                             } else {
-                                tipoVariable = "float";
+                                tipoVariable = valor.tipo;
                             }
                         } else if (typeof valor.valor === 'string') {
                             if (valor.valor.length === 1) {
-                                tipoVariable = "char";
+                                tipoVariable = valor.tipo;
                             } else {
-                                tipoVariable = "string";
+                                tipoVariable = valor.tipo;
                             }
                         } else if (typeof valor.valor === 'boolean') {
-                            tipoVariable = "bool";
+                            tipoVariable = valor.tipo;
                         } else {
                             throw new Error(`Tipo no soportado para la variable ${nombreVariable}`);
                         }
@@ -553,7 +549,7 @@ export class InterpreterVisitor extends BaseVisitor {
                     throw new Error(`Operador no soportado: ${node.op}`);
             }
 
-
+            console.log("fin: "+tipoVariable)
 
             this.entornoActual.setVariable(tipoVariable,nombreVariable, valor.valor);
             return
@@ -634,7 +630,7 @@ export class InterpreterVisitor extends BaseVisitor {
      * @type {BaseVisitor['visitIf']}
      */
     visitIf(node) {
-        const cond = node.cond.accept(this);
+        const cond = node.cond.accept(this).valor;
 
         if (cond) {
             node.stmtTrue.accept(this);
@@ -651,7 +647,7 @@ export class InterpreterVisitor extends BaseVisitor {
      * @type {BaseVisitor['visitWhile']}
      */
     visitWhile(node) {
-        while (node.cond.accept(this)) {
+        while (node.cond.accept(this).valor) {
             node.stmt.accept(this);
         }
     }
@@ -668,7 +664,7 @@ export class InterpreterVisitor extends BaseVisitor {
         node.inicializacion.accept(this)
 
 
-        while (node.condicion.accept(this)) {
+        while (node.condicion.accept(this).valor) {
             node.stmt.accept(this);
 
             node.incremento.accept(this)
@@ -736,10 +732,10 @@ export class InterpreterVisitor extends BaseVisitor {
                 switch(exp.tipo){
                     case "string":
                         console.log("aqui inicio" + exp.valor)
-                        const manuysucla = exp.valor.toUpperCase();                        
+                        //const manuysucla = exp.valor.toUpperCase();                        
                         
                         
-                        return {valor: manuysucla, tipo: "string"}
+                        return {valor: exp.valor.toUpperCase(), tipo: "string"}
 
                     default:
                         throw new Error(`No valido ese tipo de dato en typeof`);
@@ -749,10 +745,10 @@ export class InterpreterVisitor extends BaseVisitor {
                 switch(exp.tipo){
                     case "string":
                         console.log("aqui inicio" + exp.valor)
-                        const minuscula = exp.valor.toLowerCase();                        
+                        //const minuscula = exp.valor.toLowerCase();                        
                         
                         
-                        return {valor: minuscula, tipo: "string"}
+                        return {valor: exp.valor.toLowerCase(), tipo: "string"}
 
                     default:
                         throw new Error(`No valido ese tipo de dato en typeof`);
@@ -760,15 +756,19 @@ export class InterpreterVisitor extends BaseVisitor {
 
             case 'parsefloat':
                 switch(exp.tipo){
+                        
                     case "string":
-                        console.log("aquí inicio: " + exp.valor);
+                        console.log("aqui inicio --" + exp.valor)
+                        console.log(node.Embe)
+                        console.log(exp.tipo)
+                        console.log("aquí inicio: ---" + exp.valor);
             
                         // Validar que el string contenga solo números, opcionalmente con un punto decimal
                         const regex = /^[+-]?(\d+(\.\d*)?|\.\d+)$/;
             
                         if (regex.test(exp.valor)) {
-                            const valorFloat = parseFloat(exp.valor);
-                            return { valor: valorFloat, tipo: "float" };
+                            //const valorFloat = parseFloat(exp.valor);
+                            return { valor: parseFloat(exp.valor), tipo: "float" };
                         } else {
                             throw new Error(`El valor '${exp.valor}' no es un número válido.`);
                         }
@@ -785,8 +785,8 @@ export class InterpreterVisitor extends BaseVisitor {
                         const regex = /^[+-]?(\d+(\.\d*)?|\.\d+)$/;
             
                         if (regex.test(exp.valor)) {
-                            const valorFloat = parseInt(exp.valor);
-                            return { valor: valorFloat, tipo: "int" };
+                            //const valorFloat = parseInt(exp.valor);
+                            return { valor: parseInt(exp.valor), tipo: "int" };
                         } else {
                             throw new Error(`El valor '${exp.valor}' no es un número válido.`);
                         }
@@ -794,6 +794,35 @@ export class InterpreterVisitor extends BaseVisitor {
                     default:
                         throw new Error(`No valido ese tipo de dato en typeof`);
                 }
+            case 'toString':
+                switch(exp.tipo){
+                    case "int":
+                        
+            
+                        console.log("aqui estoy ------")
+                        console.log("aquí inicio: " +  exp.valor  + exp.tipo);
+                        //const valorString = toString(exp.valor);
+                        return { valor: exp.valor.toString(), tipo: "string" };
+                    case "boolean":
+                        
+            
+                        console.log("aqui estoy ------")
+                        console.log("aquí inicio: " +  exp.valor  + exp.tipo);
+                        //const valorString = toString(exp.valor);
+                        return { valor: exp.valor.toString(), tipo: "string" };
+                    case "float":
+                        
+            
+                        console.log("aqui estoy ------")
+                        console.log("aquí inicio: " +  exp.valor  + exp.tipo);
+                        //const valorString = toString(exp.valor);
+                        return { valor: exp.valor.toString(), tipo: "string" };
+                        
+
+                    default:
+                        throw new Error(`No valido ese tipo de dato en typeof`);
+                }
+
 
             default:
                 throw new Error(`Operacion embebedia no encontrada`);

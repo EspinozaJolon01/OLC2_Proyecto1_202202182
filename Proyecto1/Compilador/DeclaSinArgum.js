@@ -7,7 +7,7 @@ export function DatoSinArgu(tipo) {
         case "string":
             return ""
         case "boolean":
-            return true
+            return false
         case "char":
             return ''
         default:

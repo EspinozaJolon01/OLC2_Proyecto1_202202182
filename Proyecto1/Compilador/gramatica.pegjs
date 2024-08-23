@@ -15,7 +15,7 @@
       'if': nodos.If,
       'while': nodos.While,
       'for' : nodos.For,
-      'boolT' : nodos.Boolena,
+      'boolena' : nodos.Boolena,
       'cadenaString' : nodos.CadenaString,
       'caracter' : nodos.Caracter,
       'typeof1' : nodos.Typeof1,
@@ -35,13 +35,13 @@ Declaracion = dcl:VarDcl _ { return dcl }
             / stmt:Stmt _ { return stmt }
 
 VarDcl = tipo:Tipo _ id:Identify _ "=" _ exp:Expresion _ ";" { return crearNodo('declaracionVariable', { tipo, id, exp }) }
-      / tipo:Tipo _ id:Identify _ ";" { return crearNodo('DeclaracionSinAargumn', {tipo, id})}
+      / tipo:Tipo _ id:Identify _ ";" { return crearNodo('declaracionSinAargumn', {tipo, id})}
 
 
 Tipo = "int" {return text()}
         / "float" {return text()}    
         / "string" {return text()}
-        / "bool"  {return text()}
+        / "boolean"  {return text()}
         / "char" {return text()}
         / "var" {return text()}
 
@@ -131,7 +131,7 @@ Multiplicacion = izq:Unaria expansion:(
 
 Unaria = "-" _ num:Valores { return crearNodo('unaria', { op: '-', exp: num }) }
   /  Embe:("typeof") _ dat:Valores { return crearNodo('embebidas', {Embe, exp: dat }) }
-  / Embe: ("toUpperCase" /"toLowerCase" /"parsefloat"/"parseInt") "(" _ dat:Valores _ ")" _ { return crearNodo('embebidas', {Embe, exp: dat }) }
+  / Embe: ("toUpperCase" /"toLowerCase" /"parsefloat"/"parseInt"/"toString") "(" _ dat:Valores _ ")" _ { return crearNodo('embebidas', {Embe, exp: dat }) }
   / Valores
 
 
