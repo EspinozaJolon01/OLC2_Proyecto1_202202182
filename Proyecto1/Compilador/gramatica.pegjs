@@ -20,7 +20,8 @@
       'caracter' : nodos.Caracter,
       'typeof1' : nodos.Typeof1,
       'declaracionSinAargumn' : nodos.DeclaracionSinAargumn,
-      'embebidas' : nodos.Embebidas
+      'embebidas' : nodos.Embebidas,
+      'switch' :nodos.Switch
     }
 
     const nodo = new tipos[tipoNodo](props)
@@ -55,7 +56,11 @@ Stmt = "print(" _ exp: Expresion _ expM: ("," _ expM: Expresion { return expM } 
       )? { return crearNodo('if', { cond, stmtTrue, stmtFalse }) }
     / "while" _ "(" _ cond:Expresion _ ")" _ stmt:Stmt { return crearNodo('while', { cond, stmt }) }
     / "for" _ "(" _ inicializacion:Declaracion _ condicion:Expresion _ ";" _ incremento:Expresion _ ")" _ stmt:Stmt {return crearNodo('for', {inicializacion,condicion,incremento,stmt})}
-    
+    / "switch" _ "("_ exp: Expresion _")"_ "{" _ cas:EstructuraCase* _ def:default? _ "}"  {return crearNodo('switch', {exp,cas,def})} 
+
+EstructuraCase = "case"_ exp: Expresion _ ":" _ bloque:Stmt* _ {return {exp,bloque}}
+
+default = "default" _ ":" _ bloque:Stmt* _  {return {bloque}}
 
 Identify = [a-zA-Z][a-zA-Z0-9]* { return text() }
     / '"' content:([a-zA-Z0-9 ]*) '"' { return content.join('');
@@ -146,7 +151,14 @@ Bool = "true" { return crearNodo('boolena', { valor: true , tipo : "boolean" }) 
           / "false" { return crearNodo('boolena', { valor: false ,  tipo : "boolean"  }) }
 
 
-CadeString = "\"" chars:([^"]*) "\"" { return crearNodo('cadenaString', { valor: chars.join("") , tipo :"string"}) }
+CadeString = "\"" chars:([^"]*) "\"" {var text = chars.join(""); 
+            text = text.replace(/\\n/g, "\n");
+            text = text.replace(/\\\\/g, "\\");
+            text = text.replace(/\\\"/g,"\"");
+            text = text.replace(/\\r/g, "\r");
+            text = text.replace(/\\t/g, "\t");
+            text = text.replace(/\\\'/g, "'");
+            return crearNodo('cadenaString', { valor: text , tipo :"string"}) }
 
 Caracter = "'" char:[^'] "'" { return crearNodo('caracter', { valor: char, tipo: "char" }) }
 

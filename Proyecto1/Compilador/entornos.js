@@ -81,20 +81,4 @@ export class Entorno {
     }
 
 
-    /**
-     * Busca la variable por nombre y devuelve su tipo.
-     * @param {string} nombre
-     * @returns {string} El tipo de la variable.
-     */
-    getVariableType(nombre) {
-        if (nombre in this.valores) {
-            return this.valores[nombre].tipo;
-        }
-
-        if (this.padre) {
-            return this.padre.getVariableType(nombre);
-        }
-
-        throw new Error(`Tipo de la variable ${nombre} no definido`);
-    }
 }

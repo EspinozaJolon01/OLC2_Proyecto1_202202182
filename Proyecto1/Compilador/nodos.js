@@ -643,4 +643,45 @@ export class Embebidas extends expression  {
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas }
+export class Switch extends expression  {
+
+    /**
+    * @param {Object} options
+    * @param {expression } options.exp la expresion del while - case
+ * @param {expression } options.cas cuepor del case
+ * @param {expression |undefined  } options.def expresion defesault opcional
+    */
+    constructor({ exp, cas, def }) {
+        super();
+        
+        /**
+         * la expresion del while - case
+         * @type {expression }
+        */
+        this.exp = exp;
+
+
+        /**
+         * cuepor del case
+         * @type {expression }
+        */
+        this.cas = cas;
+
+
+        /**
+         * expresion defesault opcional
+         * @type {expression |undefined  }
+        */
+        this.def = def;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitSwitch(this);
+    }
+}
+    
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch }

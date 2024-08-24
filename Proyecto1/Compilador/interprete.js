@@ -890,5 +890,37 @@ export class InterpreterVisitor extends BaseVisitor {
     }
 
 
+    /** @type {BaseVisitor['visitSwitch']} */
+    visitSwitch(node) {
+        let casoEncontrado = false;
+
+
+        for (const caso of node.cas) {
+
+            if (caso.exp.accept(this).valor === node.exp.accept(this).valor) {
+                casoEncontrado = true;
+            }
+
+            if (casoEncontrado) {
+                const entornoAnterior = this.entornoActual;
+                this.entornoActual = new Entorno(entornoAnterior);
+                
+                for (const stmt of caso.bloque) {
+                    stmt.accept(this);
+                }
+
+                this.entornoActual = entornoAnterior;
+                
+            }
+        }
+        if (casoEncontrado && node.def) {
+
+            for (const stmt of node.def.bloque) {
+                stmt.accept(this);
+            }
+        }
+    }
+
+
     
 }
