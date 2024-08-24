@@ -406,6 +406,61 @@ export class InterpreterVisitor extends BaseVisitor {
                             throw new Error('No es valida esa operacion');
                     }
                 }
+            case '+=':
+                if(izq.tipo == "int"){
+                    switch (der.tipo){
+                        case 'int':
+                            return {valor:izq.valor + der.valor , tipo: "int"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+                
+                if(izq.tipo == "float"){
+                    switch (der.tipo){
+                        case 'float':
+                            return {valor:izq.valor + der.valor , tipo: "float"};
+                        case 'int':
+                            return {valor:izq.valor + der.valor , tipo: "float"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+
+                if(izq.tipo == "string"){
+                    switch (der.tipo){
+                        case 'string':
+                            return {valor:izq.valor + der.valor , tipo: "string"};
+                        
+                        default:
+                            throw new Error('No es valida esa operacion');
+                    }
+                }
+
+                case '-=':
+                    if(izq.tipo == "int"){
+                        switch (der.tipo){
+                            case 'int':
+                                return {valor:izq.valor - der.valor , tipo: "int"};
+                            
+                            default:
+                                throw new Error('No es valida esa operacion');
+                        }
+                    }
+                    
+                    if(izq.tipo == "float"){
+                        switch (der.tipo){
+                            case 'float':
+                                return {valor:izq.valor - der.valor , tipo: "float"};
+                            case 'int':
+                                return {valor:izq.valor - der.valor , tipo: "float"};
+                            
+                            default:
+                                throw new Error('No es valida esa operacion');
+                        }
+                    }
 
 
             default:
@@ -430,6 +485,13 @@ export class InterpreterVisitor extends BaseVisitor {
                     throw new Error('No es valida esa operacion');
                 }
                 
+            case '!':
+                    if(exp.tipo == "boolean"){
+                        return {valor:!exp.valor , tipo: exp.tipo};
+                    }else{
+                        throw new Error('No es valida esa operacion');
+                    }
+                    
 
             case '++':
                 if(exp.tipo == "int"){
@@ -450,11 +512,7 @@ export class InterpreterVisitor extends BaseVisitor {
                     throw new Error('No es valida esa operacion');
                 }
                 
-            
-            case '+=':
-                return exp + exp;
-            case '-=':
-                return exp - exp;
+
 
             default:
                 throw new Error(`Operador no soportado: ${node.op}`);
