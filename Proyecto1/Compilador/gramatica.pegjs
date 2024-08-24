@@ -21,7 +21,8 @@
       'typeof1' : nodos.Typeof1,
       'declaracionSinAargumn' : nodos.DeclaracionSinAargumn,
       'embebidas' : nodos.Embebidas,
-      'switch' :nodos.Switch
+      'switch' :nodos.Switch,
+      'ternario' : nodos.Ternario
     }
 
     const nodo = new tipos[tipoNodo](props)
@@ -66,11 +67,17 @@ Identify = [a-zA-Z][a-zA-Z0-9]* { return text() }
     / '"' content:([a-zA-Z0-9 ]*) '"' { return content.join('');
 }
 Expresion = Asignacion
+        
+          
 
-Asignacion = id:Identify _ "=" _ asgn:Asignacion { return crearNodo('asignacion', { id, asgn }) }
+Asignacion = OpTenario
+          /id:Identify _ "=" _ asgn:Asignacion { return crearNodo('asignacion', { id, asgn }) }
           /  id:Identify _ "+=" _ asgn:Expresion { return crearNodo('asignacion', { id, asgn: crearNodo('binaria', { op: "+=", izq: crearNodo('referenciaVariable', { id }),der: asgn }) })} 
           /  id:Identify _ "-=" _ asgn:Expresion { return crearNodo('asignacion', { id, asgn: crearNodo('binaria', { op: "-=", izq: crearNodo('referenciaVariable', { id }),der: asgn }) })} 
           / Log
+
+OpTenario = validar:Log _ "?" _ cond1:Log _ ":" _ cond2:Log {return crearNodo('ternario',{validar,cond1,cond2})}
+
 
 Log = izq:Igualacion expansion:(
   _ op:("&&" / "||") _ der:Igualacion { return { tipo: op, der } })* 

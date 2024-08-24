@@ -921,6 +921,25 @@ export class InterpreterVisitor extends BaseVisitor {
         }
     }
 
+    /**
+     * @type {BaseVisitor['visitTernario']}
+     */
+    visitTernario(node){
+        const cond = node.validar.accept(this);
+        console.log(cond.tipo)
+
+        if(cond.tipo != "boolean"){
+            throw new Error(`el tipo no es un boolean`);
+        }
+
+
+        return cond.valor ?node.cond1.accept(this) :  node.cond2.accept(this)
+        
+
+
+    }
+
+
 
     
 }

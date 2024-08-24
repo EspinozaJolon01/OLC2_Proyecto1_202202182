@@ -684,4 +684,45 @@ export class Switch extends expression  {
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch }
+export class Ternario extends expression  {
+
+    /**
+    * @param {Object} options
+    * @param {expression } options.validar la condicion 
+ * @param {expression } options.cond1 cuepor del case
+ * @param {expression} options.cond2 expresion defesault opcional
+    */
+    constructor({ validar, cond1, cond2 }) {
+        super();
+        
+        /**
+         * la condicion 
+         * @type {expression }
+        */
+        this.validar = validar;
+
+
+        /**
+         * cuepor del case
+         * @type {expression }
+        */
+        this.cond1 = cond1;
+
+
+        /**
+         * expresion defesault opcional
+         * @type {expression}
+        */
+        this.cond2 = cond2;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitTernario(this);
+    }
+}
+    
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Ternario }
