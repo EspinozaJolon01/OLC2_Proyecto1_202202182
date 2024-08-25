@@ -25,7 +25,8 @@
       'ternario' : nodos.Ternario,
       'arregloValores' : nodos.ArregloValores,
       'arregloCantida' : nodos.ArregloCantida,
-      'arregloCopia' : nodos.ArregloCopia
+      'arregloCopia' : nodos.ArregloCopia,
+      'accesoElem' : nodos.AccesoElem
     }
 
     const nodo = new tipos[tipoNodo](props)
@@ -159,9 +160,11 @@ Multiplicacion = izq:Unaria expansion:(
 Unaria = op:("-"/"!") _ num:Valores { return crearNodo('unaria', { op, exp: num }) }
   /  Embe:("typeof") _ dat:Valores { return crearNodo('embebidas', {Embe, exp: dat }) }
   / Embe: ("toUpperCase" /"toLowerCase" /"parsefloat"/"parseInt"/"toString") "(" _ dat:Valores _ ")" _ { return crearNodo('embebidas', {Embe, exp: dat }) }
+  /_ dat:Valores "." op:"indexOf" "("_ bus:Valores _")" _ {return crearNodo('accesoElem',{dat,op,bus})}
   / id: Identify "++" { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "++", exp: crearNodo('referenciaVariable', { id }) }) }) }
   / id: Identify "--" { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "--", exp: crearNodo('referenciaVariable', { id }) }) }) }
   / Valores
+
 
 
 Valores =  Bool

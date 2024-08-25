@@ -1039,6 +1039,32 @@ export class InterpreterVisitor extends BaseVisitor {
 
     }
 
+    /**
+     * @type {BaseVisitor['visitAccesoElem']}
+     */
+
+    visitAccesoElem(node){
+        const arreglo = node.dat.accept(this).valor
+        const operacion = node.op
+        const valor = node.bus.valor
+
+
+        console.log("arreglo : "  + arreglo)
+        console.log("operacion : "  + operacion)
+        console.log("valor : "  + valor)
+
+        for (let index = 0; index < arreglo.length; index++) {
+            const element = arreglo[index];
+            if(element == valor){
+                return {valor:index, tipo: "int"}
+            }
+            
+        }
+        return {valor:-1 , tipo:"int"}
+
+
+    }
+
 
     
 

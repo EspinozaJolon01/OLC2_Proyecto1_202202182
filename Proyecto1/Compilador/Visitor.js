@@ -72,6 +72,9 @@
 
  * @typedef {import('./nodos').ArregloCopia} ArregloCopia
 
+
+ * @typedef {import('./nodos').AccesoElem} AccesoElem
+
  */
 
 
@@ -295,6 +298,15 @@ export class BaseVisitor {
      */
     visitArregloCopia(node) {
         throw new Error('Metodo visitArregloCopia no implementado');
+    }
+    
+
+    /**
+     * @param {AccesoElem} node
+     * @returns {any}
+     */
+    visitAccesoElem(node) {
+        throw new Error('Metodo visitAccesoElem no implementado');
     }
     
 }

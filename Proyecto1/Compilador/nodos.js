@@ -856,4 +856,45 @@ export class ArregloCopia extends expression  {
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Ternario, ArregloValores, ArregloCantida, ArregloCopia }
+export class AccesoElem extends expression  {
+
+    /**
+    * @param {Object} options
+    * @param {any } options.dat arreglo a buscar 
+ * @param {string } options.op tipo de acceso al arreglo
+ * @param {any } options.bus dato a encontrar
+    */
+    constructor({ dat, op, bus }) {
+        super();
+        
+        /**
+         * arreglo a buscar 
+         * @type {any }
+        */
+        this.dat = dat;
+
+
+        /**
+         * tipo de acceso al arreglo
+         * @type {string }
+        */
+        this.op = op;
+
+
+        /**
+         * dato a encontrar
+         * @type {any }
+        */
+        this.bus = bus;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitAccesoElem(this);
+    }
+}
+    
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Ternario, ArregloValores, ArregloCantida, ArregloCopia, AccesoElem }
