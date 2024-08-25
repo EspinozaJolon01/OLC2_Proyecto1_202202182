@@ -22,7 +22,9 @@
       'declaracionSinAargumn' : nodos.DeclaracionSinAargumn,
       'embebidas' : nodos.Embebidas,
       'switch' :nodos.Switch,
-      'ternario' : nodos.Ternario
+      'ternario' : nodos.Ternario,
+      'arregloValores' : nodos.ArregloValores,
+      'arregloCantida' : nodos.ArregloCantida
     }
 
     const nodo = new tipos[tipoNodo](props)
@@ -38,6 +40,16 @@ Declaracion = dcl:VarDcl _ { return dcl }
 
 VarDcl = tipo:Tipo _ id:Identify _ "=" _ exp:Expresion _ ";" { return crearNodo('declaracionVariable', { tipo, id, exp }) }
       / tipo:Tipo _ id:Identify _ ";" { return crearNodo('declaracionSinAargumn', {tipo, id})}
+      /Arreglos
+
+Arreglos = tipo:Tipo _ "[]" _ id:Identify _ "=" _ ArreTi:TipoDeca _ ";" {return crearNodo('arregloValores' ,{tipo, id,ArreTi})}
+        / tipo:Tipo _ "[]" _ id:Identify _ "=" _ "new" _ tipo2:Tipo _ "[" _ dim:Numero _ "]" _ ";" {return crearNodo('arregloCantida' , {tipo, id, tipo2, dim})}
+
+
+TipoDeca = _ "{" _ Lista:ListaValores _ "}" _ {return Lista}
+
+
+ListaValores =  _ exp: Expresion _ expM: ("," _ expM: Expresion { return expM } )* _ {return {dato1:exp, dato2: expM} }
 
 
 Tipo = "int" {return text()}
@@ -46,6 +58,7 @@ Tipo = "int" {return text()}
         / "boolean"  {return text()}
         / "char" {return text()}
         / "var" {return text()}
+
 
 
 Stmt = "print(" _ exp: Expresion _ expM: ("," _ expM: Expresion { return expM } )* _ ")" _ ";" { return crearNodo('print', { exp, expM }) }
@@ -59,7 +72,7 @@ Stmt = "print(" _ exp: Expresion _ expM: ("," _ expM: Expresion { return expM } 
     / "for" _ "(" _ inicializacion:Declaracion _ condicion:Expresion _ ";" _ incremento:Expresion _ ")" _ stmt:Stmt {return crearNodo('for', {inicializacion,condicion,incremento,stmt})}
     / "switch" _ "("_ exp: Expresion _")"_ "{" _ cas:EstructuraCase* _ def:default? _ "}"  {return crearNodo('switch', {exp,cas,def})} 
 
-EstructuraCase = "case"_ exp: Expresion _ ":" _ bloque:Stmt* _ {return {exp,bloque}}
+EstructuraCase = "case" _ exp: Expresion _ ":" _ bloque:Stmt* _ {return {exp,bloque}}
 
 default = "default" _ ":" _ bloque:Stmt* _  {return {bloque}}
 

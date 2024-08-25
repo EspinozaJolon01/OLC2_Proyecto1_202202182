@@ -725,4 +725,94 @@ export class Ternario extends expression  {
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Ternario }
+export class ArregloValores extends expression  {
+
+    /**
+    * @param {Object} options
+    * @param {any } options.tipo tipo del arreglo 
+ * @param {expression } options.id nombre del arreglo
+ * @param {expression} options.ArreTi lista del arreglo
+    */
+    constructor({ tipo, id, ArreTi }) {
+        super();
+        
+        /**
+         * tipo del arreglo 
+         * @type {any }
+        */
+        this.tipo = tipo;
+
+
+        /**
+         * nombre del arreglo
+         * @type {expression }
+        */
+        this.id = id;
+
+
+        /**
+         * lista del arreglo
+         * @type {expression}
+        */
+        this.ArreTi = ArreTi;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitArregloValores(this);
+    }
+}
+    
+export class ArregloCantida extends expression  {
+
+    /**
+    * @param {Object} options
+    * @param {any } options.tipo tipo del arreglo 
+ * @param {expression } options.id nombre del arreglo
+ * @param {any} options.tipo2 segundo tipo del arreglo
+ * @param {number} options.dim segundo tipo del arreglo
+    */
+    constructor({ tipo, id, tipo2, dim }) {
+        super();
+        
+        /**
+         * tipo del arreglo 
+         * @type {any }
+        */
+        this.tipo = tipo;
+
+
+        /**
+         * nombre del arreglo
+         * @type {expression }
+        */
+        this.id = id;
+
+
+        /**
+         * segundo tipo del arreglo
+         * @type {any}
+        */
+        this.tipo2 = tipo2;
+
+
+        /**
+         * segundo tipo del arreglo
+         * @type {number}
+        */
+        this.dim = dim;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitArregloCantida(this);
+    }
+}
+    
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Ternario, ArregloValores, ArregloCantida }

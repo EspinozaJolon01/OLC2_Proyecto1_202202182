@@ -1,7 +1,7 @@
 import { Entorno } from "./entornos.js";
 import { BaseVisitor } from "./Visitor.js";
 
-import { DatoSinArgu } from "./DeclaSinArgum.js";
+import { DatoSinArgu , DatoSinArguemntoArreglo } from "./DeclaSinArgum.js";
 
 
 
@@ -939,6 +939,75 @@ export class InterpreterVisitor extends BaseVisitor {
 
     }
 
+    /**
+     * @type {BaseVisitor['visitArregloValores']}
+     */
+    visitArregloValores(node){
+        let arry = [];
+        const tipos = node.tipo;
+        const idT = node.id;
+        const lista1 = node.ArreTi.dato1; // Suponiendo que dato1.tipo es un array
+        const lista2 = node.ArreTi.dato2; // Suponiendo que dato2 es un array
+        
+        console.log("tipo del arreglo: " + tipos);
+        console.log("nombre del arreglo: " + idT);
+        
+        // Si lista1 es un array, puedes concatenarlo con lista2
+        if(tipos != lista1.tipo){
+            throw new Error(`el dato del valor no es el mismo tipo`);
+        }
+        arry.push(lista1.valor)
+
+        for (let index = 0; index < lista2.length; index++) {
+            const element = lista2[index];
+            if(tipos != element.tipo ){
+                throw new Error(`el dato del valor no es el mismo tipo`);
+            }
+            arry.push(element.valor)
+            
+        }
+
+        this.entornoActual.setVariable(tipos,idT,arry);
+        return
+
+
+    }
+    /**
+     * @type {BaseVisitor['visitArregloCantida']}
+     */
+
+    visitArregloCantida(node){
+        
+        const tipo = node.tipo
+        const id = node.id
+        const tipo1 = node.tipo2
+
+        const dimension = node.dim.valor
+
+
+        console.log("tipo: "+ tipo)
+        console.log("id: "+ id)
+        console.log("tipo1: "+ tipo1)
+        console.log("dimension: "+ dimension)
+
+        if(tipo != tipo1){
+            throw new Error(`el dato del valor no es el mismo tipo`);
+        }
+
+        if(dimension < 0){
+            throw new Error(`El tamaño de un arreglo no puede ser negativo`);
+        }
+
+
+         // Crear el arreglo con el valor por defecto según el tipo
+        let arry = new Array(dimension).fill(DatoSinArguemntoArreglo(tipo));
+
+        this.entornoActual.setVariable(tipo, id, arry);
+
+        
+        return
+
+    }
 
 
     

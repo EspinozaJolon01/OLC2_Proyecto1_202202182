@@ -7,6 +7,24 @@ export function DatoSinArgu(tipo) {
         case "string":
             return ""
         case "boolean":
+            return true
+        case "char":
+            return ''
+        default:
+            throw new Error(`Tipo ${tipo} no es valido`)
+    }
+}
+
+
+export function DatoSinArguemntoArreglo(tipo) {
+    switch (tipo) {
+        case "int":               
+            return 0
+        case "float":
+            return 0.0
+        case "string":
+            return ""
+        case "boolean":
             return false
         case "char":
             return ''

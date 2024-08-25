@@ -63,6 +63,12 @@
 
  * @typedef {import('./nodos').Ternario} Ternario
 
+
+ * @typedef {import('./nodos').ArregloValores} ArregloValores
+
+
+ * @typedef {import('./nodos').ArregloCantida} ArregloCantida
+
  */
 
 
@@ -259,6 +265,24 @@ export class BaseVisitor {
      */
     visitTernario(node) {
         throw new Error('Metodo visitTernario no implementado');
+    }
+    
+
+    /**
+     * @param {ArregloValores} node
+     * @returns {any}
+     */
+    visitArregloValores(node) {
+        throw new Error('Metodo visitArregloValores no implementado');
+    }
+    
+
+    /**
+     * @param {ArregloCantida} node
+     * @returns {any}
+     */
+    visitArregloCantida(node) {
+        throw new Error('Metodo visitArregloCantida no implementado');
     }
     
 }
