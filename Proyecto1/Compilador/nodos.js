@@ -815,4 +815,45 @@ export class ArregloCantida extends expression  {
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Ternario, ArregloValores, ArregloCantida }
+export class ArregloCopia extends expression  {
+
+    /**
+    * @param {Object} options
+    * @param {any } options.tipo tipo del arreglo 
+ * @param {expression } options.id nombre del arreglo
+ * @param {expression } options.exp arreglo a buscar
+    */
+    constructor({ tipo, id, exp }) {
+        super();
+        
+        /**
+         * tipo del arreglo 
+         * @type {any }
+        */
+        this.tipo = tipo;
+
+
+        /**
+         * nombre del arreglo
+         * @type {expression }
+        */
+        this.id = id;
+
+
+        /**
+         * arreglo a buscar
+         * @type {expression }
+        */
+        this.exp = exp;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitArregloCopia(this);
+    }
+}
+    
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Ternario, ArregloValores, ArregloCantida, ArregloCopia }

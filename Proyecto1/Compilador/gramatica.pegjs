@@ -24,7 +24,8 @@
       'switch' :nodos.Switch,
       'ternario' : nodos.Ternario,
       'arregloValores' : nodos.ArregloValores,
-      'arregloCantida' : nodos.ArregloCantida
+      'arregloCantida' : nodos.ArregloCantida,
+      'arregloCopia' : nodos.ArregloCopia
     }
 
     const nodo = new tipos[tipoNodo](props)
@@ -40,10 +41,11 @@ Declaracion = dcl:VarDcl _ { return dcl }
 
 VarDcl = tipo:Tipo _ id:Identify _ "=" _ exp:Expresion _ ";" { return crearNodo('declaracionVariable', { tipo, id, exp }) }
       / tipo:Tipo _ id:Identify _ ";" { return crearNodo('declaracionSinAargumn', {tipo, id})}
-      /Arreglos
+      /Arreglos 
 
 Arreglos = tipo:Tipo _ "[]" _ id:Identify _ "=" _ ArreTi:TipoDeca _ ";" {return crearNodo('arregloValores' ,{tipo, id,ArreTi})}
         / tipo:Tipo _ "[]" _ id:Identify _ "=" _ "new" _ tipo2:Tipo _ "[" _ dim:Numero _ "]" _ ";" {return crearNodo('arregloCantida' , {tipo, id, tipo2, dim})}
+        / tipo:Tipo _ "[]" _ id:Identify _ "=" _ exp:Expresion _ ";" {return crearNodo('arregloCopia', {tipo,id,exp})}
 
 
 TipoDeca = _ "{" _ Lista:ListaValores _ "}" _ {return Lista}

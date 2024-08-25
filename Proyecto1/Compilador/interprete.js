@@ -1009,6 +1009,39 @@ export class InterpreterVisitor extends BaseVisitor {
 
     }
 
+/**
+     * @type {BaseVisitor['visitArregloCopia']}
+     */
+    visitArregloCopia(node){
+        
+        const tipo = node.tipo
+        const copiaArreglo = node.id
+        const arregloAcopiar = node.exp.accept(this)
+
+
+        console.log("tipo: " + tipo)
+        console.log("copiaArreglo: " + copiaArreglo)
+        console.log("arregloAcopiar: " + arregloAcopiar.tipo)
+        if(tipo != arregloAcopiar.tipo){
+            throw new Error(`el arreglo a copiar es de diferente tipo`);
+        }
+
+        const arryNuevo =  arregloAcopiar.valor.slice();
+        console.log("se realizo copia: " + arryNuevo);
+
+        this.entornoActual.setVariable(tipo, copiaArreglo, arryNuevo);
+
+        
+        return
+
+
+
+
+    }
+
+
+    
+
 
     
 }

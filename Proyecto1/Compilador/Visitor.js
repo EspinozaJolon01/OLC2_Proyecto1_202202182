@@ -69,6 +69,9 @@
 
  * @typedef {import('./nodos').ArregloCantida} ArregloCantida
 
+
+ * @typedef {import('./nodos').ArregloCopia} ArregloCopia
+
  */
 
 
@@ -283,6 +286,15 @@ export class BaseVisitor {
      */
     visitArregloCantida(node) {
         throw new Error('Metodo visitArregloCantida no implementado');
+    }
+    
+
+    /**
+     * @param {ArregloCopia} node
+     * @returns {any}
+     */
+    visitArregloCopia(node) {
+        throw new Error('Metodo visitArregloCopia no implementado');
     }
     
 }
