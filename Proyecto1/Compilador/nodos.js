@@ -897,4 +897,37 @@ export class AccesoElem extends expression  {
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Ternario, ArregloValores, ArregloCantida, ArregloCopia, AccesoElem }
+export class AccElem extends expression  {
+
+    /**
+    * @param {Object} options
+    * @param {expression} options.id arreglo acceder
+ * @param {expression } options.exp tipo de acceso al arreglo
+    */
+    constructor({ id, exp }) {
+        super();
+        
+        /**
+         * arreglo acceder
+         * @type {expression}
+        */
+        this.id = id;
+
+
+        /**
+         * tipo de acceso al arreglo
+         * @type {expression }
+        */
+        this.exp = exp;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitAccElem(this);
+    }
+}
+    
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Ternario, ArregloValores, ArregloCantida, ArregloCopia, AccesoElem, AccElem }

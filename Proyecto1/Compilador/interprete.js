@@ -551,6 +551,7 @@ export class InterpreterVisitor extends BaseVisitor {
         if(node.exp){
 
             const valor = node.exp.accept(this)
+            console.log("no se que devevle" + valor.tipo)
 
             switch (tipoVariable) {
                 case "int":
@@ -1074,9 +1075,31 @@ export class InterpreterVisitor extends BaseVisitor {
                 throw new Error(`Operacion de arreglo no encontrada`);
         }
 
+    }
+
+        /**
+     * @type {BaseVisitor['visitAccElem']}
+     */
+
+    visitAccElem(node){
+
+        const arreglo = this.entornoActual.getVariable(node.id)
+        const indice = node.exp.accept(this)
 
 
-        
+        console.log("areglo " +arreglo)
+        console.log("indice a : " + indice)
+
+
+        if (indice.tipo != "int") {
+            throw new Error(`El Indice De Acceso Al Arreglo Debe Ser De Tipo Int: "${indice.tipo}".`);
+        }
+        for (let index = 0; index < arreglo.valor.length; index++) {
+            if (index === indice.valor) {
+                return {valor: arreglo.valor[index], tipo: arreglo.tipo};
+            }
+        }
+        throw new Error(`Indice Fuera De Rango: "${indice.valor}".`)
 
 
     }

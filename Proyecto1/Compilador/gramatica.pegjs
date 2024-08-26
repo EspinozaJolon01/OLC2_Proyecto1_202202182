@@ -26,7 +26,8 @@
       'arregloValores' : nodos.ArregloValores,
       'arregloCantida' : nodos.ArregloCantida,
       'arregloCopia' : nodos.ArregloCopia,
-      'accesoElem' : nodos.AccesoElem
+      'accesoElem' : nodos.AccesoElem,
+      'accElem' : nodos.AccElem
     }
 
     const nodo = new tipos[tipoNodo](props)
@@ -89,6 +90,7 @@ Expresion = Asignacion
 Asignacion = id:Identify _ "=" _ asgn:Asignacion { return crearNodo('asignacion', { id, asgn }) }
           /  id:Identify _ "+=" _ asgn:Expresion { return crearNodo('asignacion', { id, asgn: crearNodo('binaria', { op: "+=", izq: crearNodo('referenciaVariable', { id }),der: asgn }) })} 
           /  id:Identify _ "-=" _ asgn:Expresion { return crearNodo('asignacion', { id, asgn: crearNodo('binaria', { op: "-=", izq: crearNodo('referenciaVariable', { id }),der: asgn }) })} 
+
           /AcceElemn
 
 AcceElemn = dat:OpTenario "." op:"indexOf" "("_ bus:OpTenario? _")" _ {return crearNodo('accesoElem',{dat,op,bus})}
@@ -196,6 +198,7 @@ Caracter = "'" char:[^'] "'" { return crearNodo('caracter', { valor: char, tipo:
 // { return{ tipo: "numero", valor: parseFloat(text(), 10) } }
 Numero = [0-9]+( "." [0-9]+ )? { return text().includes('.') ? crearNodo('numero', { valor: parseFloat(text(), 10), tipo:"float"}) : crearNodo('numero', { valor: parseInt(text(), 10), tipo:"int"})	 }
   / "(" _ exp:Expresion _ ")" { return crearNodo('agrupacion', { exp }) }
+  /id:Identify "[" _ exp:Expresion _ "]" {return crearNodo('accElem', {id,exp})}
   / id:Identify { return crearNodo('referenciaVariable', { id }) }
 
 

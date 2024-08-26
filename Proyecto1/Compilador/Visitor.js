@@ -75,6 +75,9 @@
 
  * @typedef {import('./nodos').AccesoElem} AccesoElem
 
+
+ * @typedef {import('./nodos').AccElem} AccElem
+
  */
 
 
@@ -307,6 +310,15 @@ export class BaseVisitor {
      */
     visitAccesoElem(node) {
         throw new Error('Metodo visitAccesoElem no implementado');
+    }
+    
+
+    /**
+     * @param {AccElem} node
+     * @returns {any}
+     */
+    visitAccElem(node) {
+        throw new Error('Metodo visitAccElem no implementado');
     }
     
 }
