@@ -27,7 +27,8 @@
       'arregloCantida' : nodos.ArregloCantida,
       'arregloCopia' : nodos.ArregloCopia,
       'accesoElem' : nodos.AccesoElem,
-      'accElem' : nodos.AccElem
+      'accElem' : nodos.AccElem,
+      'asigVector' : nodos.AsigVector
     }
 
     const nodo = new tipos[tipoNodo](props)
@@ -90,7 +91,7 @@ Expresion = Asignacion
 Asignacion = id:Identify _ "=" _ asgn:Asignacion { return crearNodo('asignacion', { id, asgn }) }
           /  id:Identify _ "+=" _ asgn:Expresion { return crearNodo('asignacion', { id, asgn: crearNodo('binaria', { op: "+=", izq: crearNodo('referenciaVariable', { id }),der: asgn }) })} 
           /  id:Identify _ "-=" _ asgn:Expresion { return crearNodo('asignacion', { id, asgn: crearNodo('binaria', { op: "-=", izq: crearNodo('referenciaVariable', { id }),der: asgn }) })} 
-
+          / id:Identify _ "[" _ num:Expresion _ "]" _ "=" _ dato:Expresion {return crearNodo('asigVector', {id,num,dato})}
           /AcceElemn
 
 AcceElemn = dat:OpTenario "." op:"indexOf" "("_ bus:OpTenario? _")" _ {return crearNodo('accesoElem',{dat,op,bus})}

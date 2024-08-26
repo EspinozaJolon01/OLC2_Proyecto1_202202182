@@ -1090,7 +1090,6 @@ export class InterpreterVisitor extends BaseVisitor {
         console.log("areglo " +arreglo)
         console.log("indice a : " + indice)
 
-
         if (indice.tipo != "int") {
             throw new Error(`El Indice De Acceso Al Arreglo Debe Ser De Tipo Int: "${indice.tipo}".`);
         }
@@ -1100,10 +1099,39 @@ export class InterpreterVisitor extends BaseVisitor {
             }
         }
         throw new Error(`Indice Fuera De Rango: "${indice.valor}".`)
-
-
     }
 
+
+        /**
+     * @type {BaseVisitor['visitAsigVector']}
+     */
+
+    visitAsigVector(node){
+        // id,valor,dato
+
+        const arreglo = this.entornoActual.getVariable(node.id)
+        const valor = node.num.accept(this).valor
+        const dato = node.dato.accept(this)
+
+
+        console.log("arreglo : " + arreglo.valor)
+        console.log("valor : [" + valor + "]"  + "=" + dato.valor)
+
+        if(valor === undefined){
+            throw new Error('El índice del arreglo es indefinido.');
+        }
+
+        if (valor < 0 || valor >= arreglo.valor.length) {
+            throw new Error(`Índice fuera de rango: "${valor}".`);
+        }
+
+        if(dato.tipo != arreglo.tipo){
+            throw new Error('El índice del arreglo es indefinido.');
+        }
+
+        arreglo.valor[valor] = dato.valor;
+        return
+    }
 
     
 

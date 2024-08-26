@@ -78,6 +78,9 @@
 
  * @typedef {import('./nodos').AccElem} AccElem
 
+
+ * @typedef {import('./nodos').AsigVector} AsigVector
+
  */
 
 
@@ -319,6 +322,15 @@ export class BaseVisitor {
      */
     visitAccElem(node) {
         throw new Error('Metodo visitAccElem no implementado');
+    }
+    
+
+    /**
+     * @param {AsigVector} node
+     * @returns {any}
+     */
+    visitAsigVector(node) {
+        throw new Error('Metodo visitAsigVector no implementado');
     }
     
 }

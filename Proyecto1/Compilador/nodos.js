@@ -819,7 +819,7 @@ export class ArregloCopia extends expression  {
 
     /**
     * @param {Object} options
-    * @param {any } options.tipo tipo del arreglo 
+    * @param {any} options.tipo tipo del arreglo 
  * @param {expression } options.id nombre del arreglo
  * @param {expression } options.exp arreglo a buscar
     */
@@ -828,7 +828,7 @@ export class ArregloCopia extends expression  {
         
         /**
          * tipo del arreglo 
-         * @type {any }
+         * @type {any}
         */
         this.tipo = tipo;
 
@@ -860,7 +860,7 @@ export class AccesoElem extends expression  {
 
     /**
     * @param {Object} options
-    * @param {any } options.dat arreglo a buscar 
+    * @param {any} options.dat arreglo a buscar
  * @param {string } options.op tipo de acceso al arreglo
  * @param {any |undefined} options.bus dato a encontrar
     */
@@ -868,8 +868,8 @@ export class AccesoElem extends expression  {
         super();
         
         /**
-         * arreglo a buscar 
-         * @type {any }
+         * arreglo a buscar
+         * @type {any}
         */
         this.dat = dat;
 
@@ -930,4 +930,45 @@ export class AccElem extends expression  {
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Ternario, ArregloValores, ArregloCantida, ArregloCopia, AccesoElem, AccElem }
+export class AsigVector extends expression  {
+
+    /**
+    * @param {Object} options
+    * @param {expression} options.id arreglo acceder
+ * @param {expression} options.num tipo de acceso al arreglo
+ * @param {expression} options.dato tipo de acceso al arreglo
+    */
+    constructor({ id, num, dato }) {
+        super();
+        
+        /**
+         * arreglo acceder
+         * @type {expression}
+        */
+        this.id = id;
+
+
+        /**
+         * tipo de acceso al arreglo
+         * @type {expression}
+        */
+        this.num = num;
+
+
+        /**
+         * tipo de acceso al arreglo
+         * @type {expression}
+        */
+        this.dato = dato;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitAsigVector(this);
+    }
+}
+    
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Ternario, ArregloValores, ArregloCantida, ArregloCopia, AccesoElem, AccElem, AsigVector }
