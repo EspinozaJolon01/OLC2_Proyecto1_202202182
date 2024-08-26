@@ -45,7 +45,7 @@ VarDcl = tipo:Tipo _ id:Identify _ "=" _ exp:Expresion _ ";" { return crearNodo(
       /Arreglos 
 
 Arreglos = tipo:Tipo _ "[]" _ id:Identify _ "=" _ ArreTi:TipoDeca _ ";" {return crearNodo('arregloValores' ,{tipo, id,ArreTi})}
-        / tipo:Tipo _ "[]" _ id:Identify _ "=" _ "new" _ tipo2:Tipo _ "[" _ dim:Numero _ "]" _ ";" {return crearNodo('arregloCantida' , {tipo, id, tipo2, dim})}
+        / tipo:Tipo _ "[]" _ id:Identify _ "=" _ "new" _ tipo2:Tipo _ "[" _ dim:Expresion _ "]" _ ";" {return crearNodo('arregloCantida' , {tipo, id, tipo2, dim})}
         / tipo:Tipo _ "[]" _ id:Identify _ "=" _ exp:Expresion _ ";" {return crearNodo('arregloCopia', {tipo,id,exp})}
 
 
@@ -86,13 +86,19 @@ Expresion = Asignacion
         
           
 
-Asignacion = OpTenario
-          /id:Identify _ "=" _ asgn:Asignacion { return crearNodo('asignacion', { id, asgn }) }
+Asignacion = id:Identify _ "=" _ asgn:Asignacion { return crearNodo('asignacion', { id, asgn }) }
           /  id:Identify _ "+=" _ asgn:Expresion { return crearNodo('asignacion', { id, asgn: crearNodo('binaria', { op: "+=", izq: crearNodo('referenciaVariable', { id }),der: asgn }) })} 
           /  id:Identify _ "-=" _ asgn:Expresion { return crearNodo('asignacion', { id, asgn: crearNodo('binaria', { op: "-=", izq: crearNodo('referenciaVariable', { id }),der: asgn }) })} 
-          / Log
+          /AcceElemn
+
+AcceElemn = dat:OpTenario "." op:"indexOf" "("_ bus:OpTenario? _")" _ {return crearNodo('accesoElem',{dat,op,bus})}
+        / dat:OpTenario "." op:"length" _ {return crearNodo('accesoElem',{dat,op, bus: undefined})}
+        / dat:OpTenario "." op:"join" _ "()" _{return crearNodo('accesoElem',{dat,op, bus: undefined})}
+        /OpTenario
+
 
 OpTenario = validar:Log _ "?" _ cond1:Log _ ":" _ cond2:Log {return crearNodo('ternario',{validar,cond1,cond2})}
+    / Log
 
 
 Log = izq:Igualacion expansion:(
@@ -160,7 +166,6 @@ Multiplicacion = izq:Unaria expansion:(
 Unaria = op:("-"/"!") _ num:Valores { return crearNodo('unaria', { op, exp: num }) }
   /  Embe:("typeof") _ dat:Valores { return crearNodo('embebidas', {Embe, exp: dat }) }
   / Embe: ("toUpperCase" /"toLowerCase" /"parsefloat"/"parseInt"/"toString") "(" _ dat:Valores _ ")" _ { return crearNodo('embebidas', {Embe, exp: dat }) }
-  /_ dat:Valores "." op:"indexOf" "("_ bus:Valores _")" _ {return crearNodo('accesoElem',{dat,op,bus})}
   / id: Identify "++" { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "++", exp: crearNodo('referenciaVariable', { id }) }) }) }
   / id: Identify "--" { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "--", exp: crearNodo('referenciaVariable', { id }) }) }) }
   / Valores

@@ -773,7 +773,7 @@ export class ArregloCantida extends expression  {
     * @param {any } options.tipo tipo del arreglo 
  * @param {expression } options.id nombre del arreglo
  * @param {any} options.tipo2 segundo tipo del arreglo
- * @param {number} options.dim segundo tipo del arreglo
+ * @param {expression} options.dim segundo tipo del arreglo
     */
     constructor({ tipo, id, tipo2, dim }) {
         super();
@@ -801,7 +801,7 @@ export class ArregloCantida extends expression  {
 
         /**
          * segundo tipo del arreglo
-         * @type {number}
+         * @type {expression}
         */
         this.dim = dim;
 
@@ -862,7 +862,7 @@ export class AccesoElem extends expression  {
     * @param {Object} options
     * @param {any } options.dat arreglo a buscar 
  * @param {string } options.op tipo de acceso al arreglo
- * @param {any } options.bus dato a encontrar
+ * @param {any |undefined} options.bus dato a encontrar
     */
     constructor({ dat, op, bus }) {
         super();
@@ -883,7 +883,7 @@ export class AccesoElem extends expression  {
 
         /**
          * dato a encontrar
-         * @type {any }
+         * @type {any |undefined}
         */
         this.bus = bus;
 

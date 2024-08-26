@@ -977,30 +977,30 @@ export class InterpreterVisitor extends BaseVisitor {
      */
 
     visitArregloCantida(node){
-        
         const tipo = node.tipo
         const id = node.id
         const tipo1 = node.tipo2
-
-        const dimension = node.dim.valor
-
+        const dimension = node.dim.accept(this)
 
         console.log("tipo: "+ tipo)
         console.log("id: "+ id)
         console.log("tipo1: "+ tipo1)
-        console.log("dimension: "+ dimension)
+        console.log("dimension: "+ dimension.tipo)
 
         if(tipo != tipo1){
             throw new Error(`el dato del valor no es el mismo tipo`);
         }
 
-        if(dimension < 0){
+        if(dimension.valor < 0){
             throw new Error(`El tamaño de un arreglo no puede ser negativo`);
         }
 
+        if(dimension.tipo != "int"){
+            throw new Error(`el tipo debe de ser un int`);
+        }
 
          // Crear el arreglo con el valor por defecto según el tipo
-        let arry = new Array(dimension).fill(DatoSinArguemntoArreglo(tipo));
+        let arry = new Array(dimension.valor).fill(DatoSinArguemntoArreglo(tipo));
 
         this.entornoActual.setVariable(tipo, id, arry);
 
@@ -1033,10 +1033,6 @@ export class InterpreterVisitor extends BaseVisitor {
 
         
         return
-
-
-
-
     }
 
     /**
@@ -1045,22 +1041,42 @@ export class InterpreterVisitor extends BaseVisitor {
 
     visitAccesoElem(node){
         const arreglo = node.dat.accept(this).valor
-        const operacion = node.op
-        const valor = node.bus.valor
+        
 
 
-        console.log("arreglo : "  + arreglo)
-        console.log("operacion : "  + operacion)
-        console.log("valor : "  + valor)
+        switch(node.op){
+            case "indexOf":
+                const valor = node.bus.valor
+                for (let index = 0; index < arreglo.length; index++) {
+                    const element = arreglo[index];
+                    if(element == valor){
+                        return {valor:index, tipo: "int"}
+                    }
+                    
+                }
+                return {valor:-1 , tipo:"int"}
+            case "length":
+                const length = arreglo.length;
+                console.log(length);
+                return { valor: length, tipo: "int" };
+            case "join":
+                let cadena ="";
+                for (let index = 0; index < arreglo.length; index++) {
+                    cadena += arreglo[index].toString();
+                    if (index < arreglo.length - 1) {
+                        cadena += ",";
+                    }
+                            
+                }
+                return { valor: cadena, tipo: "string" };
 
-        for (let index = 0; index < arreglo.length; index++) {
-            const element = arreglo[index];
-            if(element == valor){
-                return {valor:index, tipo: "int"}
-            }
-            
+            default:
+                throw new Error(`Operacion de arreglo no encontrada`);
         }
-        return {valor:-1 , tipo:"int"}
+
+
+
+        
 
 
     }
