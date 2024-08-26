@@ -971,4 +971,102 @@ export class AsigVector extends expression  {
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Ternario, ArregloValores, ArregloCantida, ArregloCopia, AccesoElem, AccElem, AsigVector }
+export class Matrices extends expression  {
+
+    /**
+    * @param {Object} options
+    * @param {any} options.tipo arreglo acceder
+ * @param {expression} options.id tipo de acceso al arreglo
+ * @param {expression} options.lista tipo de acceso al arreglo
+    */
+    constructor({ tipo, id, lista }) {
+        super();
+        
+        /**
+         * arreglo acceder
+         * @type {any}
+        */
+        this.tipo = tipo;
+
+
+        /**
+         * tipo de acceso al arreglo
+         * @type {expression}
+        */
+        this.id = id;
+
+
+        /**
+         * tipo de acceso al arreglo
+         * @type {expression}
+        */
+        this.lista = lista;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitMatrices(this);
+    }
+}
+    
+export class MatrizCantidad extends expression  {
+
+    /**
+    * @param {Object} options
+    * @param {any } options.tipo tipo del arreglo 
+ * @param {expression } options.id nombre del arreglo
+ * @param {any} options.tipo2 segundo tipo del arreglo
+ * @param {expression} options.dim1 segundo tipo del arreglo
+ * @param {expression} options.dim2 segundo tipo del arreglo
+    */
+    constructor({ tipo, id, tipo2, dim1, dim2 }) {
+        super();
+        
+        /**
+         * tipo del arreglo 
+         * @type {any }
+        */
+        this.tipo = tipo;
+
+
+        /**
+         * nombre del arreglo
+         * @type {expression }
+        */
+        this.id = id;
+
+
+        /**
+         * segundo tipo del arreglo
+         * @type {any}
+        */
+        this.tipo2 = tipo2;
+
+
+        /**
+         * segundo tipo del arreglo
+         * @type {expression}
+        */
+        this.dim1 = dim1;
+
+
+        /**
+         * segundo tipo del arreglo
+         * @type {expression}
+        */
+        this.dim2 = dim2;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitMatrizCantidad(this);
+    }
+}
+    
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Ternario, ArregloValores, ArregloCantida, ArregloCopia, AccesoElem, AccElem, AsigVector, Matrices, MatrizCantidad }

@@ -1133,8 +1133,54 @@ export class InterpreterVisitor extends BaseVisitor {
         return
     }
 
-    
+    /**
+     * @type {BaseVisitor['visitMatrices']}
+     */
+    visitMatrices(node) {
+        const tipo = node.tipo;
+        const id = node.id;
 
+    }
+
+
+    /**
+     * @type {BaseVisitor['visitMatrizCantidad']}
+     */
+    visitMatrizCantidad(node){
+        const tipo = node.tipo;
+        const id = node.id;
+        const tipo1 = node.tipo2;
+        const dim1 = node.dim1.accept(this); // Primera dimensión
+        const dim2 = node.dim2.accept(this); // Segunda dimensión
+
+        console.log("Tipo: " + tipo);
+        console.log("ID: " + id);
+        console.log("Tipo 1: " + tipo1);
+        console.log("Primera dimensión: " + dim1.tipo + " valor: " + dim1.valor);
+        console.log("Segunda dimensión: " + dim2.tipo + " valor: " + dim2.valor);
+
+        if (tipo !== tipo1) {
+            throw new Error(`El tipo del valor no coincide: se esperaba ${tipo} pero se encontró ${tipo1}`);
+        }
+
+        if (dim1.valor < 0 || dim2.valor < 0) {
+            throw new Error(`El tamaño de una dimensión no puede ser negativo`);
+        }
+
+        if (dim1.tipo !== "int" || dim2.tipo !== "int") {
+            throw new Error(`Las dimensiones deben ser de tipo int`);
+        }
+
+        // Crear el arreglo bidimensional con el valor por defecto según el tipo
+        let arry = Array.from({ length: dim1.valor }, () => 
+            new Array(dim2.valor).fill(DatoSinArguemntoArreglo(tipo))
+        );
+
+        this.entornoActual.setVariable(tipo, id, arry);
+
+        return;
+
+    }
 
     
 }

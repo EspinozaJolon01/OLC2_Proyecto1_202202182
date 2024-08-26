@@ -81,6 +81,12 @@
 
  * @typedef {import('./nodos').AsigVector} AsigVector
 
+
+ * @typedef {import('./nodos').Matrices} Matrices
+
+
+ * @typedef {import('./nodos').MatrizCantidad} MatrizCantidad
+
  */
 
 
@@ -331,6 +337,24 @@ export class BaseVisitor {
      */
     visitAsigVector(node) {
         throw new Error('Metodo visitAsigVector no implementado');
+    }
+    
+
+    /**
+     * @param {Matrices} node
+     * @returns {any}
+     */
+    visitMatrices(node) {
+        throw new Error('Metodo visitMatrices no implementado');
+    }
+    
+
+    /**
+     * @param {MatrizCantidad} node
+     * @returns {any}
+     */
+    visitMatrizCantidad(node) {
+        throw new Error('Metodo visitMatrizCantidad no implementado');
     }
     
 }
