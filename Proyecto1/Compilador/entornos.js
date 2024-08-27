@@ -13,7 +13,7 @@ export class Entorno {
      */
     setVariable(tipo, nombre, valor) {
         // Verificar si la variable ya está definida en el entorno actual o en sus padres
-        if (this.valores[nombre]) {
+        if (this.valores[nombre] != undefined) {
             throw new Error(`Error: La variable ${nombre} ya está definida`);
         }
         this.valores[nombre] = { valor, tipo };
@@ -32,6 +32,8 @@ export class Entorno {
         if (!bandera && this.padre) {
             return this.padre.getVariable(nombre);
         }
+
+        throw new Error(`Variable ${nombre} no definida`)
 
         
     }

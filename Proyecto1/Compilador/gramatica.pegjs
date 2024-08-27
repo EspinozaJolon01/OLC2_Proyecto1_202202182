@@ -30,7 +30,10 @@
       'accElem' : nodos.AccElem,
       'asigVector' : nodos.AsigVector,
       'matrices' : nodos.Matrices,
-      'matrizCantidad' : nodos.MatrizCantidad
+      'matrizCantidad' : nodos.MatrizCantidad,
+      'break': nodos.Break,
+      'continue': nodos.Continue,
+      'return': nodos.Return,
     }
 
     const nodo = new tipos[tipoNodo](props)
@@ -49,14 +52,20 @@ VarDcl = tipo:Tipo _ id:Identify _ "=" _ exp:Expresion _ ";" { return crearNodo(
       /Arreglos 
       /Matrices
 
-Matrices = tipo:Tipo _ "[]"* _ id:Identify _ "=" _ "{" _ lista:Lista _ "}"* _ ";" {return crearNodo('matrices', {tipo,id,lista})}
-//         / tipo:Tipo _ "[][][]" _ id:Identify _ "=" _ "new" _ tipo2:Tipo _ "[" _ dim1:Expresion _ "]" _ "[" _ dim2:Expresion _ "]" _ ";" {return crearNodo('matrizCantidad' , {tipo, id, tipo2, dim1,dim2})}
 
-Lista =   _ exp: Dimen _ expM: ("," _ expM: Dimen { return expM } )* _ {return {arregl1:exp, arregl2: expM} }
+Matrices
+    = tipo:Tipo _ "[]"* _ id:Identify _ "=" _ "{" _ lista:Lista _ "}" _ ";" { return crearNodo('matrices', { tipo, id, lista }) }
 
-Dimen = _ "{" _ datA:DatAregl _ "}" _ {return datA}
+Lista
+    = exp:Dimen _ ("," _ expM:Dimen { return expM })* { return { arregl1: exp, arregl2: expM } }
 
-DatAregl = _ exp: Expresion _ expM: ("," _ expM: Expresion { return expM } )* _ {return {dato1:exp, dato2: expM} }
+Dimen
+    = _ "{" _ lista:Lista _ "}" { return lista }
+
+DatAregl
+    = exp:Expresion _ ("," _ expM:Expresion { return expM })* { return { dato1: exp, dato2: expM } }
+
+
 
 Arreglos = //tipo:Tipo _ "[]" _ id:Identify _ "=" _ ArreTi:TipoDeca _ ";" {return crearNodo('arregloValores' ,{tipo, id,ArreTi})}
   tipo:Tipo _ "[]"* _ id:Identify _ "=" _ "new" _ tipo2:Tipo _ "[" _ dim:Expresion _ "]" dims:("[" _ Expresion _ "]")* _ ";" 
@@ -86,15 +95,23 @@ Tipo = "int" {return text()}
 
 
 Stmt = "print(" _ exp: Expresion _ expM: ("," _ expM: Expresion { return expM } )* _ ")" _ ";" { return crearNodo('print', { exp, expM }) }
-    / exp:Expresion _ ";" { return crearNodo('expresionStmt', { exp }) }
     / "{" _ dcls:Declaracion* _ "}" { return crearNodo('bloque', { dcls }) }
     / "if" _ "(" _ cond:Expresion _ ")" _ stmtTrue:Stmt 
       stmtFalse:(
         _ "else" _ stmtFalse:Stmt { return stmtFalse } 
       )? { return crearNodo('if', { cond, stmtTrue, stmtFalse }) }
     / "while" _ "(" _ cond:Expresion _ ")" _ stmt:Stmt { return crearNodo('while', { cond, stmt }) }
-    / "for" _ "(" _ inicializacion:Declaracion _ condicion:Expresion _ ";" _ incremento:Expresion _ ")" _ stmt:Stmt {return crearNodo('for', {inicializacion,condicion,incremento,stmt})}
+    / "for" _ "(" _ inicializacion:ForComienzo _ condicion:Expresion _ ";" _ incremento:Expresion _ ")" _ stmt:Stmt {return crearNodo('for', {inicializacion,condicion,incremento,stmt})}
     / "switch" _ "("_ exp: Expresion _")"_ "{" _ cas:EstructuraCase* _ def:default? _ "}"  {return crearNodo('switch', {exp,cas,def})} 
+    / "break" _ ";" { return crearNodo('break') }
+    / "continue" _ ";" { return crearNodo('continue') }
+    / "return" _ exp:Expresion? _ ";" { return crearNodo('return', { exp }) }
+    / exp:Expresion _ ";" { return crearNodo('expresionStmt', { exp }) }
+
+ForComienzo = dcl:VarDcl { return dcl }
+        / exp:Expresion _ ";" { return exp }
+
+
 
 EstructuraCase = "case" _ exp: Expresion _ ":" _ bloque:Stmt* _ {return {exp,bloque}}
 

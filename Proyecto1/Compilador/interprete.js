@@ -1,8 +1,9 @@
 import { Entorno } from "./entornos.js";
 import { BaseVisitor } from "./Visitor.js";
+import nodos, { expression } from './nodos.js'
 
 import { DatoSinArgu , DatoSinArguemntoArreglo } from "./DeclaSinArgum.js";
-
+import {BreakException, ContinueException, ReturnException} from "./TransferCommands.js"
 
 
 
@@ -13,6 +14,12 @@ export class InterpreterVisitor extends BaseVisitor {
         super();
         this.entornoActual = new Entorno();
         this.consola = '';
+
+
+        /**
+         * @type {expression | null}
+        */
+        this.continueProcessing = null;
     }
 
     interpretar(nodo) {
@@ -706,31 +713,55 @@ export class InterpreterVisitor extends BaseVisitor {
      * @type {BaseVisitor['visitWhile']}
      */
     visitWhile(node) {
-        while (node.cond.accept(this).valor) {
-            node.stmt.accept(this);
+        const entornoInicial = this.entornoActual;
+
+        try {
+            while (node.cond.accept(this).valor) {
+                node.stmt.accept(this);
+            }
+            
+        } catch (error) {
+            this.entornoActual = entornoInicial
+
+            if(error instanceof BreakException){
+                return
+            }
+
+            if(error instanceof ContinueException){
+                return this.visitWhile(node);
+            }
+
+            throw error;
+            
         }
+        
     }
 
     /**
      * @type {BaseVisitor['visitFor']}
      */
     visitFor(node){
-        const entornoAnterior = this.entornoActual;
-        this.entornoActual = new Entorno(entornoAnterior);
+        const incrementoAnterior = this.continueProcessing;
+        this.continueProcessing = node.incremento;
 
-        //inicio 
+        const forTraducido = new nodos.Bloque({
+            dcls: [
+                node.inicializacion,
+                new nodos.While({
+                    cond: node.condicion,
+                    stmt: new nodos.Bloque({
+                        dcls: [
+                            node.stmt,
+                            node.incremento
+                        ]
+                    })
+                })
+            ]
+        })
 
-        node.inicializacion.accept(this)
+        forTraducido.accept(this);
 
-
-        while (node.condicion.accept(this).valor) {
-            node.stmt.accept(this);
-
-            node.incremento.accept(this)
-        }
-        
-
-        this.entornoActual = entornoAnterior;
+        this.continueProcessing = incrementoAnterior;
 
     }
 
@@ -1147,40 +1178,38 @@ export class InterpreterVisitor extends BaseVisitor {
     visitMatrices(node) {
         const tipo = node.tipo;
         const id = node.id;
+        const valores = node.valores.accept(this);
+        let arrayTemp = [];
 
         console.log(node)
-        // const lista = node.lista;
     
-        // // Acceder a arregl1
-        // const arregl1 = lista.arregl1;
-        // const arregl2 = lista.arregl2;
-
-        
-        // // Acceder a dato1 en arregl1
-        // const dato1 = arregl1.dato1;
-        // console.log("Dato1 - Valor:", dato1.valor);
-
+        // function procesarDimen(dim, tipo) {
+        //     if (Array.isArray(dim)) {
+        //         let tempArray = [];
+        //         dim.forEach(valor => {
+        //             if (Array.isArray(valor)) {
+        //                 tempArray.push(procesarDimen(valor, tipo));
+        //             } else {
+        //                 if (tipo === "float" && typeof valor === "number") {
+        //                     tempArray.push(valor);
+        //                 } else if (tipo !== typeof valor) {
+        //                     throw new Error(`El tipo del array no coincide con el tipo del valor`);
+        //                 } else {
+        //                     tempArray.push(valor);
+        //                 }
+        //             }
+        //         });
+        //         return tempArray;
+        //     }
+        //     return dim;
+        // }
     
-        // // Acceder a dato2 en arregl1
-        // const dato2Array = arregl1.dato2;
-        
-        // dato2Array.forEach((element, index) => {
-
-        //     console.log(`Dato2 - Elemento ${index + 1} - Valor:`, element.valor);
-            
-        // });
-
-
-        // const dato01 = arregl2.dato1;
-        // console.log("Dato1 - Valor:", dato01.valor);
-
-
-        this.entornoActual.setVariable(tipos,idT,arry);
-        return
-
+        // arrayTemp = procesarDimen(valores.valor, tipo);
     
-
+        // console.log(arrayTemp);
+        // this.entornoActual.setVariable(tipo, id, arrayTemp);
     }
+    
     
 
 
@@ -1222,6 +1251,40 @@ export class InterpreterVisitor extends BaseVisitor {
         return;
 
     }
+
+
+        /**
+     * @type {BaseVisitor['visitBreak']}
+     */
+        visitBreak(node) {
+            throw new BreakException();
+        }
+    
+        /**
+         * @type {BaseVisitor['visitContinue']}
+         */
+        visitContinue(node) {
+    
+            if (this.continueProcessing) {
+                this.continueProcessing.accept(this);
+            }
+    
+            throw new ContinueException();
+        }
+    
+        /**
+         * @type {BaseVisitor['visitReturn']}
+         */
+        visitReturn(node) {
+            let valor = null
+            if (node.exp) {
+                valor = node.exp.accept(this);
+            }
+            throw new ReturnException(valor);
+        }
+    
+        
+
 
     
 }

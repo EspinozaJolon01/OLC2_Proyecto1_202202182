@@ -971,33 +971,33 @@ export class AsigVector extends expression  {
     }
 }
     
-export class Matrices extends expression  {
+export class Matrices extends expression {
 
     /**
     * @param {Object} options
-    * @param {any} options.tipo arreglo acceder
- * @param {expression} options.id tipo de acceso al arreglo
- * @param {expression} options.lista tipo de acceso al arreglo
+    * @param {any} options.tipo Tipo de los elementos en la matriz
+ * @param {expression} options.id Identificador de la matriz
+ * @param {expression} options.lista Lista que representa la estructura multidimensional de la matriz
     */
     constructor({ tipo, id, lista }) {
         super();
         
         /**
-         * arreglo acceder
+         * Tipo de los elementos en la matriz
          * @type {any}
         */
         this.tipo = tipo;
 
 
         /**
-         * tipo de acceso al arreglo
+         * Identificador de la matriz
          * @type {expression}
         */
         this.id = id;
 
 
         /**
-         * tipo de acceso al arreglo
+         * Lista que representa la estructura multidimensional de la matriz
          * @type {expression}
         */
         this.lista = lista;
@@ -1069,4 +1069,67 @@ export class MatrizCantidad extends expression  {
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Ternario, ArregloValores, ArregloCantidad, ArregloCopia, AccesoElem, AccElem, AsigVector, Matrices, MatrizCantidad }
+export class Break extends expression {
+
+    /**
+    * @param {Object} options
+    * 
+    */
+    constructor() {
+        super();
+        
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitBreak(this);
+    }
+}
+    
+export class Continue extends expression {
+
+    /**
+    * @param {Object} options
+    * 
+    */
+    constructor() {
+        super();
+        
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitContinue(this);
+    }
+}
+    
+export class Return extends expression {
+
+    /**
+    * @param {Object} options
+    * @param {expression|undefined} options.exp expression a retornar
+    */
+    constructor({ exp }) {
+        super();
+        
+        /**
+         * expression a retornar
+         * @type {expression|undefined}
+        */
+        this.exp = exp;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitReturn(this);
+    }
+}
+    
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Ternario, ArregloValores, ArregloCantidad, ArregloCopia, AccesoElem, AccElem, AsigVector, Matrices, MatrizCantidad, Break, Continue, Return }
