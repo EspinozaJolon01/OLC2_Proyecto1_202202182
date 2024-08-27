@@ -766,28 +766,28 @@ export class ArregloValores extends expression  {
     }
 }
     
-export class ArregloCantida extends expression  {
+export class ArregloCantidad extends expression {
 
     /**
     * @param {Object} options
-    * @param {any } options.tipo tipo del arreglo 
- * @param {expression } options.id nombre del arreglo
+    * @param {any} options.tipo tipo del arreglo
+ * @param {expression} options.id nombre del arreglo
  * @param {any} options.tipo2 segundo tipo del arreglo
- * @param {expression} options.dim segundo tipo del arreglo
+ * @param {expression[]} options.dimensiones dimensiones del arreglo
     */
-    constructor({ tipo, id, tipo2, dim }) {
+    constructor({ tipo, id, tipo2, dimensiones }) {
         super();
         
         /**
-         * tipo del arreglo 
-         * @type {any }
+         * tipo del arreglo
+         * @type {any}
         */
         this.tipo = tipo;
 
 
         /**
          * nombre del arreglo
-         * @type {expression }
+         * @type {expression}
         */
         this.id = id;
 
@@ -800,10 +800,10 @@ export class ArregloCantida extends expression  {
 
 
         /**
-         * segundo tipo del arreglo
-         * @type {expression}
+         * dimensiones del arreglo
+         * @type {expression[]}
         */
-        this.dim = dim;
+        this.dimensiones = dimensiones;
 
     }
 
@@ -811,7 +811,7 @@ export class ArregloCantida extends expression  {
      * @param {BaseVisitor} visitor
      */
     accept(visitor) {
-        return visitor.visitArregloCantida(this);
+        return visitor.visitArregloCantidad(this);
     }
 }
     
@@ -1069,4 +1069,4 @@ export class MatrizCantidad extends expression  {
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Ternario, ArregloValores, ArregloCantida, ArregloCopia, AccesoElem, AccElem, AsigVector, Matrices, MatrizCantidad }
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Ternario, ArregloValores, ArregloCantidad, ArregloCopia, AccesoElem, AccElem, AsigVector, Matrices, MatrizCantidad }

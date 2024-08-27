@@ -67,7 +67,7 @@
  * @typedef {import('./nodos').ArregloValores} ArregloValores
 
 
- * @typedef {import('./nodos').ArregloCantida} ArregloCantida
+ * @typedef {import('./nodos').ArregloCantidad} ArregloCantidad
 
 
  * @typedef {import('./nodos').ArregloCopia} ArregloCopia
@@ -296,11 +296,11 @@ export class BaseVisitor {
     
 
     /**
-     * @param {ArregloCantida} node
+     * @param {ArregloCantidad} node
      * @returns {any}
      */
-    visitArregloCantida(node) {
-        throw new Error('Metodo visitArregloCantida no implementado');
+    visitArregloCantidad(node) {
+        throw new Error('Metodo visitArregloCantidad no implementado');
     }
     
 

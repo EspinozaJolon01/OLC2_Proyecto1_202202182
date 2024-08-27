@@ -954,14 +954,14 @@ export class InterpreterVisitor extends BaseVisitor {
         console.log("nombre del arreglo: " + idT);
         
         // Si lista1 es un array, puedes concatenarlo con lista2
-        if(tipos != lista1.tipo){
+        if(tipos != lista1.tipo && (tipos != "float" && lista1.tipo != "int")){
             throw new Error(`el dato del valor no es el mismo tipo`);
         }
         arry.push(lista1.valor)
 
         for (let index = 0; index < lista2.length; index++) {
             const element = lista2[index];
-            if(tipos != element.tipo ){
+            if(tipos != element.tipo  && (tipos != "float" && element.tipo != "int")){
                 throw new Error(`el dato del valor no es el mismo tipo`);
             }
             arry.push(element.valor)
@@ -977,39 +977,47 @@ export class InterpreterVisitor extends BaseVisitor {
      * @type {BaseVisitor['visitArregloCantida']}
      */
 
-    visitArregloCantida(node){
-        const tipo = node.tipo
-        const id = node.id
-        const tipo1 = node.tipo2
-        const dimension = node.dim.accept(this)
-
-        console.log("tipo: "+ tipo)
-        console.log("id: "+ id)
-        console.log("tipo1: "+ tipo1)
-        console.log("dimension: "+ dimension.tipo)
-
-        if(tipo != tipo1){
-            throw new Error(`el dato del valor no es el mismo tipo`);
+    visitArregloCantidad(node) {
+        const tipo = node.tipo;
+        const id = node.id;
+        const tipo1 = node.tipo2;
+        const dimensiones = node.dimensiones.map(dim => dim.accept(this));
+    
+        console.log("tipo: " + tipo);
+        console.log("id: " + id);
+        console.log("tipo1: " + tipo1);
+        console.log("dimensiones: " + dimensiones.map(dim => dim.tipo).join(', '));
+    
+        if (tipo != tipo1) {
+            throw new Error(`El dato del valor no es del mismo tipo`);
         }
-
-        if(dimension.valor < 0){
-            throw new Error(`El tamaño de un arreglo no puede ser negativo`);
+    
+        for (const dimension of dimensiones) {
+            if (dimension.valor < 0) {
+                throw new Error(`El tamaño de un arreglo no puede ser negativo`);
+            }
+            if (dimension.tipo != "int") {
+                throw new Error(`El tipo de la dimensión debe ser int`);
+            }
         }
-
-        if(dimension.tipo != "int"){
-            throw new Error(`el tipo debe de ser un int`);
-        }
-
-         // Crear el arreglo con el valor por defecto según el tipo
-        let arry = new Array(dimension.valor).fill(DatoSinArguemntoArreglo(tipo));
-
+    
+        // Crear el arreglo multidimensional
+        let crearArregloMultidimensional = (dimensiones, index = 0) => {
+            if (index === dimensiones.length) {
+                return DatoSinArguemntoArreglo(tipo);
+            }
+            return new Array(dimensiones[index].valor).fill().map(() => 
+                crearArregloMultidimensional(dimensiones, index + 1)
+            );
+        };
+    
+        let arry = crearArregloMultidimensional(dimensiones);
         this.entornoActual.setVariable(tipo, id, arry);
-
-        
-        return
-
+    
+        return;
     }
 
+    
 /**
      * @type {BaseVisitor['visitArregloCopia']}
      */
@@ -1140,7 +1148,40 @@ export class InterpreterVisitor extends BaseVisitor {
         const tipo = node.tipo;
         const id = node.id;
 
+        console.log(node)
+        // const lista = node.lista;
+    
+        // // Acceder a arregl1
+        // const arregl1 = lista.arregl1;
+        // const arregl2 = lista.arregl2;
+
+        
+        // // Acceder a dato1 en arregl1
+        // const dato1 = arregl1.dato1;
+        // console.log("Dato1 - Valor:", dato1.valor);
+
+    
+        // // Acceder a dato2 en arregl1
+        // const dato2Array = arregl1.dato2;
+        
+        // dato2Array.forEach((element, index) => {
+
+        //     console.log(`Dato2 - Elemento ${index + 1} - Valor:`, element.valor);
+            
+        // });
+
+
+        // const dato01 = arregl2.dato1;
+        // console.log("Dato1 - Valor:", dato01.valor);
+
+
+        this.entornoActual.setVariable(tipos,idT,arry);
+        return
+
+    
+
     }
+    
 
 
     /**
