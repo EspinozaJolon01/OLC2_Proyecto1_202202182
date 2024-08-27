@@ -648,8 +648,8 @@ export class Switch extends expression  {
     /**
     * @param {Object} options
     * @param {expression } options.exp la expresion del while - case
- * @param {expression } options.cas cuepor del case
- * @param {expression |undefined  } options.def expresion defesault opcional
+ * @param {expression[] } options.cas cuepor del case
+ * @param {expression[] |undefined  } options.def expresion defesault opcional
     */
     constructor({ exp, cas, def }) {
         super();
@@ -663,14 +663,14 @@ export class Switch extends expression  {
 
         /**
          * cuepor del case
-         * @type {expression }
+         * @type {expression[] }
         */
         this.cas = cas;
 
 
         /**
          * expresion defesault opcional
-         * @type {expression |undefined  }
+         * @type {expression[] |undefined  }
         */
         this.def = def;
 
@@ -681,6 +681,47 @@ export class Switch extends expression  {
      */
     accept(visitor) {
         return visitor.visitSwitch(this);
+    }
+}
+    
+export class Case extends expression  {
+
+    /**
+    * @param {Object} options
+    * @param {expression } options.exp la expresion del while - case
+ * @param {expression[] } options.commands cuepor del case
+ * @param {boolean} options.breakST expresion defesault opcional
+    */
+    constructor({ exp, commands, breakST }) {
+        super();
+        
+        /**
+         * la expresion del while - case
+         * @type {expression }
+        */
+        this.exp = exp;
+
+
+        /**
+         * cuepor del case
+         * @type {expression[] }
+        */
+        this.commands = commands;
+
+
+        /**
+         * expresion defesault opcional
+         * @type {boolean}
+        */
+        this.breakST = breakST;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitCase(this);
     }
 }
     
@@ -1132,4 +1173,4 @@ export class Return extends expression {
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Ternario, ArregloValores, ArregloCantidad, ArregloCopia, AccesoElem, AccElem, AsigVector, Matrices, MatrizCantidad, Break, Continue, Return }
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Case, Ternario, ArregloValores, ArregloCantidad, ArregloCopia, AccesoElem, AccElem, AsigVector, Matrices, MatrizCantidad, Break, Continue, Return }

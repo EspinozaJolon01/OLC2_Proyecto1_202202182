@@ -34,6 +34,7 @@
       'break': nodos.Break,
       'continue': nodos.Continue,
       'return': nodos.Return,
+      'case' : nodos.Case
     }
 
     const nodo = new tipos[tipoNodo](props)
@@ -113,7 +114,7 @@ ForComienzo = dcl:VarDcl { return dcl }
 
 
 
-EstructuraCase = "case" _ exp: Expresion _ ":" _ bloque:Stmt* _ {return {exp,bloque}}
+EstructuraCase = "case" _ exp: Expresion _ ":" _ commands:(_ commands:Stmt _{return commands})* _ breakStatement:("break" _ ";")? _ {return crearNodo('case', {exp, commands, breakST: !!breakStatement})};
 
 default = "default" _ ":" _ bloque:Stmt* _  {return {bloque}}
 

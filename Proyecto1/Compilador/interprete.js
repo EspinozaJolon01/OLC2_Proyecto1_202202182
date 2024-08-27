@@ -925,31 +925,42 @@ export class InterpreterVisitor extends BaseVisitor {
     /** @type {BaseVisitor['visitSwitch']} */
     visitSwitch(node) {
         let casoEncontrado = false;
+        const entornoAnterior = this.entornoActual
 
+        try {
+            for (const caso of node.cas) {
 
-        for (const caso of node.cas) {
-
-            if (caso.exp.accept(this).valor === node.exp.accept(this).valor) {
-                casoEncontrado = true;
+                if (caso.exp.accept(this).valor === node.exp.accept(this).valor  || casoEncontrado) {
+                    casoEncontrado = true;
+                    this.visitCase(caso);
+                }
+    
+                // if (casoEncontrado) {
+                //     const entornoAnterior = this.entornoActual;
+                //     this.entornoActual = new Entorno(entornoAnterior);
+                    
+                //     for (const stmt of caso.bloque) {
+                //         stmt.accept(this);
+                //     }
+    
+                //     this.entornoActual = entornoAnterior;
+                    
+                // }
             }
-
-            if (casoEncontrado) {
-                const entornoAnterior = this.entornoActual;
-                this.entornoActual = new Entorno(entornoAnterior);
-                
-                for (const stmt of caso.bloque) {
+            if (!casoEncontrado && node.def) {
+    
+                for (const stmt of node.def.bloque) {
                     stmt.accept(this);
                 }
-
-                this.entornoActual = entornoAnterior;
-                
             }
-        }
-        if (casoEncontrado && node.def) {
+        } catch (error) {
+            this.entornoActual = entornoAnterior;
 
-            for (const stmt of node.def.bloque) {
-                stmt.accept(this);
+            if(error instanceof BreakException){
+                return;
             }
+
+            throw error
         }
     }
 
@@ -1283,6 +1294,31 @@ export class InterpreterVisitor extends BaseVisitor {
             throw new ReturnException(valor);
         }
     
+        /**
+         * @type {BaseVisitor['visitCase']}
+         */
+        visitCase(node){
+
+            const entornoAnterior = this.entornoActual;
+
+            try {
+
+                for (const accion of node.commands) {
+                    accion.accept(this);
+                }
+                if (node.breakST) {
+                    throw new BreakException();
+                }
+            } catch (error) {
+                this.entornoActual = entornoAnterior;
+    
+                if (error instanceof BreakException) {
+                    throw error; 
+                }
+                throw error; 
+
+            }
+        }
         
 
 

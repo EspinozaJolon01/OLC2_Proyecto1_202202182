@@ -61,6 +61,9 @@
  * @typedef {import('./nodos').Switch} Switch
 
 
+ * @typedef {import('./nodos').Case} Case
+
+
  * @typedef {import('./nodos').Ternario} Ternario
 
 
@@ -283,6 +286,15 @@ export class BaseVisitor {
      */
     visitSwitch(node) {
         throw new Error('Metodo visitSwitch no implementado');
+    }
+    
+
+    /**
+     * @param {Case} node
+     * @returns {any}
+     */
+    visitCase(node) {
+        throw new Error('Metodo visitCase no implementado');
     }
     
 
