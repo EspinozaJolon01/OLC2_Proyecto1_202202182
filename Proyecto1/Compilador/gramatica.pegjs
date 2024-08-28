@@ -54,17 +54,13 @@ VarDcl = tipo:Tipo _ id:Identify _ "=" _ exp:Expresion _ ";" { return crearNodo(
       /Matrices
 
 
-Matrices
-    = tipo:Tipo _ "[]"* _ id:Identify _ "=" _ "{" _ lista:Lista _ "}" _ ";" { return crearNodo('matrices', { tipo, id, lista }) }
+Matrices = tipo:Tipo _ "[]"* _ id:Identify _ "=" _ lista:Lista _ ";" {return crearNodo('matrices', {tipo,id,lista})}
 
-Lista
-    = exp:Dimen _ ("," _ expM:Dimen { return expM })* { return { arregl1: exp, arregl2: expM } }
+Lista = "{"_ exp: Expresion _ expM: ("," _ expM: Expresion { return expM } )* _"}" {return {arregl1:exp, arregl2: expM} }
 
-Dimen
-    = _ "{" _ lista:Lista _ "}" { return lista }
+// Dimen = _ "{" _ datA:DatAregl _ "}"* _ {return datA}
 
-DatAregl
-    = exp:Expresion _ ("," _ expM:Expresion { return expM })* { return { dato1: exp, dato2: expM } }
+// DatAregl = _ exp: Expresion _ expM: ("," _ expM: Expresion { return expM } )* _ {return {dato1:exp, dato2: expM} }
 
 
 
@@ -80,10 +76,10 @@ Arreglos = //tipo:Tipo _ "[]" _ id:Identify _ "=" _ ArreTi:TipoDeca _ ";" {retur
   }        / tipo:Tipo _ "[]" _ id:Identify _ "=" _ exp:Expresion _ ";" {return crearNodo('arregloCopia', {tipo,id,exp})}
 
 
-TipoDeca = _ "{" _ Lista:ListaValores _ "}" _ {return Lista}
+//TipoDeca = _ "{" _ Lista:ListaValores _ "}" _ {return Lista}
 
 
-ListaValores =  _ exp: Expresion _ expM: ("," _ expM: Expresion { return expM } )* _ {return {dato1:exp, dato2: expM} }
+//ListaValores =  _ exp: Expresion _ expM: ("," _ expM: Expresion { return expM } )* _ {return {dato1:exp, dato2: expM} }
 
 
 Tipo = "int" {return text()}
@@ -128,7 +124,7 @@ Expresion = Asignacion
 Asignacion = id:Identify _ "=" _ asgn:Asignacion { return crearNodo('asignacion', { id, asgn }) }
           /  id:Identify _ "+=" _ asgn:Expresion { return crearNodo('asignacion', { id, asgn: crearNodo('binaria', { op: "+=", izq: crearNodo('referenciaVariable', { id }),der: asgn }) })} 
           /  id:Identify _ "-=" _ asgn:Expresion { return crearNodo('asignacion', { id, asgn: crearNodo('binaria', { op: "-=", izq: crearNodo('referenciaVariable', { id }),der: asgn }) })} 
-          / id:Identify _ "[" _ num:Expresion _ "]" _ "=" _ dato:Expresion {return crearNodo('asigVector', {id,num,dato})}
+          / id:Identify _ indices:("[" Expresion "]")* _ "=" _ dato:Expresion {return crearNodo('asigVector', {id,indices,dato})}
           /AcceElemn
 
 AcceElemn = dat:OpTenario "." op:"indexOf" "("_ bus:OpTenario? _")" _ {return crearNodo('accesoElem',{dat,op,bus})}
@@ -236,8 +232,9 @@ Caracter = "'" char:[^'] "'" { return crearNodo('caracter', { valor: char, tipo:
 // { return{ tipo: "numero", valor: parseFloat(text(), 10) } }
 Numero = [0-9]+( "." [0-9]+ )? { return text().includes('.') ? crearNodo('numero', { valor: parseFloat(text(), 10), tipo:"float"}) : crearNodo('numero', { valor: parseInt(text(), 10), tipo:"int"})	 }
   / "(" _ exp:Expresion _ ")" { return crearNodo('agrupacion', { exp }) }
-  /id:Identify "[" _ exp:Expresion _ "]" {return crearNodo('accElem', {id,exp})}
-  /id:Identify "[" _ exp1:Expresion _ "]" _ "[" _ exp2:Expresion _ "]" {return crearNodo('accMatriz', {id,exp1,exp2})}
+  / id:Identify dimensiones:("[" Expresion "]")* {return crearNodo('accElem', {id, dimensiones});}
+
+  ///id:Identify "[" _ exp1:Expresion _ "]" _ "[" _ exp2:Expresion _ "]" {return crearNodo('accMatriz', {id,exp1,exp2})}
   / id:Identify { return crearNodo('referenciaVariable', { id }) }
 
 
@@ -246,3 +243,7 @@ Comentario = "//" [^\n]* { /* Ignora comentarios de una línea */ }
           / "/*" (!"*/" .)* "*/" { /* Ignora comentarios multilínea */ }
 
 _ = (Comentario / [ \t\n\r])* // Actualiza la regla _ para incluir comentarios
+
+
+
+

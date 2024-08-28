@@ -938,28 +938,28 @@ export class AccesoElem extends expression  {
     }
 }
     
-export class AccElem extends expression  {
+export class AccElem extends expression {
 
     /**
     * @param {Object} options
-    * @param {expression} options.id arreglo acceder
- * @param {expression } options.exp tipo de acceso al arreglo
+    * @param {expression} options.id identificador del arreglo a acceder
+ * @param {array} options.dimensiones array de pares [Expresion] para cada dimensión del arreglo
     */
-    constructor({ id, exp }) {
+    constructor({ id, dimensiones }) {
         super();
         
         /**
-         * arreglo acceder
+         * identificador del arreglo a acceder
          * @type {expression}
         */
         this.id = id;
 
 
         /**
-         * tipo de acceso al arreglo
-         * @type {expression }
+         * array de pares [Expresion] para cada dimensión del arreglo
+         * @type {array}
         */
-        this.exp = exp;
+        this.dimensiones = dimensiones;
 
     }
 
@@ -971,33 +971,33 @@ export class AccElem extends expression  {
     }
 }
     
-export class AsigVector extends expression  {
+export class AsigVector extends expression {
 
     /**
     * @param {Object} options
-    * @param {expression} options.id arreglo acceder
- * @param {expression} options.num tipo de acceso al arreglo
- * @param {expression} options.dato tipo de acceso al arreglo
+    * @param {expression} options.id identificador del arreglo
+ * @param {array} options.indices array de pares [Expresion] para cada dimensión del arreglo
+ * @param {expression} options.dato valor a asignar
     */
-    constructor({ id, num, dato }) {
+    constructor({ id, indices, dato }) {
         super();
         
         /**
-         * arreglo acceder
+         * identificador del arreglo
          * @type {expression}
         */
         this.id = id;
 
 
         /**
-         * tipo de acceso al arreglo
-         * @type {expression}
+         * array de pares [Expresion] para cada dimensión del arreglo
+         * @type {array}
         */
-        this.num = num;
+        this.indices = indices;
 
 
         /**
-         * tipo de acceso al arreglo
+         * valor a asignar
          * @type {expression}
         */
         this.dato = dato;

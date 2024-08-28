@@ -563,7 +563,8 @@ export class InterpreterVisitor extends BaseVisitor {
             switch (tipoVariable) {
                 case "int":
                     if(tipoVariable != valor.tipo) {
-                        throw new Error(`El tipo del valor es incompatible con el tipo requerido. ${tipo}`)
+                        const { line, column } = node.location.start;
+                        throw new Error(`El tipo del valor no coincide con el tipo ${tipoVariable}. En linea ${line}, columna ${column}`);
                     }
                     
                     break;
@@ -1131,57 +1132,77 @@ export class InterpreterVisitor extends BaseVisitor {
      * @type {BaseVisitor['visitAccElem']}
      */
 
-    visitAccElem(node){
+        visitAccElem(node) {
+            let arreglo = this.entornoActual.getVariable(node.id);
+            console.log("arreglo inicial:", arreglo);
+        
+            for (let i = 0; i < node.dimensiones.length; i++) {
+                const indice = node.dimensiones[i][1].accept(this);  // Accedemos a la Expresion dentro del par [Expresion]
+                console.log(`dimensión ${i + 1}, índice:`, indice);
+        
+                if (indice.tipo !== "int") {
+                    throw new Error(`El índice de acceso al arreglo debe ser de tipo int, pero se encontró: "${indice.tipo}" en la dimensión ${i + 1}.`);
+                }
+        
+                if (!Array.isArray(arreglo.valor)) {
+                    throw new Error(`Se esperaba un arreglo en la dimensión ${i + 1}, pero se encontró: "${typeof arreglo.valor}".`);
+                }
+        
+                if (indice.valor < 0 || indice.valor >= arreglo.valor.length) {
+                    throw new Error(`Índice fuera de rango en la dimensión ${i + 1}: ${indice.valor}. El rango válido es 0-${arreglo.valor.length - 1}.`);
+                }
 
-        const arreglo = this.entornoActual.getVariable(node.id)
-        const indice = node.exp.accept(this)
-
-
-        console.log("areglo " +arreglo)
-        console.log("indice a : " + indice)
-
-        if (indice.tipo != "int") {
-            throw new Error(`El Indice De Acceso Al Arreglo Debe Ser De Tipo Int: "${indice.tipo}".`);
-        }
-        for (let index = 0; index < arreglo.valor.length; index++) {
-            if (index === indice.valor) {
-                return {valor: arreglo.valor[index], tipo: arreglo.tipo};
+                console.log("no se que es lo que hace"  +arreglo.valor[indice.valor])
+        
+                arreglo = { valor: arreglo.valor[indice.valor], tipo: arreglo.tipo };
             }
+        
+            return arreglo;
         }
-        throw new Error(`Indice Fuera De Rango: "${indice.valor}".`)
-    }
 
 
         /**
      * @type {BaseVisitor['visitAsigVector']}
      */
-
-    visitAsigVector(node){
-        // id,valor,dato
-
-        const arreglo = this.entornoActual.getVariable(node.id)
-        const valor = node.num.accept(this).valor
-        const dato = node.dato.accept(this)
-
-
-        console.log("arreglo : " + arreglo.valor)
-        console.log("valor : [" + valor + "]"  + "=" + dato.valor)
-
-        if(valor === undefined){
-            throw new Error('El índice del arreglo es indefinido.');
+        visitAsigVector(node) {
+            let arreglo = this.entornoActual.getVariable(node.id);
+            const dato = node.dato.accept(this);
+            let currentArray = arreglo.valor;
+        
+            for (let i = 0; i < node.indices.length; i++) {
+                console.log(`node.indices[${i}]:`, node.indices[i]);
+                const indice = node.indices[i][1].accept(this);
+        
+                if (indice.tipo !== "int") {
+                    throw new Error(`El índice de acceso al arreglo debe ser de tipo int, pero se encontró: "${indice.tipo}" en la dimensión ${i + 1}.`);
+                }
+        
+                if (!Array.isArray(currentArray)) {
+                    throw new Error(`Se esperaba un arreglo en la dimensión ${i + 1}, pero se encontró: "${typeof currentArray}".`);
+                }           
+        
+                if (indice.valor < 0 || indice.valor >= currentArray.length) {
+                    throw new Error(`Índice fuera de rango en la dimensión ${i + 1}: ${indice.valor}. El rango válido es 0-${currentArray.length - 1}.`);
+                }
+        
+                if (i === node.indices.length - 1) {
+                    // Estamos en el último índice, asignamos el valor
+                    if (dato.tipo !== arreglo.tipo) {
+                        throw new Error(`Tipo de dato incorrecto. Se esperaba ${arreglo.tipo}, pero se recibió ${dato.tipo}.`);
+                    }
+                    currentArray[indice.valor] = dato.valor;
+                } else {
+                    // Nos movemos al siguiente nivel del arreglo
+                    currentArray = currentArray[indice.valor];
+                }
+            }
+        
+            console.log("Asignación completada:", arreglo.valor);
+            return;
         }
-
-        if (valor < 0 || valor >= arreglo.valor.length) {
-            throw new Error(`Índice fuera de rango: "${valor}".`);
-        }
-
-        if(dato.tipo != arreglo.tipo){
-            throw new Error('El índice del arreglo es indefinido.');
-        }
-
-        arreglo.valor[valor] = dato.valor;
-        return
-    }
+        
+        
+        
 
     /**
      * @type {BaseVisitor['visitMatrices']}
