@@ -124,7 +124,7 @@ export class InterpreterVisitor extends BaseVisitor {
                     if(izq.tipo == "int"){
                         switch (der.tipo){
                             case 'int':
-                                return {valor:izq.valor / der.valor , tipo: "int"};
+                                return {valor:Math.floor(izq.valor / der.valor) , tipo: "int"};
                             case 'float':
                                 return {valor:izq.valor / der.valor , tipo: "float"};
                             
@@ -877,7 +877,7 @@ export class InterpreterVisitor extends BaseVisitor {
             
                         if (regex.test(exp.valor)) {
                             //const valorFloat = parseInt(exp.valor);
-                            return { valor: parseInt(exp.valor), tipo: "int" };
+                            return { valor: Math.floor(parseInt(exp.valor)), tipo: "int" };
                         } else {
                             throw new Error(`El valor '${exp.valor}' no es un número válido.`);
                         }
@@ -1212,16 +1212,25 @@ export class InterpreterVisitor extends BaseVisitor {
         }
         
         
-        
-
+    validarNodo(valor) {
+            if (Array.isArray(valor)) {
+                return valor.map(item => this.validarNodo(item));
+            } else if (typeof valor === 'object' && valor !== null && 'accept' in valor) {
+                return valor.accept(this);
+            } else {
+                return valor; // Si es un valor primitivo, lo devolvemos tal cual
+            }
+        }
     /**
      * @type {BaseVisitor['visitMatrices']}
      */
     visitMatrices(node) {
         const tipo = node.tipo;
         const id = node.id;  // Ahora id es directamente un identificador
-        const valores = node.valores;  // Valores de la matriz
+        const valores = this.validarNodo(node.valores)  // Valores de la matriz
         const nD = node.nD;  // Número de dimensiones
+
+
 
         if (!Array.isArray(valores)) {
             throw new Error(`Se esperaba un array para la matriz, pero se recibió: ${typeof valores}`);
