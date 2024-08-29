@@ -302,7 +302,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             throw new Error('No es valida esa operacion');
                     }
                 }
-            case '&&"':
+            case '&&':
                 if(izq.tipo == "boolean"){
                     switch (der.tipo){
                         case 'boolean':
@@ -1017,19 +1017,27 @@ export class InterpreterVisitor extends BaseVisitor {
 
     }
     /**
-     * @type {BaseVisitor['visitArregloCantida']}
+     * @type {BaseVisitor['visitArregloCantidad']}
      */
 
     visitArregloCantidad(node) {
         const tipo = node.tipo;
         const id = node.id;
         const tipo1 = node.tipo2;
+        const nD = node.nd
         const dimensiones = node.dimensiones.map(dim => dim.accept(this));
     
-        console.log("tipo: " + tipo);
-        console.log("id: " + id);
-        console.log("tipo1: " + tipo1);
-        console.log("dimensiones: " + dimensiones.map(dim => dim.tipo).join(', '));
+        // console.log("tipo: " + tipo);
+        // console.log("id: " + id);
+        // console.log("tipo1: " + tipo1);
+        // console.log("dimensiones: " + dimensiones.map(dim => dim.tipo).join(', '));
+
+        console.log("dimensiones: " + dimensiones.length);
+        console.log("dimensiones" + nD);
+
+        if(nD != dimensiones.length){
+            throw new Error(`El tamaño del arreglo no coincide con la cantidad de dimensiones`);
+        }
     
         if (tipo != tipo1) {
             throw new Error(`El dato del valor no es del mismo tipo`);
@@ -1053,7 +1061,8 @@ export class InterpreterVisitor extends BaseVisitor {
                 crearArregloMultidimensional(dimensiones, index + 1)
             );
         };
-    
+        
+        
         let arry = crearArregloMultidimensional(dimensiones);
         this.entornoActual.setVariable(tipo, id, arry);
     
@@ -1156,6 +1165,7 @@ export class InterpreterVisitor extends BaseVisitor {
         
                 arreglo = { valor: arreglo.valor[indice.valor], tipo: arreglo.tipo };
             }
+            
         
             return arreglo;
         }
@@ -1209,80 +1219,102 @@ export class InterpreterVisitor extends BaseVisitor {
      */
     visitMatrices(node) {
         const tipo = node.tipo;
-        const id = node.id;
-        const valores = node.valores.accept(this);
-        let arrayTemp = [];
+        const id = node.id;  // Ahora id es directamente un identificador
+        const valores = node.valores;  // Valores de la matriz
+        const nD = node.nD;  // Número de dimensiones
 
-        console.log(node)
-    
-        // function procesarDimen(dim, tipo) {
-        //     if (Array.isArray(dim)) {
-        //         let tempArray = [];
-        //         dim.forEach(valor => {
-        //             if (Array.isArray(valor)) {
-        //                 tempArray.push(procesarDimen(valor, tipo));
-        //             } else {
-        //                 if (tipo === "float" && typeof valor === "number") {
-        //                     tempArray.push(valor);
-        //                 } else if (tipo !== typeof valor) {
-        //                     throw new Error(`El tipo del array no coincide con el tipo del valor`);
-        //                 } else {
-        //                     tempArray.push(valor);
-        //                 }
-        //             }
-        //         });
-        //         return tempArray;
-        //     }
-        //     return dim;
-        // }
-    
-        // arrayTemp = procesarDimen(valores.valor, tipo);
-    
-        // console.log(arrayTemp);
-        // this.entornoActual.setVariable(tipo, id, arrayTemp);
+        if (!Array.isArray(valores)) {
+            throw new Error(`Se esperaba un array para la matriz, pero se recibió: ${typeof valores}`);
+        }
+
+        function validarTipo(valor, tipoEsperado) {
+            if (valor.tipo !== tipoEsperado) {
+                throw new Error(`Tipo incorrecto. Se esperaba ${tipoEsperado} pero se encontró ${valor.tipo}`);
+            }
+            return true;
+        }
+
+        function procesarDimensiones(dim, tipoEsperado, profundidad = 0) {
+            if (Array.isArray(dim)) {
+                return dim.map(valor => procesarDimensiones(valor, tipoEsperado, profundidad + 1));
+            } else {
+                if (!validarTipo(dim, tipoEsperado)) {
+                    throw new Error(`Tipo incorrecto en la matriz. Se esperaba ${tipoEsperado} pero se encontró ${dim.tipo} en la profundidad ${profundidad}`);
+                }
+                return dim.valor;  // Devolvemos solo el valor, no el objeto completo
+            }
+        }
+
+        let matrizProcesada;
+        try {
+            matrizProcesada = procesarDimensiones(valores, tipo);
+        } catch (error) {
+            throw new Error(`Error al procesar la matriz: ${error.message}`);
+        }
+
+        function validarDimensiones(arr, expectedDimensions) {
+            if (!Array.isArray(arr)) return expectedDimensions === 0;
+            if (expectedDimensions === 0) return false;
+            const longitud = arr.length;
+            return arr.every(subarr => validarDimensiones(subarr, expectedDimensions - 1));
+        }
+
+        if (!validarDimensiones(matrizProcesada, nD)) {
+            throw new Error(`Las dimensiones de la matriz no son correctas. Se esperaban ${nD} dimensiones.`);
+        }
+
+        try {
+            this.entornoActual.setVariable(tipo, id, matrizProcesada);
+        } catch (error) {
+            throw new Error(`Error al guardar la matriz en el entorno: ${error.message}`);
+        }
+
     }
     
-    
 
 
-    /**
-     * @type {BaseVisitor['visitMatrizCantidad']}
-     */
-    visitMatrizCantidad(node){
-        const tipo = node.tipo;
-        const id = node.id;
-        const tipo1 = node.tipo2;
-        const dim1 = node.dim1.accept(this); // Primera dimensión
-        const dim2 = node.dim2.accept(this); // Segunda dimensión
+    // /**
+    //  * @type {BaseVisitor['visitMatrizCantidad']}
+    //  */
+    // visitMatrizCantidad(node){
+    //     const tipo = node.tipo;
+    //     const id = node.id;
+    //     const tipo1 = node.tipo2;
+    //     const dim1 = node.dim1.accept(this); // Primera dimensión
+    //     const dim2 = node.dim2.accept(this); // Segunda dimensión
+    //     const nD = node.nD;  // Número de dimensiones
 
-        console.log("Tipo: " + tipo);
-        console.log("ID: " + id);
-        console.log("Tipo 1: " + tipo1);
-        console.log("Primera dimensión: " + dim1.tipo + " valor: " + dim1.valor);
-        console.log("Segunda dimensión: " + dim2.tipo + " valor: " + dim2.valor);
+    //     // console.log("Tipo: " + tipo);
+    //     // console.log("ID: " + id);
+    //     // console.log("Tipo 1: " + tipo1);
+    //     // console.log("Primera dimensión: " + dim1.tipo + " valor: " + dim1.valor);
+    //     // console.log("Segunda dimensión: " + dim2.tipo + " valor: " + dim2.valor);
 
-        if (tipo !== tipo1) {
-            throw new Error(`El tipo del valor no coincide: se esperaba ${tipo} pero se encontró ${tipo1}`);
-        }
+    //     if (tipo !== tipo1) {
+    //         throw new Error(`El tipo del valor no coincide: se esperaba ${tipo} pero se encontró ${tipo1}`);
+    //     }
 
-        if (dim1.valor < 0 || dim2.valor < 0) {
-            throw new Error(`El tamaño de una dimensión no puede ser negativo`);
-        }
+    //     if (dim1.valor < 0 || dim2.valor < 0) {
+    //         throw new Error(`El tamaño de una dimensión no puede ser negativo`);
+    //     }
 
-        if (dim1.tipo !== "int" || dim2.tipo !== "int") {
-            throw new Error(`Las dimensiones deben ser de tipo int`);
-        }
+    //     if (dim1.tipo !== "int" || dim2.tipo !== "int") {
+    //         throw new Error(`Las dimensiones deben ser de tipo int`);
+    //     }
 
-        // Crear el arreglo bidimensional con el valor por defecto según el tipo
-        let arry = Array.from({ length: dim1.valor }, () => 
-            new Array(dim2.valor).fill(DatoSinArguemntoArreglo(tipo))
-        );
+    //     // Crear el arreglo bidimensional con el valor por defecto según el tipo
+    //     let arry = Array.from({ length: dim1.valor }, () => 
+    //         new Array(dim2.valor).fill(DatoSinArguemntoArreglo(tipo))
+    //     );
 
-        this.entornoActual.setVariable(tipo, id, arry);
+    //     console.log("Arreglo bidimensional creado:", arry);
+    //     console.log("Número de dimensiones:", nD);
 
-        return;
+    //     this.entornoActual.setVariable(tipo, id, arry);
 
-    }
+    //     return;
+
+    // }
 
 
         /**

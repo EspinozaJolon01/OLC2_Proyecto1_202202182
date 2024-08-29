@@ -814,9 +814,10 @@ export class ArregloCantidad extends expression {
     * @param {any} options.tipo tipo del arreglo
  * @param {expression} options.id nombre del arreglo
  * @param {any} options.tipo2 segundo tipo del arreglo
+ * @param {string[]} options.nd dimensiones del arreglo
  * @param {expression[]} options.dimensiones dimensiones del arreglo
     */
-    constructor({ tipo, id, tipo2, dimensiones }) {
+    constructor({ tipo, id, tipo2, nd, dimensiones }) {
         super();
         
         /**
@@ -838,6 +839,13 @@ export class ArregloCantidad extends expression {
          * @type {any}
         */
         this.tipo2 = tipo2;
+
+
+        /**
+         * dimensiones del arreglo
+         * @type {string[]}
+        */
+        this.nd = nd;
 
 
         /**
@@ -1018,9 +1026,10 @@ export class Matrices extends expression {
     * @param {Object} options
     * @param {any} options.tipo Tipo de los elementos en la matriz
  * @param {expression} options.id Identificador de la matriz
- * @param {expression} options.lista Lista que representa la estructura multidimensional de la matriz
+ * @param {expression} options.valores Lista que representa la estructura multidimensional de la matriz
+ * @param {string[]} options.nD Lista que representa la estructura multidimensional de la matriz
     */
-    constructor({ tipo, id, lista }) {
+    constructor({ tipo, id, valores, nD }) {
         super();
         
         /**
@@ -1041,7 +1050,14 @@ export class Matrices extends expression {
          * Lista que representa la estructura multidimensional de la matriz
          * @type {expression}
         */
-        this.lista = lista;
+        this.valores = valores;
+
+
+        /**
+         * Lista que representa la estructura multidimensional de la matriz
+         * @type {string[]}
+        */
+        this.nD = nD;
 
     }
 
@@ -1062,8 +1078,9 @@ export class MatrizCantidad extends expression  {
  * @param {any} options.tipo2 segundo tipo del arreglo
  * @param {expression} options.dim1 segundo tipo del arreglo
  * @param {expression} options.dim2 segundo tipo del arreglo
+ * @param {string[]} options.nD segundo tipo del arreglo
     */
-    constructor({ tipo, id, tipo2, dim1, dim2 }) {
+    constructor({ tipo, id, tipo2, dim1, dim2, nD }) {
         super();
         
         /**
@@ -1099,6 +1116,13 @@ export class MatrizCantidad extends expression  {
          * @type {expression}
         */
         this.dim2 = dim2;
+
+
+        /**
+         * segundo tipo del arreglo
+         * @type {string[]}
+        */
+        this.nD = nD;
 
     }
 
