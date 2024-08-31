@@ -1197,4 +1197,53 @@ export class Return extends expression {
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Case, Ternario, ArregloValores, ArregloCantidad, ArregloCopia, AccesoElem, AccElem, AsigVector, Matrices, MatrizCantidad, Break, Continue, Return }
+export class ForEach extends expression {
+
+    /**
+    * @param {Object} options
+    * @param {string} options.tipo Identificador de la funcion
+ * @param {expression} options.id delcaracion del foreach
+ * @param {expression} options.id2 Cuerpo de la funcion
+ * @param {expression} options.stmt Cuerpo de la funcion
+    */
+    constructor({ tipo, id, id2, stmt }) {
+        super();
+        
+        /**
+         * Identificador de la funcion
+         * @type {string}
+        */
+        this.tipo = tipo;
+
+
+        /**
+         * delcaracion del foreach
+         * @type {expression}
+        */
+        this.id = id;
+
+
+        /**
+         * Cuerpo de la funcion
+         * @type {expression}
+        */
+        this.id2 = id2;
+
+
+        /**
+         * Cuerpo de la funcion
+         * @type {expression}
+        */
+        this.stmt = stmt;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitForEach(this);
+    }
+}
+    
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Case, Ternario, ArregloValores, ArregloCantidad, ArregloCopia, AccesoElem, AccElem, AsigVector, Matrices, MatrizCantidad, Break, Continue, Return, ForEach }

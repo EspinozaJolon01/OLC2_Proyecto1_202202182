@@ -34,7 +34,8 @@
       'break': nodos.Break,
       'continue': nodos.Continue,
       'return': nodos.Return,
-      'case' : nodos.Case
+      'case' : nodos.Case,
+      'forEach' : nodos.ForEach
     }
 
     const nodo = new tipos[tipoNodo](props)
@@ -54,7 +55,7 @@ VarDcl = tipo:Tipo _ id:Identify _ "=" _ exp:Expresion _ ";" { return crearNodo(
       /Matrices
 
 
-Matrices = tipo:Tipo _ dimensiones:("[" _ "]")+ _ id:Identify _ "=" _ valores:ValoresMatriz _ ";" 
+Matrices = tipo:TipoArrays _ dimensiones:("[" _ "]")+ _ id:Identify _ "=" _ valores:ValoresMatriz _ ";" 
   { 
     return crearNodo('matrices', { 
       tipo, 
@@ -82,7 +83,7 @@ ValoresMatriz = "{" _ primerValor:ValorMatriz _ resto:("," _ ValorMatriz _)* _ "
 
 
 Arreglos = //tipo:Tipo _ "[]" _ id:Identify _ "=" _ ArreTi:TipoDeca _ ";" {return crearNodo('arregloValores' ,{tipo, id,ArreTi})}
-  tipo:Tipo _ dimeAr:("[" _ "]")+ _ id:Identify _ "=" _ "new" _ tipo2:Tipo _ "[" _ dim:Expresion _ "]" dims:("[" _ Expresion _ "]")* _ ";" 
+  tipo:TipoArrays _ dimeAr:("[" _ "]")+ _ id:Identify _ "=" _ "new" _ tipo2:Tipo _ "[" _ dim:Expresion _ "]" dims:("[" _ Expresion _ "]")* _ ";" 
   { 
     return crearNodo('arregloCantidad', {
       tipo: tipo,
@@ -92,7 +93,7 @@ Arreglos = //tipo:Tipo _ "[]" _ id:Identify _ "=" _ ArreTi:TipoDeca _ ";" {retur
       dimensiones: [dim].concat(dims.map(d => d[2]))
       
     });
-  }        / tipo:Tipo _ "[]" _ id:Identify _ "=" _ exp:Expresion _ ";" {return crearNodo('arregloCopia', {tipo,id,exp})}
+  }        / tipo:TipoArrays _ "[]" _ id:Identify _ "=" _ exp:Expresion _ ";" {return crearNodo('arregloCopia', {tipo,id,exp})}
 
 
 //TipoDeca = _ "{" _ Lista:ListaValores _ "}" _ {return Lista}
@@ -109,6 +110,13 @@ Tipo = "int" {return text()}
         / "var" {return text()}
 
 
+TipoArrays = "int" {return text()}
+        / "float" {return text()}    
+        / "string" {return text()}
+        / "boolean"  {return text()}
+        / "char" {return text()}
+
+
 
 Stmt = "print(" _ exp: Expresion _ expM: ("," _ expM: Expresion { return expM } )* _ ")" _ ";" { return crearNodo('print', { exp, expM }) }
     / "{" _ dcls:Declaracion* _ "}" { return crearNodo('bloque', { dcls }) }
@@ -119,6 +127,7 @@ Stmt = "print(" _ exp: Expresion _ expM: ("," _ expM: Expresion { return expM } 
     / "while" _ "(" _ cond:Expresion _ ")" _ stmt:Stmt { return crearNodo('while', { cond, stmt }) }
     / "for" _ "(" _ inicializacion:ForComienzo _ condicion:Expresion _ ";" _ incremento:Expresion _ ")" _ stmt:Stmt {return crearNodo('for', {inicializacion,condicion,incremento,stmt})}
     / "switch" _ "("_ exp: Expresion _")"_ "{" _ cas:EstructuraCase* _ def:default? _ "}"  {return crearNodo('switch', {exp,cas,def})} 
+    / "for" _ "(" _ tipo:TipoArrays _ id:Identify _ ":" _ id2:Identify _ ")" _ stmt:Stmt {return crearNodo('forEach', {tipo,id,id2,stmt})}
     / "break" _ ";" { return crearNodo('break') }
     / "continue" _ ";" { return crearNodo('continue') }
     / "return" _ exp:Expresion? _ ";" { return crearNodo('return', { exp }) }
@@ -252,7 +261,7 @@ Caracter = "'" char:[^'] "'" { return crearNodo('caracter', { valor: char, tipo:
 // { return{ tipo: "numero", valor: parseFloat(text(), 10) } }
 Numero = [0-9]+( "." [0-9]+ )? { return text().includes('.') ? crearNodo('numero', { valor: parseFloat(text(), 10), tipo:"float"}) : crearNodo('numero', { valor: parseInt(text(), 10), tipo:"int"})	 }
   / "(" _ exp:Expresion _ ")" { return crearNodo('agrupacion', { exp }) }
-  / id:Identify dimensiones:("[" Expresion "]")* {return crearNodo('accElem', {id, dimensiones});}
+  / id:Identify _ dimensiones:("[" Expresion "]")* {return crearNodo('accElem', {id, dimensiones});}
 
   ///id:Identify "[" _ exp1:Expresion _ "]" _ "[" _ exp2:Expresion _ "]" {return crearNodo('accMatriz', {id,exp1,exp2})}
   / id:Identify { return crearNodo('referenciaVariable', { id }) }

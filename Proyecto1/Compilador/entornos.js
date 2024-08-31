@@ -83,4 +83,25 @@ export class Entorno {
     }
 
 
+        /**
+     * @param {string} nombre
+     */
+
+        eleiminar(nombre) {
+            const bandera = this.valores[nombre]
+
+            if (bandera != undefined) {
+                delete this.valores[nombre]
+                return;
+            }
+
+            if (!bandera && this.padre) {
+                this.padre.eleiminar(nombre);
+                return;
+            }
+
+            throw new Error(`Variable ${nombre} no definida`);
+        }
+
+
 }

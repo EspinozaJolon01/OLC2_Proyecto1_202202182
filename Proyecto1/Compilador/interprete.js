@@ -1381,6 +1381,35 @@ export class InterpreterVisitor extends BaseVisitor {
 
             }
         }
+
+        /**
+         * @type {BaseVisitor['visitForEach']}
+         */
+        visitForEach(node){
+            const entornoAnterior = this.entornoActual;
+            this.entornoActual = new Entorno(entornoAnterior);
+
+            const arreglo = this.entornoActual.getVariable(node.id2);
+
+            if (!Array.isArray(arreglo.valor)) {
+                throw new Error(`El valor no es un arreglo`);
+            }
+
+            if (node.tipo != arreglo.tipo) {
+                throw new Error(`El tipo del arreglo no coincide con el tipo de la variable`);
+            }
+
+            for (const valor of arreglo.valor) {
+                this.entornoActual.setVariable(arreglo.tipo, node.id, valor);
+                node.stmt.accept(this);
+
+                this.entornoActual.eleiminar(node.id);
+                
+            }
+
+
+            this.entornoActual = entornoAnterior;
+        }
         
 
 

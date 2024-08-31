@@ -99,6 +99,9 @@
 
  * @typedef {import('./nodos').Return} Return
 
+
+ * @typedef {import('./nodos').ForEach} ForEach
+
  */
 
 
@@ -403,6 +406,15 @@ export class BaseVisitor {
      */
     visitReturn(node) {
         throw new Error('Metodo visitReturn no implementado');
+    }
+    
+
+    /**
+     * @param {ForEach} node
+     * @returns {any}
+     */
+    visitForEach(node) {
+        throw new Error('Metodo visitForEach no implementado');
     }
     
 }
