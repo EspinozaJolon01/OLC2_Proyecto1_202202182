@@ -35,7 +35,9 @@
       'continue': nodos.Continue,
       'return': nodos.Return,
       'case' : nodos.Case,
-      'forEach' : nodos.ForEach
+      'forEach' : nodos.ForEach,
+      'funLlamada' : nodos.FunLlamada,
+      'declaracionFuncion' : nodos.DeclaracionFuncion
     }
 
     const nodo = new tipos[tipoNodo](props)
@@ -47,12 +49,23 @@
 programa = _ dcl:Declaracion* _ { return dcl }
 
 Declaracion = dcl:VarDcl _ { return dcl }
+            / dcl:DeclaFun _ { return dcl }
             / stmt:Stmt _ { return stmt }
 
 VarDcl = tipo:Tipo _ id:Identify _ "=" _ exp:Expresion _ ";" { return crearNodo('declaracionVariable', { tipo, id, exp }) }
       / tipo:Tipo _ id:Identify _ ";" { return crearNodo('declaracionSinAargumn', {tipo, id})}
       /Arreglos 
       /Matrices
+
+DeclaFun = tipo:(Tipo / "void") _ id:Identify _ "(" _ params:Parametros? _ ")" _ bloque:Bloque { return crearNodo('declaracionFuncion', { tipo, id, params: params || [], bloque }) }
+
+
+Parametros = primerParametro:Params restoParametros:("," _ parametro:Params { return parametro; })* 
+            { return [primerParametro, ...restoParametros]; }
+
+Params = tipo:Tipo dimensiones:Dimension? _ id:Identify { return { tipo, id, dim: dimensiones || "" }; }
+
+Dimension = "[" _ "]"+  { return text(); }
 
 
 Matrices = tipo:TipoArrays _ dimensiones:("[" _ "]")+ _ id:Identify _ "=" _ valores:ValoresMatriz _ ";" 
@@ -119,7 +132,7 @@ TipoArrays = "int" {return text()}
 
 
 Stmt = "print(" _ exp: Expresion _ expM: ("," _ expM: Expresion { return expM } )* _ ")" _ ";" { return crearNodo('print', { exp, expM }) }
-    / "{" _ dcls:Declaracion* _ "}" { return crearNodo('bloque', { dcls }) }
+    / Bloque: Bloque { return Bloque }
     / "if" _ "(" _ cond:Expresion _ ")" _ stmtTrue:Stmt 
       stmtFalse:(
         _ "else" _ stmtFalse:Stmt { return stmtFalse } 
@@ -132,6 +145,9 @@ Stmt = "print(" _ exp: Expresion _ expM: ("," _ expM: Expresion { return expM } 
     / "continue" _ ";" { return crearNodo('continue') }
     / "return" _ exp:Expresion? _ ";" { return crearNodo('return', { exp }) }
     / exp:Expresion _ ";" { return crearNodo('expresionStmt', { exp }) }
+
+Bloque = "{" _ dcls:Declaracion* _ "}" { return crearNodo('bloque', { dcls }) }
+
 
 ForComienzo = dcl:VarDcl { return dcl }
         / exp:Expresion _ ";" { return exp }
@@ -231,7 +247,8 @@ Unaria =
     Embe:("typeof") _ dat:Valores { return crearNodo('embebidas', {Embe, exp: dat }) }
   / Embe: ("toUpperCase" /"toLowerCase" /"parsefloat"/"parseInt"/"toString") "(" _ dat:Valores _ ")" _ { return crearNodo('embebidas', {Embe, exp: dat }) }
   / id: Identify "++" { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "++", exp: crearNodo('referenciaVariable', { id }) }) }) }
-  / op:("-"/"!") _ num:Valores { return crearNodo('unaria', { op, exp: num }) }
+  / op:"-" _ num:Unaria { return crearNodo('unaria', { op, exp: num }) }
+  / op:"!" _ num:Valores { return crearNodo('unaria', { op, exp: num }) }
   / id: Identify "--" { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "--", exp: crearNodo('referenciaVariable', { id }) }) }) }
   / Valores
 
@@ -240,7 +257,21 @@ Unaria =
 Valores =  Bool
   /CadeString 
   /Caracter
-  / Numero
+  / FunLlamada
+
+
+FunLlamada = funLam:Numero _ params:("(" args:Argumens? ")" { return args })* {      
+    return params.reduce(
+        (funLam, args) => {
+          return crearNodo('funLlamada', {  funLam, args: args || []})
+        },
+        funLam
+      )
+      
+      }
+
+
+Argumens = arg:Expresion _ args:("," _ args:Expresion { return args })* { return [arg, ...args] }
 
 Bool = "true" { return crearNodo('boolena', { valor: true , tipo : "boolean" }) }
           / "false" { return crearNodo('boolena', { valor: false ,  tipo : "boolean"  }) }

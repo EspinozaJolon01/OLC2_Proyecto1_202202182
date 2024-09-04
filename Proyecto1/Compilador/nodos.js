@@ -1246,4 +1246,86 @@ export class ForEach extends expression {
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Case, Ternario, ArregloValores, ArregloCantidad, ArregloCopia, AccesoElem, AccElem, AsigVector, Matrices, MatrizCantidad, Break, Continue, Return, ForEach }
+export class FunLlamada extends expression {
+
+    /**
+    * @param {Object} options
+    * @param {expression} options.funLam expresion de la llamada
+ * @param {expression[]} options.args los argumentos de la llamda
+    */
+    constructor({ funLam, args }) {
+        super();
+        
+        /**
+         * expresion de la llamada
+         * @type {expression}
+        */
+        this.funLam = funLam;
+
+
+        /**
+         * los argumentos de la llamda
+         * @type {expression[]}
+        */
+        this.args = args;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitFunLlamada(this);
+    }
+}
+    
+export class DeclaracionFuncion extends expression {
+
+    /**
+    * @param {Object} options
+    * @param {string} options.tipo Identificador de la funcion
+ * @param {expression} options.id Identificador de la funcion
+ * @param {string[]} options.params los parametros de la funcion
+ * @param {Bloque} options.bloque Cuerpo de la funcion
+    */
+    constructor({ tipo, id, params, bloque }) {
+        super();
+        
+        /**
+         * Identificador de la funcion
+         * @type {string}
+        */
+        this.tipo = tipo;
+
+
+        /**
+         * Identificador de la funcion
+         * @type {expression}
+        */
+        this.id = id;
+
+
+        /**
+         * los parametros de la funcion
+         * @type {string[]}
+        */
+        this.params = params;
+
+
+        /**
+         * Cuerpo de la funcion
+         * @type {Bloque}
+        */
+        this.bloque = bloque;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitDeclaracionFuncion(this);
+    }
+}
+    
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Case, Ternario, ArregloValores, ArregloCantidad, ArregloCopia, AccesoElem, AccElem, AsigVector, Matrices, MatrizCantidad, Break, Continue, Return, ForEach, FunLlamada, DeclaracionFuncion }

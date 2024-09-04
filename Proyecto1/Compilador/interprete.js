@@ -4,6 +4,8 @@ import nodos, { expression } from './nodos.js'
 
 import { DatoSinArgu , DatoSinArguemntoArreglo } from "./DeclaSinArgum.js";
 import {BreakException, ContinueException, ReturnException} from "./TransferCommands.js"
+import { Ejecutable } from "./Ejecutable.js";
+import { FuncionRemota } from "./remota.js";
 
 
 
@@ -13,6 +15,11 @@ export class InterpreterVisitor extends BaseVisitor {
     constructor() {
         super();
         this.entornoActual = new Entorno();
+
+
+
+
+
         this.consola = '';
 
 
@@ -53,7 +60,7 @@ export class InterpreterVisitor extends BaseVisitor {
 
                 if(izq.tipo == "float"){
                     switch (der.tipo){
-                        case 'flot':
+                        case 'float':
                             return {valor:izq.valor + der.valor , tipo: "float"};
                         case 'int':
                             return {valor:izq.valor + der.valor , tipo: "float"};
@@ -558,7 +565,7 @@ export class InterpreterVisitor extends BaseVisitor {
         if(node.exp){
 
             const valor = node.exp.accept(this)
-            console.log("no se que devevle" + valor.tipo)
+            
 
             switch (tipoVariable) {
                 case "int":
@@ -1411,6 +1418,52 @@ export class InterpreterVisitor extends BaseVisitor {
             this.entornoActual = entornoAnterior;
         }
         
+
+    /**
+         * @type {BaseVisitor['visitFunLlamada']}
+         */
+        visitFunLlamada(node){
+            const fun = node.funLam.accept(this).valor;
+
+            console.log("fun: " + fun)
+            
+
+            const argums = node.args.map(arg => arg.accept(this));
+
+            console.log("argums: " + argums)    
+
+            if(!(fun instanceof Ejecutable)){
+                throw new Error(`La función llamada no es invocable`);
+            }
+
+            if(fun.aridad() !== argums.length){
+                throw new Error(`La función llamada no coincide con la cantidad de argumentos`);
+            }
+
+            return fun.invocar(this, argums);
+
+        }
+
+
+
+    /**
+         * @type {BaseVisitor['visitDeclaracionFuncion']}
+         */
+
+        visitDeclaracionFuncion(node){
+
+            const nomParams = node.params.map(param => param.id);
+            const valorUnico = new Set(nomParams);
+
+            if(nomParams.length  !== valorUnico.size){
+                throw new Error(`No se permiten parámetros duplicados en la función`);
+            }
+
+            
+
+            const funcion = new FuncionRemota(node,this.entornoActual);
+            this.entornoActual.setVariable(node.tipo, node.id, funcion);
+        }
 
 
     

@@ -102,6 +102,12 @@
 
  * @typedef {import('./nodos').ForEach} ForEach
 
+
+ * @typedef {import('./nodos').FunLlamada} FunLlamada
+
+
+ * @typedef {import('./nodos').DeclaracionFuncion} DeclaracionFuncion
+
  */
 
 
@@ -415,6 +421,24 @@ export class BaseVisitor {
      */
     visitForEach(node) {
         throw new Error('Metodo visitForEach no implementado');
+    }
+    
+
+    /**
+     * @param {FunLlamada} node
+     * @returns {any}
+     */
+    visitFunLlamada(node) {
+        throw new Error('Metodo visitFunLlamada no implementado');
+    }
+    
+
+    /**
+     * @param {DeclaracionFuncion} node
+     * @returns {any}
+     */
+    visitDeclaracionFuncion(node) {
+        throw new Error('Metodo visitDeclaracionFuncion no implementado');
     }
     
 }
