@@ -37,27 +37,44 @@ export class FuncionRemota extends Ejecutable {
         const entornoAntesDeEjecutar = interprete.entornoActual;
         interprete.entornoActual = nuevoEntorno;
 
+            
+
         try {
             this.node.bloque.accept(interprete);
+
+
+
         } catch (error) {
             interprete.entornoActual = entornoAntesDeEjecutar;
+
             
             if (error instanceof ReturnException) {
 
+                
                 if(this.node.tipo === 'void' && error.value !== null){
                     throw new Error(`Una función de tipo 'void' no puede retornar un valor.`);
                 }
+
 
                 if(this.node.tipo !== error.value.tipo){
                     throw new Error(`El tipo de retonor no coincide con el esperado`)
                 }
                 return error.value;
             }
-            if( error instanceof BreakException){
-                return;
+
+            if(this.node.tipo !== "void" && error instanceof BreakException){
+                throw new Error(`La función ${this.node.id} debe retornar un valor`);
+            }
+
+            if(this.node.tipo !== "void" && error instanceof ContinueException){
+                throw new Error(`La función ${this.node.id} debe retornar un valor`);
             }
 
             throw error;
+        }
+
+        if(this.node.tipo !== "void"){
+            throw new Error(`La función ${this.node.id} debe retornar un valor`);
         }
 
         interprete.entornoActual = entornoAntesDeEjecutar;

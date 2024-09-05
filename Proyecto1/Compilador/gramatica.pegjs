@@ -131,7 +131,7 @@ TipoArrays = "int" {return text()}
 
 
 
-Stmt = "print(" _ exp: Expresion _ expM: ("," _ expM: Expresion { return expM } )* _ ")" _ ";" { return crearNodo('print', { exp, expM }) }
+Stmt = "System.out.println(" _ exp: Expresion _ expM: ("," _ expM: Expresion _ { return expM } )* _ ")" _ ";" { return crearNodo('print', { exp, expM }) }
     / Bloque: Bloque { return Bloque }
     / "if" _ "(" _ cond:Expresion _ ")" _ stmtTrue:Stmt 
       stmtFalse:(
@@ -158,9 +158,9 @@ EstructuraCase = "case" _ exp: Expresion _ ":" _ commands:(_ commands:Stmt _{ret
 
 default = "default" _ ":" _ bloque:Stmt* _  {return {bloque}}
 
-Identify = [a-zA-Z][a-zA-Z0-9]* { return text() }
-    / '"' content:([a-zA-Z0-9 ]*) '"' { return content.join('');
-}
+Identify = [a-zA-Z_][a-zA-Z0-9_]* { return text() }
+    
+
 Expresion = Asignacion
         
           
@@ -171,10 +171,7 @@ Asignacion = id:Identify _ "=" _ asgn:Asignacion { return crearNodo('asignacion'
           / id:Identify _ indices:("[" Expresion "]")* _ "=" _ dato:Expresion {return crearNodo('asigVector', {id,indices,dato})}
           /AcceElemn
 
-AcceElemn = dat:OpTenario "." op:"indexOf" "("_ bus:OpTenario? _")" _ {return crearNodo('accesoElem',{dat,op,bus})}
-        / dat:OpTenario "." op:"length" _ {return crearNodo('accesoElem',{dat,op, bus: undefined})}
-        / dat:OpTenario "." op:"join" _ "()" _{return crearNodo('accesoElem',{dat,op, bus: undefined})}
-        /OpTenario
+AcceElemn = OpTenario
 
 
 OpTenario = validar:Log _ "?" _ cond1:Log _ ":" _ cond2:Log {return crearNodo('ternario',{validar,cond1,cond2})}
@@ -244,7 +241,10 @@ Multiplicacion = izq:Unaria expansion:(
 }
 
 Unaria = 
-    Embe:("typeof") _ dat:Valores { return crearNodo('embebidas', {Embe, exp: dat }) }
+        dati:Identify "." op:"indexOf" "("_ bus:Expresion? _")" _ {return crearNodo('accesoElem',{dat: crearNodo('referenciaVariable' , {id:dati}),op,bus})}
+        / dati:Identify "." op:"length" {return crearNodo('accesoElem',{dat: crearNodo('referenciaVariable' , {id:dati}),op, bus: undefined})}
+        / dati:Identify "." op:"join" _ "()" {return crearNodo('accesoElem',{dat: crearNodo('referenciaVariable' , {id:dati}),op, bus: undefined})}
+  / Embe:("typeof") _ dat:Valores { return crearNodo('embebidas', {Embe, exp: dat }) }
   / Embe: ("toUpperCase" /"toLowerCase" /"parsefloat"/"parseInt"/"toString") "(" _ dat:Valores _ ")" _ { return crearNodo('embebidas', {Embe, exp: dat }) }
   / id: Identify "++" { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "++", exp: crearNodo('referenciaVariable', { id }) }) }) }
   / op:"-" _ num:Unaria { return crearNodo('unaria', { op, exp: num }) }
