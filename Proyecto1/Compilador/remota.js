@@ -19,7 +19,7 @@ export class FuncionRemota extends Ejecutable {
     }
 
     aridad() {
-        return this.node.params.length;
+        return this.node.params;
     }
 
     /**
@@ -53,6 +53,10 @@ export class FuncionRemota extends Ejecutable {
                 
                 if(this.node.tipo === 'void' && error.value !== null){
                     throw new Error(`Una función de tipo 'void' no puede retornar un valor.`);
+                }
+
+                if(this.node.tipo === 'void' && error.value === null){
+                    return null;  
                 }
 
 

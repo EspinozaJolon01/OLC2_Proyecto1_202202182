@@ -108,6 +108,15 @@
 
  * @typedef {import('./nodos').DeclaracionFuncion} DeclaracionFuncion
 
+
+ * @typedef {import('./nodos').Estructura} Estructura
+
+
+ * @typedef {import('./nodos').ContenidoStruct} ContenidoStruct
+
+
+ * @typedef {import('./nodos').InstStuc} InstStuc
+
  */
 
 
@@ -439,6 +448,33 @@ export class BaseVisitor {
      */
     visitDeclaracionFuncion(node) {
         throw new Error('Metodo visitDeclaracionFuncion no implementado');
+    }
+    
+
+    /**
+     * @param {Estructura} node
+     * @returns {any}
+     */
+    visitEstructura(node) {
+        throw new Error('Metodo visitEstructura no implementado');
+    }
+    
+
+    /**
+     * @param {ContenidoStruct} node
+     * @returns {any}
+     */
+    visitContenidoStruct(node) {
+        throw new Error('Metodo visitContenidoStruct no implementado');
+    }
+    
+
+    /**
+     * @param {InstStuc} node
+     * @returns {any}
+     */
+    visitInstStuc(node) {
+        throw new Error('Metodo visitInstStuc no implementado');
     }
     
 }

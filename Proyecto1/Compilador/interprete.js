@@ -6,6 +6,7 @@ import { DatoSinArgu , DatoSinArguemntoArreglo } from "./DeclaSinArgum.js";
 import {BreakException, ContinueException, ReturnException} from "./TransferCommands.js"
 import { Ejecutable } from "./Ejecutable.js";
 import { FuncionRemota } from "./remota.js";
+import { StructC } from "./structC.js";
 
 
 
@@ -836,7 +837,7 @@ export class InterpreterVisitor extends BaseVisitor {
                         return {valor: exp.valor.toUpperCase(), tipo: "string"}
 
                     default:
-                        throw new Error(`No valido ese tipo de dato en typeof`);
+                        throw new Error(`No valido ese tipo de dato en toUpperCase`);
                 }
 
             case 'toLowerCase':
@@ -849,7 +850,7 @@ export class InterpreterVisitor extends BaseVisitor {
                         return {valor: exp.valor.toLowerCase(), tipo: "string"}
 
                     default:
-                        throw new Error(`No valido ese tipo de dato en typeof`);
+                        throw new Error(`No valido ese tipo de dato en toLowerCase`);
                 }
 
             case 'parsefloat':
@@ -872,7 +873,7 @@ export class InterpreterVisitor extends BaseVisitor {
                         }
 
                     default:
-                        throw new Error(`No valido ese tipo de dato en typeof`);
+                        throw new Error(`No valido ese tipo de dato en parsefloat`);
                 }
             case 'parseInt':
                 switch(exp.tipo){
@@ -890,7 +891,7 @@ export class InterpreterVisitor extends BaseVisitor {
                         }
 
                     default:
-                        throw new Error(`No valido ese tipo de dato en typeof`);
+                        throw new Error(`No valido ese tipo de dato en parseInt`);
                 }
             case 'toString':
                 switch(exp.tipo){
@@ -918,7 +919,7 @@ export class InterpreterVisitor extends BaseVisitor {
                         
 
                     default:
-                        throw new Error(`No valido ese tipo de dato en typeof`);
+                        throw new Error(`No valido ese tipo de dato en toString`);
                 }
 
 
@@ -1436,9 +1437,16 @@ export class InterpreterVisitor extends BaseVisitor {
                 throw new Error(`La función llamada no es invocable`);
             }
 
-            if(fun.aridad() !== argums.length){
+            if(fun.aridad().length !== argums.length){
                 throw new Error(`La función llamada no coincide con la cantidad de argumentos`);
             }
+
+            argums.forEach((arg1 , indic)=> {
+                const tipo = fun.aridad()[indic];
+                if(tipo.tipo !== arg1.tipo){
+                    throw new Error(`El tipo del argumento no coincide con el tipo esperado`);
+                }
+            });
 
             return fun.invocar(this, argums);
 
@@ -1465,6 +1473,120 @@ export class InterpreterVisitor extends BaseVisitor {
             this.entornoActual.setVariable(node.tipo, node.id, funcion);
         }
 
+        /**
+        * @type {BaseVisitor['visitEstructura']}
+        */
+        visitEstructura(node){
 
+            console.log("entro a estructura", node)
+            
+            const numPropiedas = {};
+
+            node.dcls.forEach(dcl => {
+                console.log("delcaracion", dcl);
+                //numPropiedas[dcl.id] = dcl.id;
+                numPropiedas[dcl.id] = {
+                    tipo: dcl.tipo
+                    
+                };
+                
+            });
+
+            console.log("Propiedades:", numPropiedas);
+            console.log(node.id, Object.keys(numPropiedas).length);
+
+            const struct = new StructC(node.id, numPropiedas);
+
+            this.entornoActual.setVariable(node.id,node.id, struct);    
+
+        }
+
+        /**
+        * @type {BaseVisitor['visitInstStuc']}
+        */
+        visitInstStuc(node) {
+            //tipo, id, instan de la estructura  
+            const tipo = node.tipo;
+            const id = node.id;
+            const instancia = node.instan.accept(this);
+            const struc = this.entornoActual.getVariable(tipo).valor;
+
+
+            if(tipo != instancia.tipo) throw new Error(`El tipo del struct no coincide con el tipo de la instancia`)
+
+
+            if(!(struc instanceof StructC)){
+                throw new Error(`${id} no es un struct`)
+            }
+
+
+
+            // if(tipo != instancia.tipo){
+            //     throw new Error(`El tipo de la instancia no coincide con el tipo de la estructura`);
+            // }
+
+            // if(this.entornoActual.getVariable(id)){
+            //     throw new Error(`El id ${id} no es un struct`);
+            // }
+
+            // if(!this.entornoActual.getVariable(tipo)){
+            //     throw new Error(`El struct ${tipo} no está definido`);
+            // }
+
+            
+
+
+            struc.invocar(this, instancia.valor);
+
+        
+            this.entornoActual.setVariable(tipo, id, instancia.valor);
+            
+        }
+
+        /**
+        * @type {BaseVisitor['visitEstructura']}
+        */
+        visitContenidoStruct(node) {
+            const tipo = node.tipo;
+            const atributos = node.atributos 
+
+            let temStruct = {};
+
+
+            const struct = this.entornoActual.getVariable(tipo);
+
+
+            if(!(struct.valor instanceof StructC)){
+                throw new Error(`${tipo} no es un struct`)
+            }
+
+
+            atributos.forEach(atributo => {
+                const id = atributo.id;
+
+
+
+
+                if(!(id in struct.valor.propiedades)){
+                    throw new Error(`El  atributo ${id} no no esta declarado en el struct`);
+                }
+
+                const dat = atributo.exp.accept(this);
+
+                if(struct.valor.propiedades[id].tipo != dat.tipo){
+                    if(!(struct.valor.propiedades[id].tipo == "float" && dat.tipo == "int")){
+                        throw new Error(`El tipo del atributo ${id} no coincide con el tipo del struct`);
+                    }
+                }
+
+                temStruct[id] = dat.valor;
+            });
+
+
+            return {valor:temStruct, tipo:tipo}
+
+        }
+
+        
     
 }

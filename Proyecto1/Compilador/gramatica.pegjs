@@ -37,7 +37,11 @@
       'case' : nodos.Case,
       'forEach' : nodos.ForEach,
       'funLlamada' : nodos.FunLlamada,
-      'declaracionFuncion' : nodos.DeclaracionFuncion
+      'declaracionFuncion' : nodos.DeclaracionFuncion,
+      'estructura' : nodos.Estructura,
+      'contenidoStruct' : nodos.ContenidoStruct,
+      'instStuc' : nodos.InstStuc
+      
     }
 
     const nodo = new tipos[tipoNodo](props)
@@ -48,7 +52,9 @@
 
 programa = _ dcl:Declaracion* _ { return dcl }
 
-Declaracion = dcl:VarDcl _ { return dcl }
+Declaracion = dcl:DeStruct _ { return dcl }
+            / dcl:VarDcl _ { return dcl }
+            / Inst:DeclaInst  { return Inst }
             / dcl:DeclaFun _ { return dcl }
             / stmt:Stmt _ { return stmt }
 
@@ -59,6 +65,11 @@ VarDcl = tipo:Tipo _ id:Identify _ "=" _ exp:Expresion _ ";" { return crearNodo(
 
 DeclaFun = tipo:(Tipo / "void") _ id:Identify _ "(" _ params:Parametros? _ ")" _ bloque:Bloque { return crearNodo('declaracionFuncion', { tipo, id, params: params || [], bloque }) }
 
+DeStruct  = "struct" _ id:Identify _ "{" _ dcls:BloStruct* _ "}" _ ";" { return crearNodo('estructura', { id, dcls }) }
+
+
+BloStruct = tipo: ("int"/"float"/"string"/"boolean"/"char"/Identify) _ id: Identify _ ";" _ { return { tipo, id } }
+          
 
 Parametros = primerParametro:Params restoParametros:("," _ parametro:Params { return parametro; })* 
             { return [primerParametro, ...restoParametros]; }
@@ -113,7 +124,8 @@ Arreglos = //tipo:Tipo _ "[]" _ id:Identify _ "=" _ ArreTi:TipoDeca _ ";" {retur
 
 
 //ListaValores =  _ exp: Expresion _ expM: ("," _ expM: Expresion { return expM } )* _ {return {dato1:exp, dato2: expM} }
-
+// Persona persona = Persona {};
+DeclaInst = tipo:Identify _ id:Identify _ "=" _ instan:Expresion _ ";" { return crearNodo('instStuc', { tipo, id, instan }) }
 
 Tipo = "int" {return text()}
         / "float" {return text()}    
@@ -242,8 +254,8 @@ Multiplicacion = izq:Unaria expansion:(
 
 Unaria = 
         dati:Identify "." op:"indexOf" "("_ bus:Expresion? _")" _ {return crearNodo('accesoElem',{dat: crearNodo('referenciaVariable' , {id:dati}),op,bus})}
-        / dati:Identify "." op:"length" {return crearNodo('accesoElem',{dat: crearNodo('referenciaVariable' , {id:dati}),op, bus: undefined})}
-        / dati:Identify "." op:"join" _ "()" {return crearNodo('accesoElem',{dat: crearNodo('referenciaVariable' , {id:dati}),op, bus: undefined})}
+        / dati:Identify "." op:"length" _ {return crearNodo('accesoElem',{dat: crearNodo('referenciaVariable' , {id:dati}),op, bus: undefined})}
+        / dati:Identify "." op:"join" _ "()"  {return crearNodo('accesoElem',{dat: crearNodo('referenciaVariable' , {id:dati}),op, bus: undefined})}
   / Embe:("typeof") _ dat:Valores { return crearNodo('embebidas', {Embe, exp: dat }) }
   / Embe: ("toUpperCase" /"toLowerCase" /"parsefloat"/"parseInt"/"toString") "(" _ dat:Valores _ ")" _ { return crearNodo('embebidas', {Embe, exp: dat }) }
   / id: Identify "++" { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "++", exp: crearNodo('referenciaVariable', { id }) }) }) }
@@ -292,10 +304,19 @@ Caracter = "'" char:[^'] "'" { return crearNodo('caracter', { valor: char, tipo:
 // { return{ tipo: "numero", valor: parseFloat(text(), 10) } }
 Numero = [0-9]+( "." [0-9]+ )? { return text().includes('.') ? crearNodo('numero', { valor: parseFloat(text(), 10), tipo:"float"}) : crearNodo('numero', { valor: parseInt(text(), 10), tipo:"int"})	 }
   / "(" _ exp:Expresion _ ")" { return crearNodo('agrupacion', { exp }) }
-  / id:Identify _ dimensiones:("[" Expresion "]")* {return crearNodo('accElem', {id, dimensiones});}
+  / instan:Intancia  {return instan}
 
+  / id:Identify _ dimensiones:("[" Expresion "]")* {return crearNodo('accElem', {id, dimensiones});}
+  
   ///id:Identify "[" _ exp1:Expresion _ "]" _ "[" _ exp2:Expresion _ "]" {return crearNodo('accMatriz', {id,exp1,exp2})}
+  
   / id:Identify { return crearNodo('referenciaVariable', { id }) }
+
+
+Intancia = _ tipo: Identify _ "{"_ atributos:( datAtri: DatoStruc _ datAtris:("," _ atriDat: DatoStruc { return atriDat })* _ { return [datAtri, ...datAtris] }) _ "}" { return crearNodo('contenidoStruct', { tipo, atributos }) }
+
+DatoStruc = id: Identify _ ":" _ exp: Expresion _ { return { id, exp } }
+
 
 
 // Definición de comentarios para omitirlos

@@ -1328,4 +1328,111 @@ export class DeclaracionFuncion extends expression {
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Case, Ternario, ArregloValores, ArregloCantidad, ArregloCopia, AccesoElem, AccElem, AsigVector, Matrices, MatrizCantidad, Break, Continue, Return, ForEach, FunLlamada, DeclaracionFuncion }
+export class Estructura extends expression {
+
+    /**
+    * @param {Object} options
+    * @param {string} options.id Identificador de la estructura
+ * @param {expression[]} options.dcls Declaraciones de la estructura
+    */
+    constructor({ id, dcls }) {
+        super();
+        
+        /**
+         * Identificador de la estructura
+         * @type {string}
+        */
+        this.id = id;
+
+
+        /**
+         * Declaraciones de la estructura
+         * @type {expression[]}
+        */
+        this.dcls = dcls;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitEstructura(this);
+    }
+}
+    
+export class ContenidoStruct extends expression {
+
+    /**
+    * @param {Object} options
+    * @param {string} options.tipo Identificador de la estructura
+ * @param {expression[]} options.atributos Atributos de la estructura
+    */
+    constructor({ tipo, atributos }) {
+        super();
+        
+        /**
+         * Identificador de la estructura
+         * @type {string}
+        */
+        this.tipo = tipo;
+
+
+        /**
+         * Atributos de la estructura
+         * @type {expression[]}
+        */
+        this.atributos = atributos;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitContenidoStruct(this);
+    }
+}
+    
+export class InstStuc extends expression {
+
+    /**
+    * @param {Object} options
+    * @param {string} options.tipo Identificador de la estructura
+ * @param {string} options.id Identificador de la estructura
+ * @param {expression} options.instan Instancia de la estructura
+    */
+    constructor({ tipo, id, instan }) {
+        super();
+        
+        /**
+         * Identificador de la estructura
+         * @type {string}
+        */
+        this.tipo = tipo;
+
+
+        /**
+         * Identificador de la estructura
+         * @type {string}
+        */
+        this.id = id;
+
+
+        /**
+         * Instancia de la estructura
+         * @type {expression}
+        */
+        this.instan = instan;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitInstStuc(this);
+    }
+}
+    
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Case, Ternario, ArregloValores, ArregloCantidad, ArregloCopia, AccesoElem, AccElem, AsigVector, Matrices, MatrizCantidad, Break, Continue, Return, ForEach, FunLlamada, DeclaracionFuncion, Estructura, ContenidoStruct, InstStuc }
