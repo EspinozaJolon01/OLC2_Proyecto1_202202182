@@ -7,6 +7,7 @@ import {BreakException, ContinueException, ReturnException} from "./TransferComm
 import { Ejecutable } from "./Ejecutable.js";
 import { FuncionRemota } from "./remota.js";
 import { StructC } from "./structC.js";
+import { Instancia } from "./instancia.js";
 
 
 
@@ -824,6 +825,8 @@ export class InterpreterVisitor extends BaseVisitor {
                         return {valor: exp.tipo, tipo: "string"}
                     case "char":
                         return {valor: exp.tipo, tipo: "string"}
+                    case exp.tipo :
+                        return {valor: exp.tipo, tipo: "string"}
                     default:
                         throw new Error(`No valido ese tipo de dato en typeof`);
                 }
@@ -1544,7 +1547,7 @@ export class InterpreterVisitor extends BaseVisitor {
         }
 
         /**
-        * @type {BaseVisitor['visitEstructura']}
+        * @type {BaseVisitor['visitContenidoStruct']}
         */
         visitContenidoStruct(node) {
             const tipo = node.tipo;
@@ -1586,6 +1589,43 @@ export class InterpreterVisitor extends BaseVisitor {
             return {valor:temStruct, tipo:tipo}
 
         }
+
+/**
+        * @type {BaseVisitor['visitGet']}
+        */
+        visitGet(node){
+
+            const instan = node.objetivo.accept(this);
+
+            if(!(instan instanceof Instancia)){
+                throw new Error('No es posible obtener una propiedad de algo que no es una instancia en get');
+            }
+
+            return instan.get(node.propiedad);
+
+        }
+
+/**
+        * @type {BaseVisitor['visitSet']}
+        */
+        visitSet(node){
+            const instan = node.objetivo.accept(this);
+
+            if(!(instan instanceof Instancia)){
+                throw new Error('No es posible establecer una propiedad de algo que no es una instancia en set');
+            }
+
+            const valor = node.valor.accept(this);
+
+            instan.set(node.propiedad, valor);
+
+            return valor;
+
+        }
+
+
+
+
 
         
     

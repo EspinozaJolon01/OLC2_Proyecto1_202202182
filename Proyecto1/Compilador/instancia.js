@@ -24,9 +24,10 @@ export class Instancia  {
     }
 
     get(nombre) {
-        if (!(nombre in this.propiedades)) {
-            throw new Error(`La propiedad ${nombre} no ha sido inicializada en esta instancia de ${this.structC.nombre}`);
+        if(this.propiedades.hasOwnProperty(nombre)){
+            return this.propiedades[nombre];
         }
-        return this.propiedades[nombre];
+
+        throw new Error(`Propiedad no encontrada: ${nombre}`);
     }
 }

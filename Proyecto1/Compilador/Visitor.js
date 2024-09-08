@@ -117,6 +117,12 @@
 
  * @typedef {import('./nodos').InstStuc} InstStuc
 
+
+ * @typedef {import('./nodos').Get} Get
+
+
+ * @typedef {import('./nodos').Set} Set
+
  */
 
 
@@ -475,6 +481,24 @@ export class BaseVisitor {
      */
     visitInstStuc(node) {
         throw new Error('Metodo visitInstStuc no implementado');
+    }
+    
+
+    /**
+     * @param {Get} node
+     * @returns {any}
+     */
+    visitGet(node) {
+        throw new Error('Metodo visitGet no implementado');
+    }
+    
+
+    /**
+     * @param {Set} node
+     * @returns {any}
+     */
+    visitSet(node) {
+        throw new Error('Metodo visitSet no implementado');
     }
     
 }

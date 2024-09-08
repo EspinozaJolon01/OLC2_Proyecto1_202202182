@@ -40,7 +40,9 @@
       'declaracionFuncion' : nodos.DeclaracionFuncion,
       'estructura' : nodos.Estructura,
       'contenidoStruct' : nodos.ContenidoStruct,
-      'instStuc' : nodos.InstStuc
+      'instStuc' : nodos.InstStuc,
+      'get' : nodos.Get,
+      'set' : nodos.Set
       
     }
 
@@ -54,7 +56,7 @@ programa = _ dcl:Declaracion* _ { return dcl }
 
 Declaracion = dcl:DeStruct _ { return dcl }
             / dcl:VarDcl _ { return dcl }
-            / Inst:DeclaInst  { return Inst }
+            / Inst:DeclaInst _ { return Inst }
             / dcl:DeclaFun _ { return dcl }
             / stmt:Stmt _ { return stmt }
 
@@ -166,9 +168,9 @@ ForComienzo = dcl:VarDcl { return dcl }
 
 
 
-EstructuraCase = "case" _ exp: Expresion _ ":" _ commands:(_ commands:Stmt _{return commands})* _ breakStatement:("break" _ ";")? _ {return crearNodo('case', {exp, commands, breakST: !!breakStatement})};
+EstructuraCase = "case" _ exp: Expresion _ ":" _ commands:(_ commands:Declaracion _{return commands})* _ breakStatement:("break" _ ";")? _ {return crearNodo('case', {exp, commands, breakST: !!breakStatement})};
 
-default = "default" _ ":" _ bloque:Stmt* _  {return {bloque}}
+default = "default" _ ":" _ bloque:Declaracion* _  {return {bloque}}
 
 Identify = [a-zA-Z_][a-zA-Z0-9_]* { return text() }
     
@@ -177,7 +179,24 @@ Expresion = Asignacion
         
           
 
-Asignacion = id:Identify _ "=" _ asgn:Asignacion { return crearNodo('asignacion', { id, asgn }) }
+Asignacion = asignado:FunLlamada _ "=" _ asgn:Asignacion 
+  { 
+
+    console.log({asignado})
+
+    if (asignado instanceof nodos.ReferenciaVariable) {
+      return crearNodo('asignacion', { id: asignado.id, asgn })
+    }
+
+    if (!(asignado instanceof nodos.Get)) {
+      throw new Error('Solo se pueden asignar valores a propiedades de objetos')
+    }
+    
+    return crearNodo('set', { objetivo: asignado.objetivo, propiedad: asignado.propiedad, valor: asgn })
+
+
+  }
+          //id:Identify _ "=" _ asgn:Asignacion { return crearNodo('asignacion', { id, asgn }) }
           /  id:Identify _ "+=" _ asgn:Expresion { return crearNodo('asignacion', { id, asgn: crearNodo('binaria', { op: "+=", izq: crearNodo('referenciaVariable', { id }),der: asgn }) })} 
           /  id:Identify _ "-=" _ asgn:Expresion { return crearNodo('asignacion', { id, asgn: crearNodo('binaria', { op: "-=", izq: crearNodo('referenciaVariable', { id }),der: asgn }) })} 
           / id:Identify _ indices:("[" Expresion "]")* _ "=" _ dato:Expresion {return crearNodo('asigVector', {id,indices,dato})}
@@ -272,16 +291,39 @@ Valores =  Bool
   / FunLlamada
 
 
-FunLlamada = funLam:Numero _ params:("(" args:Argumens? ")" { return args })* {      
-    return params.reduce(
-        (funLam, args) => {
-          return crearNodo('funLlamada', {  funLam, args: args || []})
-        },
-        funLam
-      )
+// FunLlamada = funLam:Numero _ params:("(" args:Argumens? ")" { return args })* {      
+//     return params.reduce(
+//         (funLam, args) => {
+//           return crearNodo('funLlamada', {  funLam, args: args || []})
+//         },
+//         funLam
+//       )
       
-      }
+//       }
 
+FunLlamada = objetivoInicial:Numero operaciones:(
+    ("(" _ args:Argumens? _ ")" { return {args, tipo: 'funcCall' } })
+    / ("." _ id:Identify _ { return { id, tipo: 'get' } })
+  )* 
+  {
+  const op =  operaciones.reduce(
+    (objetivo, args) => {
+      // return crearNodo('llamada', { callee, args: args || [] })
+      const { tipo, id, args:argumentos } = args
+
+      if (tipo === 'funcCall') {
+        return crearNodo('funLlamada', { callee: objetivo, args: argumentos || [] })
+      }else if (tipo === 'get') {
+        return crearNodo('get', { objetivo, propiedad: id })
+      }
+    },
+    objetivoInicial
+  )
+
+  console.log('llamada', {op}, {text: text()});
+
+return op
+}
 
 Argumens = arg:Expresion _ args:("," _ args:Expresion { return args })* { return [arg, ...args] }
 
@@ -305,18 +347,15 @@ Caracter = "'" char:[^'] "'" { return crearNodo('caracter', { valor: char, tipo:
 Numero = [0-9]+( "." [0-9]+ )? { return text().includes('.') ? crearNodo('numero', { valor: parseFloat(text(), 10), tipo:"float"}) : crearNodo('numero', { valor: parseInt(text(), 10), tipo:"int"})	 }
   / "(" _ exp:Expresion _ ")" { return crearNodo('agrupacion', { exp }) }
   / instan:Intancia  {return instan}
-
   / id:Identify _ dimensiones:("[" Expresion "]")* {return crearNodo('accElem', {id, dimensiones});}
   
   ///id:Identify "[" _ exp1:Expresion _ "]" _ "[" _ exp2:Expresion _ "]" {return crearNodo('accMatriz', {id,exp1,exp2})}
   
   / id:Identify { return crearNodo('referenciaVariable', { id }) }
 
-
 Intancia = _ tipo: Identify _ "{"_ atributos:( datAtri: DatoStruc _ datAtris:("," _ atriDat: DatoStruc { return atriDat })* _ { return [datAtri, ...datAtris] }) _ "}" { return crearNodo('contenidoStruct', { tipo, atributos }) }
 
 DatoStruc = id: Identify _ ":" _ exp: Expresion _ { return { id, exp } }
-
 
 
 // Definición de comentarios para omitirlos

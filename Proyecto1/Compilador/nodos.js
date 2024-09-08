@@ -1435,4 +1435,78 @@ export class InstStuc extends expression {
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Case, Ternario, ArregloValores, ArregloCantidad, ArregloCopia, AccesoElem, AccElem, AsigVector, Matrices, MatrizCantidad, Break, Continue, Return, ForEach, FunLlamada, DeclaracionFuncion, Estructura, ContenidoStruct, InstStuc }
+export class Get extends expression {
+
+    /**
+    * @param {Object} options
+    * @param {expression} options.objetivo Objetivo de la operacion
+ * @param {string} options.propiedad Identificador de la propiedad
+    */
+    constructor({ objetivo, propiedad }) {
+        super();
+        
+        /**
+         * Objetivo de la operacion
+         * @type {expression}
+        */
+        this.objetivo = objetivo;
+
+
+        /**
+         * Identificador de la propiedad
+         * @type {string}
+        */
+        this.propiedad = propiedad;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitGet(this);
+    }
+}
+    
+export class Set extends expression {
+
+    /**
+    * @param {Object} options
+    * @param {expression} options.objetivo Objetivo de la operacion
+ * @param {string} options.propiedad Identificador de la propiedad
+ * @param {expression} options.valor Valor a asignar
+    */
+    constructor({ objetivo, propiedad, valor }) {
+        super();
+        
+        /**
+         * Objetivo de la operacion
+         * @type {expression}
+        */
+        this.objetivo = objetivo;
+
+
+        /**
+         * Identificador de la propiedad
+         * @type {string}
+        */
+        this.propiedad = propiedad;
+
+
+        /**
+         * Valor a asignar
+         * @type {expression}
+        */
+        this.valor = valor;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitSet(this);
+    }
+}
+    
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Case, Ternario, ArregloValores, ArregloCantidad, ArregloCopia, AccesoElem, AccElem, AsigVector, Matrices, MatrizCantidad, Break, Continue, Return, ForEach, FunLlamada, DeclaracionFuncion, Estructura, ContenidoStruct, InstStuc, Get, Set }
