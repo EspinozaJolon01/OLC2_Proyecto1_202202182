@@ -8,6 +8,8 @@ import { Ejecutable } from "./Ejecutable.js";
 import { FuncionRemota } from "./remota.js";
 import { StructC } from "./structC.js";
 import { Instancia } from "./instancia.js";
+import { erroresReporte } from "./reports.js";
+import { erroresCompilacion } from "./compilador.js";
 
 
 
@@ -55,7 +57,9 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor + der.valor , tipo: "float"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en +`);
+                            erroresCompilacion.push(errores);
 
                     }
                 }
@@ -68,7 +72,9 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor + der.valor , tipo: "float"};
                             
                         default:
-                            throw new Error('No es valida esa operacion');
+                            
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en +`);
+                            erroresCompilacion.push(errores);
                     }
                 }
                 if(izq.tipo == "string"){
@@ -77,7 +83,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor + der.valor , tipo: "string"};
                     
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en +`);
+                            erroresCompilacion.push(errores);
                     }
                 }
 
@@ -91,7 +98,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor - der.valor , tipo: "float"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en -`);
+                            erroresCompilacion.push(errores);
                     }
                 }
                 if(izq.tipo == "float"){
@@ -102,7 +110,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor - der.valor , tipo: "float"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en -`);
+                            erroresCompilacion.push(errores);
                     }
                 }
             case '*':
@@ -114,7 +123,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor * der.valor , tipo: "float"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en *`);
+                            erroresCompilacion.push(errores);
                     }
                 }
                 if(izq.tipo == "float"){
@@ -125,7 +135,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor * der.valor , tipo: "float"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en *`);
+                            erroresCompilacion.push(errores);
                     }
                 }
             case '/':
@@ -138,7 +149,8 @@ export class InterpreterVisitor extends BaseVisitor {
                                 return {valor:izq.valor / der.valor , tipo: "float"};
                             
                             default:
-                                throw new Error('No es valida esa operacion');
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en /`);
+                                erroresCompilacion.push(errores);
                         }
                     }
 
@@ -150,7 +162,8 @@ export class InterpreterVisitor extends BaseVisitor {
                                 return {valor:izq.valor / der.valor , tipo: "float"};
                             
                             default:
-                                throw new Error('No es valida esa operacion');
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en /`);
+                                erroresCompilacion.push(errores);
                         }
                     }
                 }else{
@@ -168,8 +181,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor <= der.valor , tipo: "boolean"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
-                    }
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en <=`);
+                            erroresCompilacion.push(errores);}
                 }
 
                 if(izq.tipo == "float"){
@@ -180,7 +193,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor <= der.valor , tipo: "boolean"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en <=`);
+                            erroresCompilacion.push(errores);
                     }
                 }
 
@@ -190,7 +204,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor <= der.valor , tipo: "boolean"};
 
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en <=`);    
+                            erroresCompilacion.push(errores);
                     }
                 }
             case '%':
@@ -201,7 +216,8 @@ export class InterpreterVisitor extends BaseVisitor {
                                 return {valor:izq.valor % der.valor , tipo: "int"};
     
                             default:
-                                throw new Error('No es valida esa operacion');
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en %`); 
+                                erroresCompilacion.push(errores);
                         }
                     }
                 }else{
@@ -217,7 +233,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor >= der.valor , tipo: "boolean"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en >=`);
+                            erroresCompilacion.push(errores);
                     }
                 }
 
@@ -229,7 +246,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor >= der.valor , tipo: "boolean"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en >=`);
+                            erroresCompilacion.push(errores);
                     }
                 }
 
@@ -239,7 +257,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor >= der.valor , tipo: "boolean"};
 
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en >=`);
+                            erroresCompilacion.push(errores);
                     }
                 }
                 
@@ -252,7 +271,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor > der.valor , tipo: "boolean"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en >`); 
+                            erroresCompilacion.push(errores);
                     }
                 }
 
@@ -264,7 +284,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor > der.valor , tipo: "boolean"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en >`);
+                            erroresCompilacion.push(errores);
                     }
                 }
 
@@ -274,7 +295,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor > der.valor , tipo: "boolean"};
 
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en >`);
+                            erroresCompilacion.push(errores);
                     }
                 }
             case '<':
@@ -286,7 +308,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor < der.valor , tipo: "boolean"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en <`);
+                            erroresCompilacion.push(errores);
                     }
                 }
 
@@ -298,7 +321,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor < der.valor , tipo: "boolean"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en <`);
+                            erroresCompilacion.push(errores);
                     }
                 }
 
@@ -308,7 +332,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor < der.valor , tipo: "boolean"};
 
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en <`);
+                            erroresCompilacion.push(errores);
                     }
                 }
             case '&&':
@@ -318,7 +343,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor && der.valor , tipo: "boolean"};
 
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en &&`);
+                            erroresCompilacion.push(errores);
                     }
                 }
             case '!=':
@@ -330,7 +356,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor != der.valor , tipo: "boolean"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en !=`);
+                            erroresCompilacion.push(errores);
                     }
                 }
 
@@ -342,7 +369,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor != der.valor , tipo: "boolean"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en !=`);
+                            erroresCompilacion.push(errores);
                     }
                 }
 
@@ -352,7 +380,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor != der.valor , tipo: "boolean"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en !=`);
+                            erroresCompilacion.push(errores);
                     }
                 }
 
@@ -363,7 +392,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor != der.valor , tipo: "boolean"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en !=`);
+                            erroresCompilacion.push(errores);
                     }
                 }
 
@@ -376,7 +406,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor == der.valor , tipo: "boolean"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en ==`);
+                            erroresCompilacion.push(errores);
                     }
                 }
 
@@ -388,8 +419,9 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor == der.valor , tipo: "boolean"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
-                    }
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en ==`);
+                            erroresCompilacion.push(errores);   
+                        }
                 }
 
                 if(izq.tipo == "boolean"){
@@ -398,7 +430,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor == der.valor , tipo: "boolean"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en ==`);
+                            erroresCompilacion.push(errores);
                     }
                 }
 
@@ -409,7 +442,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor == der.valor , tipo: "boolean"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en ==`);
+                            erroresCompilacion.push(errores);
                     }
                 }
             case '||':
@@ -419,7 +453,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor || der.valor , tipo: "boolean"};
 
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en ||`);
+                            erroresCompilacion.push(errores);
                     }
                 }
             case '+=':
@@ -429,7 +464,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor + der.valor , tipo: "int"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en +=`);
+                            erroresCompilacion.push(errores);
                     }
                 }
                 
@@ -441,7 +477,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor + der.valor , tipo: "float"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en +=`);
+                            erroresCompilacion.push(errores);
                     }
                 }
 
@@ -451,7 +488,8 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:izq.valor + der.valor , tipo: "string"};
                         
                         default:
-                            throw new Error('No es valida esa operacion');
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en +=`);
+                            erroresCompilacion.push(errores);
                     }
                 }
 
@@ -462,7 +500,8 @@ export class InterpreterVisitor extends BaseVisitor {
                                 return {valor:izq.valor - der.valor , tipo: "int"};
                             
                             default:
-                                throw new Error('No es valida esa operacion');
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en -=`);
+                                erroresCompilacion.push(errores);
                         }
                     }
                     
@@ -474,13 +513,15 @@ export class InterpreterVisitor extends BaseVisitor {
                                 return {valor:izq.valor - der.valor , tipo: "float"};
                             
                             default:
-                                throw new Error('No es valida esa operacion');
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en -=`);
+                                erroresCompilacion.push(errores);
                         }
                     }
 
 
             default:
-                throw new Error(`Operador no soportado: ${node.op}`);
+                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: Operador no soportado: ${node.op}`);
+                erroresCompilacion.push(errores);
         }
     }
 
@@ -498,14 +539,16 @@ export class InterpreterVisitor extends BaseVisitor {
                 }else if(exp.tipo == "float"){
                     return {valor:-exp.valor , tipo: exp.tipo};
                 }else{
-                    throw new Error('No es valida esa operacion');
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en -`);
+                    erroresCompilacion.push(errores);
                 }
                 
             case '!':
                     if(exp.tipo == "boolean"){
                         return {valor:!exp.valor , tipo: exp.tipo};
                     }else{
-                        throw new Error('No es valida esa operacion');
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en !`);
+                        erroresCompilacion.push(errores);
                     }
                     
 
@@ -515,7 +558,8 @@ export class InterpreterVisitor extends BaseVisitor {
                 }else if(exp.tipo == "float"){
                     return {valor:-exp.valor + 1 , tipo: exp.tipo};
                 }else{
-                    throw new Error('No es valida esa operacion');
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en ++`);
+                    erroresCompilacion.push(errores);
                 }
                 
             
@@ -525,13 +569,15 @@ export class InterpreterVisitor extends BaseVisitor {
                 }else if(exp.tipo == "float"){
                     return {valor:exp.valor - 1 , tipo: exp.tipo};
                 }else{
-                    throw new Error('No es valida esa operacion');
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en --`);
+                    erroresCompilacion.push(errores);
                 }
                 
 
 
             default:
-                throw new Error(`Operador no soportado: ${node.op}`);
+                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: Operador no soportado: ${node.op}`);
+                erroresCompilacion.push(errores);
         }
     }
 
@@ -557,15 +603,7 @@ export class InterpreterVisitor extends BaseVisitor {
         let tipoVariable =  node.tipo;
         const nombreVariable = node.id;
 
-
-        
-
-        
-
         console.log(tipoVariable)
-
-
-
 
         if(node.exp){
             
@@ -575,32 +613,36 @@ export class InterpreterVisitor extends BaseVisitor {
             switch (tipoVariable) {
                 case "int":
                     if(tipoVariable != valor.tipo) {
-                        const { line, column } = node.location.start;
-                        throw new Error(`El tipo del valor no coincide con el tipo ${tipoVariable}. En linea ${line}, columna ${column}`);
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El tipo del valor no coincide con el tipo ${tipoVariable}`);
+                        erroresCompilacion.push(errores);
                     }
                     
                     break;
         
                 case "float":
                     if(valor.tipo != "int" &&  tipoVariable != valor.tipo){
-                        throw new Error(`El tipo del valor es incompatible con el tipo requerido. ${tipo}`)
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El tipo del valor no coincide con el tipo ${tipoVariable}`);
+                        erroresCompilacion.push(errores);
                     }
                     break;
                 case "string":
                     if (tipoVariable != valor.tipo) {
-                        throw new Error(`El tipo del valor es incompatible con el tipo requerido. ${tipo}`);
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El tipo del valor no coincide con el tipo ${tipoVariable}`);
+                        erroresCompilacion.push(errores);
                     }
                     break;
         
                 case "char":
                     if (tipoVariable != valor.tipo) {
-                        throw new Error(`El tipo del valor es incompatible con el tipo requerido. ${tipo}`);
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El tipo del valor no coincide con el tipo ${tipoVariable}`);
+                        erroresCompilacion.push(errores);
                     }
                     break;
         
                 case "boolean":
                     if (tipoVariable != valor.tipo) {
-                        throw new Error(`El tipo del valor es incompatible con el tipo requerido. ${tipo}`);
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El tipo del valor no coincide con el tipo ${tipoVariable}`);
+                        erroresCompilacion.push(errores);
                     }
                     break;
     
@@ -621,21 +663,23 @@ export class InterpreterVisitor extends BaseVisitor {
                             }
                         } else if (typeof valor.valor === 'boolean') {
                             tipoVariable = valor.tipo;
-                        } else if(this.entornoActual.getVariable(valor.tipo).valor instanceof StructC){
+                        } else if(this.entornoActual.getVariable(valor.tipo,node.location.start.line,node.location.start.column).valor instanceof StructC){
                             
                             tipoVariable = valor.tipo;
                         }else{
-                            throw new Error(`Tipo no soportado para la variable ${nombreVariable}`);
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El tipo del valor no coincide con el tipo ${tipoVariable}`);
+                            erroresCompilacion.push(errores);
 
                         }
                         break;;
                 default:
-                    throw new Error(`Operador no soportado: ${node.op}`);
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Tipo de dato no valido`);
+                    erroresCompilacion.push(errores);
             }
 
             console.log("fin: "+tipoVariable)
 
-            this.entornoActual.setVariable(tipoVariable,nombreVariable, elemento);
+            this.entornoActual.setVariable(tipoVariable, nombreVariable, elemento,node.location.start.line,node.location.start.column);
             return
 
         }
@@ -650,7 +694,7 @@ export class InterpreterVisitor extends BaseVisitor {
         const nombreVarible = node.id
         const valorDefino = DatoSinArgu(node.tipo)
 
-        this.entornoActual.setVariable(tipo, nombreVarible, valorDefino)
+        this.entornoActual.setVariable(tipo,nombreVarible,valorDefino,node.location.start.line,node.location.start.column)
 
     }
 
@@ -662,7 +706,7 @@ export class InterpreterVisitor extends BaseVisitor {
     visitReferenciaVariable(node) {
         const nombreVariable = node.id;
 
-        const varible = this.entornoActual.getVariable(nombreVariable)
+        const varible = this.entornoActual.getVariable(nombreVariable,node.location.start.line,node.location.start.column);
         // if(varible.valor instanceof Instancia){
         // return {valor: varible.valor.StructC, tipo: varible.tipo}
         // }
@@ -696,7 +740,7 @@ export class InterpreterVisitor extends BaseVisitor {
         // const valor = this.interpretar(node.asgn);
         const valor = node.asgn.accept(this);
         console.log("aqui estoy "  + valor)
-        this.entornoActual.assignVariable(node.id, valor);
+        this.entornoActual.assignVariable(node.id, valor,node.location.start.line,node.location.start.column);
 
         return valor;
     }
@@ -839,7 +883,8 @@ export class InterpreterVisitor extends BaseVisitor {
                     case exp.tipo :
                         return {valor: exp.tipo, tipo: "string"}
                     default:
-                        throw new Error(`No valido ese tipo de dato en typeof`);
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en typeof`);
+                        erroresCompilacion.push(errores);
                 }
             case 'toUpperCase':
                 switch(exp.tipo){
@@ -851,7 +896,8 @@ export class InterpreterVisitor extends BaseVisitor {
                         return {valor: exp.valor.toUpperCase(), tipo: "string"}
 
                     default:
-                        throw new Error(`No valido ese tipo de dato en toUpperCase`);
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en toUpperCase`);
+                        erroresCompilacion.push(errores);
                 }
 
             case 'toLowerCase':
@@ -864,7 +910,8 @@ export class InterpreterVisitor extends BaseVisitor {
                         return {valor: exp.valor.toLowerCase(), tipo: "string"}
 
                     default:
-                        throw new Error(`No valido ese tipo de dato en toLowerCase`);
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en toLowerCase`);
+                        erroresCompilacion.push(errores);
                 }
 
             case 'parsefloat':
@@ -883,11 +930,13 @@ export class InterpreterVisitor extends BaseVisitor {
                             //const valorFloat = parseFloat(exp.valor);
                             return { valor: parseFloat(exp.valor), tipo: "float" };
                         } else {
-                            throw new Error(`El valor '${exp.valor}' no es un número válido.`);
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El valor '${exp.valor}' no es un número válido.`);
+                            erroresCompilacion.push(errores);
                         }
 
                     default:
-                        throw new Error(`No valido ese tipo de dato en parsefloat`);
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`No valido ese tipo de dato en parseFloat`);
+                        erroresCompilacion.push(errores);
                 }
             case 'parseInt':
                 switch(exp.tipo){
@@ -901,11 +950,13 @@ export class InterpreterVisitor extends BaseVisitor {
                             //const valorFloat = parseInt(exp.valor);
                             return { valor: Math.floor(parseInt(exp.valor)), tipo: "int" };
                         } else {
-                            throw new Error(`El valor '${exp.valor}' no es un número válido.`);
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El valor '${exp.valor}' no es un número válido.`);
+                            erroresCompilacion.push(errores);
                         }
 
                     default:
-                        throw new Error(`No valido ese tipo de dato en parseInt`);
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`No valido ese tipo de dato en parseInt`);
+                        erroresCompilacion.push(errores);
                 }
             case 'toString':
                 switch(exp.tipo){
@@ -933,12 +984,14 @@ export class InterpreterVisitor extends BaseVisitor {
                         
 
                     default:
-                        throw new Error(`No valido ese tipo de dato en toString`);
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`No valido ese tipo de dato en toString`);
+                        erroresCompilacion.push(errores);
                 }
 
 
             default:
-                throw new Error(`Operacion embebedia no encontrada`);
+                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: Operador no soportado: ${node.Embe}`);
+                erroresCompilacion.push(errores);
 
         }
 
@@ -995,7 +1048,8 @@ export class InterpreterVisitor extends BaseVisitor {
         console.log(cond.tipo)
 
         if(cond.tipo != "boolean"){
-            throw new Error(`el tipo no es un boolean`);
+            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en ternario`);
+            erroresCompilacion.push(errores);
         }
 
 
@@ -1020,20 +1074,22 @@ export class InterpreterVisitor extends BaseVisitor {
         
         // Si lista1 es un array, puedes concatenarlo con lista2
         if(tipos != lista1.tipo && (tipos != "float" && lista1.tipo != "int")){
-            throw new Error(`el dato del valor no es el mismo tipo`);
+            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`el dato del valor no es el mismo tipo`);
+            erroresCompilacion.push(errores);
         }
         arry.push(lista1.valor)
 
         for (let index = 0; index < lista2.length; index++) {
             const element = lista2[index];
             if(tipos != element.tipo  && (tipos != "float" && element.tipo != "int")){
-                throw new Error(`el dato del valor no es el mismo tipo`);
+                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`el dato del valor no es el mismo tipo`);
+                erroresCompilacion.push(errores);
             }
             arry.push(element.valor)
             
         }
-
-        this.entornoActual.setVariable(tipos,idT,arry);
+        
+        this.entornoActual.setVariable(tipos,idT,arry,node.location.start.line,node.location.start.column);
         return
 
 
@@ -1058,19 +1114,23 @@ export class InterpreterVisitor extends BaseVisitor {
         console.log("dimensiones" + nD);
 
         if(nD != dimensiones.length){
-            throw new Error(`El tamaño del arreglo no coincide con la cantidad de dimensiones`);
+            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: La cantidad de dimensiones no coincide con la cantidad de valores`);
+            erroresCompilacion.push(errores);
         }
     
         if (tipo != tipo1) {
-            throw new Error(`El dato del valor no es del mismo tipo`);
+            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: El tipo de la variable no coincide con el tipo de los valores`);
+            erroresCompilacion.push(errores);
         }
     
         for (const dimension of dimensiones) {
             if (dimension.valor < 0) {
-                throw new Error(`El tamaño de un arreglo no puede ser negativo`);
+                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: Las dimensiones de un arreglo no pueden ser negativas`);
+                erroresCompilacion.push(errores);
             }
             if (dimension.tipo != "int") {
-                throw new Error(`El tipo de la dimensión debe ser int`);
+                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: Las dimensiones de un arreglo deben ser de tipo int`);
+                erroresCompilacion.push(errores);
             }
         }
     
@@ -1086,7 +1146,7 @@ export class InterpreterVisitor extends BaseVisitor {
         
         
         let arry = crearArregloMultidimensional(dimensiones);
-        this.entornoActual.setVariable(tipo, id, arry);
+        this.entornoActual.setVariable(tipo, id, arry,node.location.start.line,node.location.start.column);
     
         return;
     }
@@ -1106,13 +1166,14 @@ export class InterpreterVisitor extends BaseVisitor {
         console.log("copiaArreglo: " + copiaArreglo)
         console.log("arregloAcopiar: " + arregloAcopiar.tipo)
         if(tipo != arregloAcopiar.tipo){
-            throw new Error(`el arreglo a copiar es de diferente tipo`);
+            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: El tipo de la variable no coincide con el tipo de los valores`);
+            erroresCompilacion.push(errores);
         }
 
         const arryNuevo =  arregloAcopiar.valor.slice();
         console.log("se realizo copia: " + arryNuevo);
 
-        this.entornoActual.setVariable(tipo, copiaArreglo, arryNuevo);
+        this.entornoActual.setVariable(tipo, copiaArreglo, arryNuevo,node.location.start.line,node.location.start.column);
 
         
         return
@@ -1154,7 +1215,8 @@ export class InterpreterVisitor extends BaseVisitor {
                 return { valor: cadena, tipo: "string" };
 
             default:
-                throw new Error(`Operacion de arreglo no encontrada`);
+                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: Operador no soportado: ${node.op}`);
+                erroresCompilacion.push(errores);
         }
 
     }
@@ -1164,7 +1226,7 @@ export class InterpreterVisitor extends BaseVisitor {
      */
 
         visitAccElem(node) {
-            let arreglo = this.entornoActual.getVariable(node.id);
+            let arreglo = this.entornoActual.getVariable(node.id, node.location.start.line, node.location.start.column);
             console.log("arreglo inicial:", arreglo);
         
             for (let i = 0; i < node.dimensiones.length; i++) {
@@ -1172,15 +1234,18 @@ export class InterpreterVisitor extends BaseVisitor {
                 console.log(`dimensión ${i + 1}, índice:`, indice);
         
                 if (indice.tipo !== "int") {
-                    throw new Error(`El índice de acceso al arreglo debe ser de tipo int, pero se encontró: "${indice.tipo}" en la dimensión ${i + 1}.`);
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El índice de acceso al arreglo debe ser de tipo int, pero se encontró: "${indice.tipo}" en la dimensión ${i + 1}.`);
+                    erroresCompilacion.push(errores);
                 }
         
                 if (!Array.isArray(arreglo.valor)) {
-                    throw new Error(`Se esperaba un arreglo en la dimensión ${i + 1}, pero se encontró: "${typeof arreglo.valor}".`);
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Se esperaba un arreglo en la dimensión ${i + 1}, pero se encontró: "${typeof arreglo.valor}".`);
+                    erroresCompilacion.push(errores);
                 }
         
                 if (indice.valor < 0 || indice.valor >= arreglo.valor.length) {
-                    throw new Error(`Índice fuera de rango en la dimensión ${i + 1}: ${indice.valor}. El rango válido es 0-${arreglo.valor.length - 1}.`);
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Índice fuera de rango en la dimensión ${i + 1}: ${indice.valor}. El rango válido es 0-${arreglo.valor.length - 1}.`);
+                    erroresCompilacion.push(errores);
                 }
 
                 console.log("no se que es lo que hace"  +arreglo.valor[indice.valor])
@@ -1201,7 +1266,7 @@ export class InterpreterVisitor extends BaseVisitor {
      * @type {BaseVisitor['visitAsigVector']}
      */
         visitAsigVector(node) {
-            let arreglo = this.entornoActual.getVariable(node.id);
+            let arreglo = this.entornoActual.getVariable(node.id, node.location.start.line, node.location.start.column);
             const dato = node.dato.accept(this);
             let currentArray = arreglo.valor;
         
@@ -1210,21 +1275,25 @@ export class InterpreterVisitor extends BaseVisitor {
                 const indice = node.indices[i].accept(this);
         
                 if (indice.tipo !== "int") {
-                    throw new Error(`El índice de acceso al arreglo debe ser de tipo int, pero se encontró: "${indice.tipo}" en la dimensión ${i + 1}.`);
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El índice de acceso al arreglo debe ser de tipo int, pero se encontró: "${indice.tipo}" en la dimensión ${i + 1}.`);
+                    erroresCompilacion.push(errores);
                 }
         
                 if (!Array.isArray(currentArray)) {
-                    throw new Error(`Se esperaba un arreglo en la dimensión ${i + 1}, pero se encontró: "${typeof currentArray}".`);
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Se esperaba un arreglo en la dimensión ${i + 1}, pero se encontró: "${typeof currentArray}".`);
+                    erroresCompilacion.push(errores);
                 }           
         
                 if (indice.valor < 0 || indice.valor >= currentArray.length) {
-                    throw new Error(`Índice fuera de rango en la dimensión ${i + 1}: ${indice.valor}. El rango válido es 0-${currentArray.length - 1}.`);
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Índice fuera de rango en la dimensión ${i + 1}: ${indice.valor}. El rango válido es 0-${currentArray.length - 1}.`);
+                    erroresCompilacion.push(errores);
                 }
         
                 if (i === node.indices.length - 1) {
                     // Estamos en el último índice, asignamos el valor
                     if (dato.tipo !== arreglo.tipo) {
-                        throw new Error(`Tipo de dato incorrecto. Se esperaba ${arreglo.tipo}, pero se recibió ${dato.tipo}.`);
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El tipo del valor no coincide con el tipo del arreglo: se esperaba "${arreglo.tipo}" pero se encontró "${dato.tipo}".`);
+                        erroresCompilacion.push(errores);
                     }
                     currentArray[indice.valor] = dato.valor;
                 } else {
@@ -1259,12 +1328,14 @@ export class InterpreterVisitor extends BaseVisitor {
 
 
         if (!Array.isArray(valores)) {
-            throw new Error(`Se esperaba un array para la matriz, pero se recibió: ${typeof valores}`);
+            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: Se esperaba un arreglo de valores para la matriz`);
+            erroresCompilacion.push(errores);
         }
 
         function validarTipo(valor, tipoEsperado) {
             if (valor.tipo !== tipoEsperado) {
-                throw new Error(`Tipo incorrecto. Se esperaba ${tipoEsperado} pero se encontró ${valor.tipo}`);
+                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: El tipo del valor no coincide con el tipo de la matriz: se esperaba "${tipoEsperado}" pero se encontró "${valor.tipo}"`);
+                erroresCompilacion.push(errores);
             }
             return true;
         }
@@ -1274,7 +1345,8 @@ export class InterpreterVisitor extends BaseVisitor {
                 return dim.map(valor => procesarDimensiones(valor, tipoEsperado, profundidad + 1));
             } else {
                 if (!validarTipo(dim, tipoEsperado)) {
-                    throw new Error(`Tipo incorrecto en la matriz. Se esperaba ${tipoEsperado} pero se encontró ${dim.tipo} en la profundidad ${profundidad}`);
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: El tipo del valor no coincide con el tipo de la matriz: se esperaba "${tipoEsperado}" pero se encontró "${dim.tipo}"`);
+                    erroresCompilacion.push(errores);
                 }
                 return dim.valor;  // Devolvemos solo el valor, no el objeto completo
             }
@@ -1284,7 +1356,8 @@ export class InterpreterVisitor extends BaseVisitor {
         try {
             matrizProcesada = procesarDimensiones(valores, tipo);
         } catch (error) {
-            throw new Error(`Error al procesar la matriz: ${error.message}`);
+            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error al procesar las dimensiones de la matriz: ${error.message}`);
+            erroresCompilacion.push(errores);
         }
 
         function validarDimensiones(arr, expectedDimensions) {
@@ -1295,13 +1368,15 @@ export class InterpreterVisitor extends BaseVisitor {
         }
 
         if (!validarDimensiones(matrizProcesada, nD)) {
-            throw new Error(`Las dimensiones de la matriz no son correctas. Se esperaban ${nD} dimensiones.`);
+            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: Las dimensiones de la matriz no coinciden con las dimensiones especificadas`);
+            erroresCompilacion.push(errores);
         }
 
         try {
-            this.entornoActual.setVariable(tipo, id, matrizProcesada);
+            this.entornoActual.setVariable(tipo, id, matrizProcesada, node.location.start.line, node.location.start.column);
         } catch (error) {
-            throw new Error(`Error al guardar la matriz en el entorno: ${error.message}`);
+            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error al guardar la matriz en el entorno: ${error.message}`);
+            erroresCompilacion.push(errores);
         }
 
     }
@@ -1415,21 +1490,23 @@ export class InterpreterVisitor extends BaseVisitor {
             const entornoAnterior = this.entornoActual;
             this.entornoActual = new Entorno(entornoAnterior);
 
-            const arreglo = this.entornoActual.getVariable(node.id2);
+            const arreglo = this.entornoActual.getVariable(node.id2, node.location.start.line, node.location.start.column);
 
             if (!Array.isArray(arreglo.valor)) {
-                throw new Error(`El valor no es un arreglo`);
+                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: Se esperaba un arreglo para la instrucción forEach`);
+                erroresCompilacion.push(errores);
             }
 
             if (node.tipo != arreglo.tipo) {
-                throw new Error(`El tipo del arreglo no coincide con el tipo de la variable`);
+                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: El tipo del arreglo no coincide con el tipo esperado`);
+                erroresCompilacion.push(errores);
             }
 
             for (const valor of arreglo.valor) {
-                this.entornoActual.setVariable(arreglo.tipo, node.id, valor);
+                this.entornoActual.setVariable(arreglo.tipo, node.id, valor, node.location.start.line, node.location.start.column);
                 node.stmt.accept(this);
 
-                this.entornoActual.eleiminar(node.id);
+                this.entornoActual.eleiminar(node.id, node.location.start.line, node.location.start.column);
                 
             }
 
@@ -1452,17 +1529,20 @@ export class InterpreterVisitor extends BaseVisitor {
             console.log("argums: " + argums)    
 
             if(!(fun instanceof Ejecutable)){
-                throw new Error(`La función llamada no es invocable`);
+                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es posible llamar a una función que no sea ejecutable`);
+                erroresCompilacion.push(errores);
             }
 
             if(fun.aridad().length !== argums.length){
-                throw new Error(`La función llamada no coincide con la cantidad de argumentos`);
+                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: La cantidad de argumentos no coincide con la cantidad de parámetros de la función`);
+                erroresCompilacion.push(errores);
             }
 
             argums.forEach((arg1 , indic)=> {
                 const tipo = fun.aridad()[indic];
                 if(tipo.tipo !== arg1.tipo){
-                    throw new Error(`El tipo del argumento no coincide con el tipo esperado`);
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: El tipo del argumento no coincide con el tipo del parámetro de la función`);
+                    erroresCompilacion.push(errores);
                 }
             });
 
@@ -1482,13 +1562,14 @@ export class InterpreterVisitor extends BaseVisitor {
             const valorUnico = new Set(nomParams);
 
             if(nomParams.length  !== valorUnico.size){
-                throw new Error(`No se permiten parámetros duplicados en la función`);
+                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No se permiten parámetros duplicados en la función`);
+                erroresCompilacion.push(errores);
             }
 
             
 
             const funcion = new FuncionRemota(node,this.entornoActual);
-            this.entornoActual.setVariable(node.tipo, node.id, funcion);
+            this.entornoActual.setVariable(node.tipo, node.id, funcion,node.location.start.line,node.location.start.column);
         }
 
         /**
@@ -1514,7 +1595,7 @@ export class InterpreterVisitor extends BaseVisitor {
 
             const struct = new StructC(node.id, numPropiedas);
 
-            this.entornoActual.setVariable(node.id,node.id, struct);    
+            this.entornoActual.setVariable(node.id,node.id, struct,node.location.start.line,node.location.start.column);    
 
         }
 
@@ -1526,19 +1607,23 @@ export class InterpreterVisitor extends BaseVisitor {
             const tipo = node.tipo;
             const id = node.id;
             const instancia = node.instan.accept(this);
-            const struc = this.entornoActual.getVariable(tipo).valor;
+            
+            const struc = this.entornoActual.getVariable(tipo,node.location.start.line,node.location.start.column).valor;
 
 
-            if(tipo != instancia.tipo) throw new Error(`El tipo del struct no coincide con el tipo de la instancia`)
-
+            if(tipo != instancia.tipo) {
+                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El tipo de la instancia no coincide con el tipo de la estructura`);
+                erroresCompilacion.push(errores);
+            }
 
             if(!(struc instanceof StructC)){
-                throw new Error(`${id} no es un struct`)
+                let errores = new erroresReporte(node.location.start.line,node.location.start.column,` No es posible instanciar una estructura que no sea un struct`);
+                erroresCompilacion.push(errores);
             }
 
             //const valor = new Instancia(new StructC(tipo, instancia.valor));
             
-            this.entornoActual.setVariable(tipo, id, instancia.valor);
+            this.entornoActual.setVariable(tipo, id, instancia.valor,node.location.start.line,node.location.start.column);
 
             return struc.invocar(this, instancia.valor.structC.propiedades);
             
@@ -1553,10 +1638,12 @@ export class InterpreterVisitor extends BaseVisitor {
 
             let temStruct = {};
 
-            const struct = this.entornoActual.getVariable(tipo);
+            const struct = this.entornoActual.getVariable(tipo,node.location.start.line,node.location.start.column);
 
             if(!(struct.valor instanceof StructC)){
-                throw new Error(`${tipo} no es un struct`)
+                //throw new Error(`${tipo} no es un struct`)
+                let error = new erroresReporte( node.location.start.line, node.location.start.column,"No es un struct");
+                erroresCompilacion.push(error);
             }
 
             atributos.forEach(atributo => {
@@ -1564,7 +1651,9 @@ export class InterpreterVisitor extends BaseVisitor {
                 
 
                 if(!(id in struct.valor.propiedades)){
-                    throw new Error(`El  atributo ${id} no no esta declarado en el struct`);
+                    //throw new Error(`El  atributo ${id} no no esta declarado en el struct`);
+                    let error = new erroresReporte( node.location.start.line, node.location.start.column,"El atributo no esta declarado en el struct");
+                    erroresCompilacion.push(error);
                 }
 
                 const dat = atributo.exp.accept(this);
@@ -1573,7 +1662,9 @@ export class InterpreterVisitor extends BaseVisitor {
 
                 if(struct.valor.propiedades[id].tipo != dat.tipo){
                     if(!(struct.valor.propiedades[id].tipo == "float" && dat.tipo == "int")){
-                        throw new Error(`El tipo del atributo ${id} no coincide con el tipo del struct`);
+                        
+                        let error = new erroresReporte( node.location.start.line, node.location.start.column,"El tipo del atributo no coincide con el tipo del struct");
+                        erroresCompilacion.push(error);
                     }
                 }
 
@@ -1604,7 +1695,8 @@ export class InterpreterVisitor extends BaseVisitor {
             console.log("instancia: " + instan.valor)
 
             if(!(instan.valor instanceof Instancia)){
-                throw new Error('No es posible obtener una propiedad de algo que no es una instancia en get');
+                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`No es posible obtener una propiedad de algo que no es una instancia`);
+                erroresCompilacion.push(errores);
             }
 
             return instan.valor.get(node.propiedad);
@@ -1618,7 +1710,8 @@ export class InterpreterVisitor extends BaseVisitor {
             const instan = node.objetivo.accept(this);
 
             if(!(instan.valor instanceof Instancia)){
-                throw new Error('No es posible establecer una propiedad de algo que no es una instancia en set');
+                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`No es posible asignar una propiedad de algo que no es una instancia`);
+                erroresCompilacion.push(errores);
             }
 
             const valor = node.valor.accept(this);
@@ -1634,7 +1727,7 @@ export class InterpreterVisitor extends BaseVisitor {
         * @type {BaseVisitor['visitFunStruct']}
         */
         visitFunStruct(node){
-            const struct = this.entornoActual.getVariable(node.dato);
+            const struct = this.entornoActual.getVariable(node.dato,node.location.start.line,node.location.start.column);
             const arryPropiedad = [];
 
             console.log("struct: " + struct.valor.structC.propiedades)

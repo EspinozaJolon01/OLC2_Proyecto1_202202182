@@ -12,11 +12,12 @@ const modalErrores = document.getElementById('modal-errores')
 const modalSimbolos = document.getElementById('modal-simbolos')
 const closeButtons = document.getElementsByClassName('close')
 
-let erroresCompilacion = []
+export let erroresCompilacion = []
 let tablaSimbolos = []
 
 ejecutar.addEventListener('click', () => {
     const codigoFuente = editor.value
+    erroresCompilacion = [] // Limpiar errores de compilación
     //try {
         const sentencias = parse(codigoFuente)
         const interprete = new InterpreterVisitor()
@@ -25,10 +26,10 @@ ejecutar.addEventListener('click', () => {
         sentencias.forEach(sentencia => sentencia.accept(interprete))
         
         consola.innerHTML = interprete.consola
+
+        console.log(erroresCompilacion)
         
-        // Almacenar errores y símbolos para las tablas
-        erroresCompilacion = interprete.errores || []
-        tablaSimbolos = interprete.tablaSimbolos || []
+    
     //} catch (error) {
         // if(error.location){
         //     consola.innerHTML = 'Error: ' + error.message + ' at line ' + error.location.start.line + ' column ' + error.location.start.column
@@ -89,9 +90,9 @@ function populateErroresTable() {
         const row = tableBody.insertRow()
         row.insertCell().textContent = index + 1
         row.insertCell().textContent = error.message
-        row.insertCell().textContent = error.location ? error.location.start.line : 'N/A'
-        row.insertCell().textContent = error.location ? error.location.start.column : 'N/A'
-        row.insertCell().textContent = error.type || 'Desconocido'
+        row.insertCell().textContent = error.linea 
+        row.insertCell().textContent = error.columna 
+        row.insertCell().textContent = error.tipo 
     })
 }
 

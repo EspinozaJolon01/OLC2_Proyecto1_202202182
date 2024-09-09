@@ -2,6 +2,8 @@ import { Ejecutable } from './Ejecutable.js';
 import { Entorno } from './entornos.js';
 import { BreakException } from './TransferCommands.js';
 import { ReturnException } from './TransferCommands.js';
+import { erroresReporte } from "./reports.js";
+import { erroresCompilacion } from "./compilador.js";
 
 export class FuncionRemota extends Ejecutable {
 
@@ -52,7 +54,9 @@ export class FuncionRemota extends Ejecutable {
 
                 
                 if(this.node.tipo === 'void' && error.value !== null){
-                    throw new Error(`Una función de tipo 'void' no puede retornar un valor.`);
+
+                    let error = new erroresReporte(this.nodo.location.start.line, this.nodo.location.start.column,`Una función de tipo 'void' no puede retornar un valor.`);
+                    erroresCompilacion.push(error);
                 }
 
                 if(this.node.tipo === 'void' && error.value === null){
@@ -61,24 +65,28 @@ export class FuncionRemota extends Ejecutable {
 
 
                 if(this.node.tipo !== error.value.tipo){
-                    throw new Error(`El tipo de retonor no coincide con el esperado`)
+                    let error = new erroresReporte(this.nodo.location.start.line, this.nodo.location.start.column,`El tipo de retorno de la función no coincide con el tipo de la función.`);
+                    erroresCompilacion.push(error);
                 }
                 return error.value;
             }
 
             if(this.node.tipo !== "void" && error instanceof BreakException){
-                throw new Error(`La función ${this.node.id} debe retornar un valor`);
+                let error = new erroresReporte(this.nodo.location.start.line, this.nodo.location.start.column,`La función ${this.node.id} debe retornar un valor`);
+                erroresCompilacion.push(error);
             }
 
             if(this.node.tipo !== "void" && error instanceof ContinueException){
-                throw new Error(`La función ${this.node.id} debe retornar un valor`);
+                let error = new erroresReporte(this.nodo.location.start.line, this.nodo.location.start.column,`La función ${this.node.id} debe retornar un valor`);
+                erroresCompilacion.push(error);
             }
 
             throw error;
         }
 
         if(this.node.tipo !== "void"){
-            throw new Error(`La función ${this.node.id} debe retornar un valor`);
+            let error = new erroresReporte(this.nodo.location.start.line, this.nodo.location.start.column,`La función ${this.node.id} debe retornar un valor`);
+            erroresCompilacion.push(error);
         }
 
         interprete.entornoActual = entornoAntesDeEjecutar;

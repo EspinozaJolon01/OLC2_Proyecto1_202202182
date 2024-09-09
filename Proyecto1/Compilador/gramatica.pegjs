@@ -278,7 +278,7 @@ Unaria =
   / Embe: ("toUpperCase" /"toLowerCase" /"parsefloat"/"parseInt"/"toString") "(" _ dat:Valores _ ")" _ { return crearNodo('embebidas', {Embe, exp: dat }) }
   / id: Identify "++" { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "++", exp: crearNodo('referenciaVariable', { id }) }) }) }
   / op:"-" _ num:Unaria { return crearNodo('unaria', { op, exp: num }) }
-  / op:"!" _ num:Valores { return crearNodo('unaria', { op, exp: num }) }
+  / op:"!" _ num:Unaria { return crearNodo('unaria', { op, exp: num }) }
   / id: Identify "--" { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "--", exp: crearNodo('referenciaVariable', { id }) }) }) }
   / Valores
 

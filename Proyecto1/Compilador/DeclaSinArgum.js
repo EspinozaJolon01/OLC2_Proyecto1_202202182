@@ -1,3 +1,6 @@
+import { erroresReporte } from "./reports.js";
+import { erroresCompilacion } from "./compilador.js";
+
 export function DatoSinArgu(tipo) {
     switch (tipo) {
         case "int":               
@@ -11,7 +14,9 @@ export function DatoSinArgu(tipo) {
         case "char":
             return ''
         default:
-            throw new Error(`Tipo ${tipo} no es valido`)
+            //throw new Error(`Tipo ${tipo} no es valido`)
+            let error = new erroresReporte(this.nodo.location.start.line, this.nodo.location.start.column,`Tipo ${tipo} no es valido`);
+            erroresCompilacion.push(error);
     }
 }
 
@@ -29,6 +34,8 @@ export function DatoSinArguemntoArreglo(tipo) {
         case "char":
             return ''
         default:
-            throw new Error(`Tipo ${tipo} no es valido`)
+            //throw new Error(`Tipo ${tipo} no es valido`)
+            let error = new erroresReporte(this.nodo.location.start.line, this.nodo.location.start.column,`Tipo ${tipo} no es valido`);
+            erroresCompilacion.push(error);
     }
 }
