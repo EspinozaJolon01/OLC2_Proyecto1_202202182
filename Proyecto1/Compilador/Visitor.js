@@ -123,6 +123,9 @@
 
  * @typedef {import('./nodos').Set} Set
 
+
+ * @typedef {import('./nodos').FunStruct} FunStruct
+
  */
 
 
@@ -499,6 +502,15 @@ export class BaseVisitor {
      */
     visitSet(node) {
         throw new Error('Metodo visitSet no implementado');
+    }
+    
+
+    /**
+     * @param {FunStruct} node
+     * @returns {any}
+     */
+    visitFunStruct(node) {
+        throw new Error('Metodo visitFunStruct no implementado');
     }
     
 }

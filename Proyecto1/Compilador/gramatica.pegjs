@@ -42,7 +42,8 @@
       'contenidoStruct' : nodos.ContenidoStruct,
       'instStuc' : nodos.InstStuc,
       'get' : nodos.Get,
-      'set' : nodos.Set
+      'set' : nodos.Set,
+      'funStruct' : nodos.FunStruct
       
     }
 
@@ -272,6 +273,7 @@ Unaria =
         dati:Identify "." op:"indexOf" "("_ bus:Expresion? _")" _ {return crearNodo('accesoElem',{dat: crearNodo('referenciaVariable' , {id:dati}),op,bus})}
         / dati:Identify "." op:"length" _ {return crearNodo('accesoElem',{dat: crearNodo('referenciaVariable' , {id:dati}),op, bus: undefined})}
         / dati:Identify "." op:"join" _ "()"  {return crearNodo('accesoElem',{dat: crearNodo('referenciaVariable' , {id:dati}),op, bus: undefined})}
+        / tipo:"Object.keys(" _ dato:Identify _ ")" {return crearNodo('funStruct',{tipo, dato})}
   / Embe:("typeof") _ dat:Valores { return crearNodo('embebidas', {Embe, exp: dat }) }
   / Embe: ("toUpperCase" /"toLowerCase" /"parsefloat"/"parseInt"/"toString") "(" _ dat:Valores _ ")" _ { return crearNodo('embebidas', {Embe, exp: dat }) }
   / id: Identify "++" { return crearNodo('asignacion', { id, asgn: crearNodo('unaria', { op: "++", exp: crearNodo('referenciaVariable', { id }) }) }) }

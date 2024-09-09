@@ -1509,4 +1509,37 @@ export class Set extends expression {
     }
 }
     
-export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Case, Ternario, ArregloValores, ArregloCantidad, ArregloCopia, AccesoElem, AccElem, AsigVector, Matrices, MatrizCantidad, Break, Continue, Return, ForEach, FunLlamada, DeclaracionFuncion, Estructura, ContenidoStruct, InstStuc, Get, Set }
+export class FunStruct extends expression {
+
+    /**
+    * @param {Object} options
+    * @param {string} options.tipo Tipo de la funcion
+ * @param {string} options.dato Dato de la funcion
+    */
+    constructor({ tipo, dato }) {
+        super();
+        
+        /**
+         * Tipo de la funcion
+         * @type {string}
+        */
+        this.tipo = tipo;
+
+
+        /**
+         * Dato de la funcion
+         * @type {string}
+        */
+        this.dato = dato;
+
+    }
+
+    /**
+     * @param {BaseVisitor} visitor
+     */
+    accept(visitor) {
+        return visitor.visitFunStruct(this);
+    }
+}
+    
+export default { expression , OpeBini, OpeUnaria, Agrupacion, Numero, DeclaracionVariable, DeclaracionSinAargumn, ReferenciaVariable, Print, ExpresionStmt, Asignacion, Bloque, If, While, For, Boolena, CadenaString, Caracter, Embebidas, Switch, Case, Ternario, ArregloValores, ArregloCantidad, ArregloCopia, AccesoElem, AccElem, AsigVector, Matrices, MatrizCantidad, Break, Continue, Return, ForEach, FunLlamada, DeclaracionFuncion, Estructura, ContenidoStruct, InstStuc, Get, Set, FunStruct }

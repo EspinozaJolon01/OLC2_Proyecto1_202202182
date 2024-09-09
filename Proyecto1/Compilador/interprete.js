@@ -1629,4 +1629,26 @@ export class InterpreterVisitor extends BaseVisitor {
 
         }
 
+
+    /**
+        * @type {BaseVisitor['visitFunStruct']}
+        */
+        visitFunStruct(node){
+            const struct = this.entornoActual.getVariable(node.dato);
+            const arryPropiedad = [];
+
+            console.log("struct: " + struct.valor.structC.propiedades)
+            const structCProperties =  struct.valor.structC.propiedades;
+            for (const key in structCProperties) {
+                arryPropiedad.push(key);
+                console.log(key);
+            }
+
+
+            return {valor:arryPropiedad, tipo:"string"};
+        
+
+        
+        }
+
 }
