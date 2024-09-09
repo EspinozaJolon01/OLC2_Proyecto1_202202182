@@ -1250,17 +1250,17 @@ export class FunLlamada extends expression {
 
     /**
     * @param {Object} options
-    * @param {expression} options.funLam expresion de la llamada
+    * @param {expression} options.funLlan expresion de la llamada
  * @param {expression[]} options.args los argumentos de la llamda
     */
-    constructor({ funLam, args }) {
+    constructor({ funLlan, args }) {
         super();
         
         /**
          * expresion de la llamada
          * @type {expression}
         */
-        this.funLam = funLam;
+        this.funLlan = funLlan;
 
 
         /**
@@ -1333,7 +1333,7 @@ export class Estructura extends expression {
     /**
     * @param {Object} options
     * @param {string} options.id Identificador de la estructura
- * @param {expression[]} options.dcls Declaraciones de la estructura
+ * @param {expression} options.dcls Declaraciones de la estructura
     */
     constructor({ id, dcls }) {
         super();
@@ -1347,7 +1347,7 @@ export class Estructura extends expression {
 
         /**
          * Declaraciones de la estructura
-         * @type {expression[]}
+         * @type {expression}
         */
         this.dcls = dcls;
 

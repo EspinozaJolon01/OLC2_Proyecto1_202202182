@@ -20,12 +20,12 @@ export class Instancia  {
         if (!(nombre in this.structC.propiedades)) {
             throw new Error(`La propiedad ${nombre} no está definida en la estructura ${this.structC.nombre}`);
         }
-        this.propiedades[nombre] = valor;
+        this.structC.propiedades[nombre] = valor;
     }
 
     get(nombre) {
-        if(this.propiedades.hasOwnProperty(nombre)){
-            return this.propiedades[nombre];
+        if(this.structC.propiedades.hasOwnProperty(nombre)){
+            return this.structC.propiedades[nombre];
         }
 
         throw new Error(`Propiedad no encontrada: ${nombre}`);

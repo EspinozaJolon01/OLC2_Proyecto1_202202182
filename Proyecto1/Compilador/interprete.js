@@ -557,6 +557,9 @@ export class InterpreterVisitor extends BaseVisitor {
         let tipoVariable =  node.tipo;
         const nombreVariable = node.id;
 
+
+        
+
         
 
         console.log(tipoVariable)
@@ -565,9 +568,9 @@ export class InterpreterVisitor extends BaseVisitor {
 
 
         if(node.exp){
-
-            const valor = node.exp.accept(this)
             
+            const valor = node.exp.accept(this)
+            let elemento = valor.valor
 
             switch (tipoVariable) {
                 case "int":
@@ -603,6 +606,7 @@ export class InterpreterVisitor extends BaseVisitor {
     
                     case "var":
                         // Determinar el tipo dinámicamente basado en el valor
+
                         if (typeof valor.valor === 'number') {
                             if (Number.isInteger(valor.valor)) {
                                 tipoVariable = valor.tipo;
@@ -617,8 +621,12 @@ export class InterpreterVisitor extends BaseVisitor {
                             }
                         } else if (typeof valor.valor === 'boolean') {
                             tipoVariable = valor.tipo;
-                        } else {
+                        } else if(this.entornoActual.getVariable(valor.tipo).valor instanceof StructC){
+                            
+                            tipoVariable = valor.tipo;
+                        }else{
                             throw new Error(`Tipo no soportado para la variable ${nombreVariable}`);
+
                         }
                         break;;
                 default:
@@ -627,7 +635,7 @@ export class InterpreterVisitor extends BaseVisitor {
 
             console.log("fin: "+tipoVariable)
 
-            this.entornoActual.setVariable(tipoVariable,nombreVariable, valor.valor);
+            this.entornoActual.setVariable(tipoVariable,nombreVariable, elemento);
             return
 
         }
@@ -655,6 +663,9 @@ export class InterpreterVisitor extends BaseVisitor {
         const nombreVariable = node.id;
 
         const varible = this.entornoActual.getVariable(nombreVariable)
+        // if(varible.valor instanceof Instancia){
+        // return {valor: varible.valor.StructC, tipo: varible.tipo}
+        // }
         return {valor:varible.valor, tipo:varible.tipo}
     }
 
@@ -1157,7 +1168,7 @@ export class InterpreterVisitor extends BaseVisitor {
             console.log("arreglo inicial:", arreglo);
         
             for (let i = 0; i < node.dimensiones.length; i++) {
-                const indice = node.dimensiones[i][1].accept(this);  // Accedemos a la Expresion dentro del par [Expresion]
+                const indice = node.dimensiones[i].accept(this);  // Accedemos a la Expresion dentro del par [Expresion]
                 console.log(`dimensión ${i + 1}, índice:`, indice);
         
                 if (indice.tipo !== "int") {
@@ -1176,6 +1187,10 @@ export class InterpreterVisitor extends BaseVisitor {
         
                 arreglo = { valor: arreglo.valor[indice.valor], tipo: arreglo.tipo };
             }
+
+            // if(arreglo.valor instanceof StructC){
+            //     return {valor: arreglo.valor.StructC, tipo: arreglo.tipo}
+            // }
             
         
             return arreglo;
@@ -1192,7 +1207,7 @@ export class InterpreterVisitor extends BaseVisitor {
         
             for (let i = 0; i < node.indices.length; i++) {
                 console.log(`node.indices[${i}]:`, node.indices[i]);
-                const indice = node.indices[i][1].accept(this);
+                const indice = node.indices[i].accept(this);
         
                 if (indice.tipo !== "int") {
                     throw new Error(`El índice de acceso al arreglo debe ser de tipo int, pero se encontró: "${indice.tipo}" en la dimensión ${i + 1}.`);
@@ -1427,7 +1442,7 @@ export class InterpreterVisitor extends BaseVisitor {
          * @type {BaseVisitor['visitFunLlamada']}
          */
         visitFunLlamada(node){
-            const fun = node.funLam.accept(this).valor;
+            const fun = node.funLlan.accept(this).valor;
 
             console.log("fun: " + fun)
             
@@ -1489,14 +1504,13 @@ export class InterpreterVisitor extends BaseVisitor {
                 console.log("delcaracion", dcl);
                 //numPropiedas[dcl.id] = dcl.id;
                 numPropiedas[dcl.id] = {
-                    tipo: dcl.tipo
+                    tipo: dcl.tipo,
+                    valor: null
                     
                 };
-                
             });
 
-            console.log("Propiedades:", numPropiedas);
-            console.log(node.id, Object.keys(numPropiedas).length);
+            
 
             const struct = new StructC(node.id, numPropiedas);
 
@@ -1522,27 +1536,11 @@ export class InterpreterVisitor extends BaseVisitor {
                 throw new Error(`${id} no es un struct`)
             }
 
-
-
-            // if(tipo != instancia.tipo){
-            //     throw new Error(`El tipo de la instancia no coincide con el tipo de la estructura`);
-            // }
-
-            // if(this.entornoActual.getVariable(id)){
-            //     throw new Error(`El id ${id} no es un struct`);
-            // }
-
-            // if(!this.entornoActual.getVariable(tipo)){
-            //     throw new Error(`El struct ${tipo} no está definido`);
-            // }
-
+            //const valor = new Instancia(new StructC(tipo, instancia.valor));
             
-
-
-            struc.invocar(this, instancia.valor);
-
-        
             this.entornoActual.setVariable(tipo, id, instancia.valor);
+
+            return struc.invocar(this, instancia.valor.structC.propiedades);
             
         }
 
@@ -1555,20 +1553,15 @@ export class InterpreterVisitor extends BaseVisitor {
 
             let temStruct = {};
 
-
             const struct = this.entornoActual.getVariable(tipo);
-
 
             if(!(struct.valor instanceof StructC)){
                 throw new Error(`${tipo} no es un struct`)
             }
 
-
             atributos.forEach(atributo => {
                 const id = atributo.id;
-
-
-
+                
 
                 if(!(id in struct.valor.propiedades)){
                     throw new Error(`El  atributo ${id} no no esta declarado en el struct`);
@@ -1576,18 +1569,29 @@ export class InterpreterVisitor extends BaseVisitor {
 
                 const dat = atributo.exp.accept(this);
 
+                
+
                 if(struct.valor.propiedades[id].tipo != dat.tipo){
                     if(!(struct.valor.propiedades[id].tipo == "float" && dat.tipo == "int")){
                         throw new Error(`El tipo del atributo ${id} no coincide con el tipo del struct`);
                     }
                 }
 
-                temStruct[id] = dat.valor;
+                // if(dat.tipo != "int" && dat.tipo != "float" && dat.tipo != "string" && dat.tipo != "boolean" && dat.tipo != "char"){
+                //     if(this.entornoActual.getVariable(dat.tipo).valor instanceof StructC){
+                //         const valor = new Instancia(new StructC(dat.tipo, dat.valor));
+                //         temStruct[id] = {valor:valor , tipo:dat.tipo};
+                //     }
+                // }else{
+                    temStruct[id] = {valor:dat.valor , tipo:dat.tipo};
+
+                //}
+                    
             });
 
+            return {valor:new Instancia(new StructC(tipo, temStruct)), tipo:tipo};
 
-            return {valor:temStruct, tipo:tipo}
-
+            //return {valor:temStruct, tipo:tipo};
         }
 
 /**
@@ -1597,36 +1601,32 @@ export class InterpreterVisitor extends BaseVisitor {
 
             const instan = node.objetivo.accept(this);
 
-            if(!(instan instanceof Instancia)){
+            console.log("instancia: " + instan.valor)
+
+            if(!(instan.valor instanceof Instancia)){
                 throw new Error('No es posible obtener una propiedad de algo que no es una instancia en get');
             }
 
-            return instan.get(node.propiedad);
+            return instan.valor.get(node.propiedad);
 
         }
 
-/**
+        /**
         * @type {BaseVisitor['visitSet']}
         */
         visitSet(node){
             const instan = node.objetivo.accept(this);
 
-            if(!(instan instanceof Instancia)){
+            if(!(instan.valor instanceof Instancia)){
                 throw new Error('No es posible establecer una propiedad de algo que no es una instancia en set');
             }
 
             const valor = node.valor.accept(this);
 
-            instan.set(node.propiedad, valor);
+            instan.valor.set(node.propiedad, valor);
 
             return valor;
 
         }
 
-
-
-
-
-        
-    
 }

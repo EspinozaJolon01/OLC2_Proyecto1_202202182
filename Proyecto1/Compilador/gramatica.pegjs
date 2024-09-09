@@ -179,16 +179,15 @@ Expresion = Asignacion
         
           
 
-Asignacion = asignado:FunLlamada _ "=" _ asgn:Asignacion 
+Asignacion =  id:Identify _ indices:("[" exp:Expresion "]" {return exp})+ _ "=" _ dato:Expresion {return crearNodo('asigVector', {id,indices,dato})}
+      /asignado:FunLlamada _ "=" _ asgn:Asignacion 
   { 
-
-    console.log({asignado})
 
     if (asignado instanceof nodos.ReferenciaVariable) {
       return crearNodo('asignacion', { id: asignado.id, asgn })
     }
 
-    if (!(asignado instanceof nodos.Get)) {
+    if (!(asignado instanceof nodos.Get || asignado instanceof nodos.Matrices || asignado instanceof nodos.ArregloCopia || asignado instanceof nodos.ArregloCantidad || asignado instanceof nodos.AccElem || asignado instanceof nodos.AsigVector )) {
       throw new Error('Solo se pueden asignar valores a propiedades de objetos')
     }
     
@@ -196,10 +195,8 @@ Asignacion = asignado:FunLlamada _ "=" _ asgn:Asignacion
 
 
   }
-          //id:Identify _ "=" _ asgn:Asignacion { return crearNodo('asignacion', { id, asgn }) }
           /  id:Identify _ "+=" _ asgn:Expresion { return crearNodo('asignacion', { id, asgn: crearNodo('binaria', { op: "+=", izq: crearNodo('referenciaVariable', { id }),der: asgn }) })} 
           /  id:Identify _ "-=" _ asgn:Expresion { return crearNodo('asignacion', { id, asgn: crearNodo('binaria', { op: "-=", izq: crearNodo('referenciaVariable', { id }),der: asgn }) })} 
-          / id:Identify _ indices:("[" Expresion "]")* _ "=" _ dato:Expresion {return crearNodo('asigVector', {id,indices,dato})}
           /AcceElemn
 
 AcceElemn = OpTenario
@@ -312,15 +309,13 @@ FunLlamada = objetivoInicial:Numero operaciones:(
       const { tipo, id, args:argumentos } = args
 
       if (tipo === 'funcCall') {
-        return crearNodo('funLlamada', { callee: objetivo, args: argumentos || [] })
+        return crearNodo('funLlamada', { funLlan: objetivo, args: argumentos || [] })
       }else if (tipo === 'get') {
         return crearNodo('get', { objetivo, propiedad: id })
       }
     },
     objetivoInicial
   )
-
-  console.log('llamada', {op}, {text: text()});
 
 return op
 }
@@ -347,7 +342,7 @@ Caracter = "'" char:[^'] "'" { return crearNodo('caracter', { valor: char, tipo:
 Numero = [0-9]+( "." [0-9]+ )? { return text().includes('.') ? crearNodo('numero', { valor: parseFloat(text(), 10), tipo:"float"}) : crearNodo('numero', { valor: parseInt(text(), 10), tipo:"int"})	 }
   / "(" _ exp:Expresion _ ")" { return crearNodo('agrupacion', { exp }) }
   / instan:Intancia  {return instan}
-  / id:Identify _ dimensiones:("[" Expresion "]")* {return crearNodo('accElem', {id, dimensiones});}
+  / id:Identify _ dimensiones:("[" exp:Expresion "]" {return exp})+ {return crearNodo('accElem', {id, dimensiones});}
   
   ///id:Identify "[" _ exp1:Expresion _ "]" _ "[" _ exp2:Expresion _ "]" {return crearNodo('accMatriz', {id,exp1,exp2})}
   

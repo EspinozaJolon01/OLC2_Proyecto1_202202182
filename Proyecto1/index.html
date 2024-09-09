@@ -5,34 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oaklang Editor</title>
     <link rel="stylesheet" href="/Proyecto1/frontend/styles.css">
+    
 </head>
 <body>
     <div class="container">
         <header class="navbar">
-            
             <div class="navbar-botones">
                 <button id="ejecutar" class="navbar-btn">Ejecutar</button>
                 <button id="NuevoArchivo" class="navbar-btn">Nuevo Archivo</button>
                 <button id="abrir" class="navbar-btn">Abrir</button>
                 <button id="guardar" class="navbar-btn">Guardar</button>
-                <button id="reporte-errores" class="navbar-btn">Reportes</button>
+                <button id="reporte-errores" class="navbar-btn">Reportes errores</button>
+                <button id="reporte-simbolos" class="navbar-btn">Reportes Simbolos</button>
             </div>
         </header>
         <main class="main-content">
             <aside>
                 <div class="tabs">
-                    
+                    <!-- Las pestañas se añadirán dinámicamente aquí -->
                 </div>
             </aside>
             <section class="editors">
                 <h2>Entrada</h2>
                 <div class="input-area">
-                    
                     <textarea id="codigofuente" class="code-editor" placeholder="Escribe tu código aquí..."></textarea>
                 </div>
                 <h2>Consola</h2>
                 <div class="console-area">
-                    
                     <textarea id="consola" readonly class="console"></textarea>
                 </div>
             </section>
@@ -46,6 +45,52 @@
             </div>
         </footer>
     </div>
+
+    <!-- Modal para Reporte de Errores -->
+    <div id="modal-errores" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Reporte de Errores</h2>
+            <table id="tabla-errores">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Descripción</th>
+                        <th>Línea</th>
+                        <th>Columna</th>
+                        <th>Tipo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Los datos se insertarán aquí dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal para Tabla de Símbolos -->
+    <div id="modal-simbolos" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Tabla de Símbolos</h2>
+            <table id="tabla-simbolos">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tipo símbolo</th>
+                        <th>Tipo dato</th>
+                        <th>Ámbito</th>
+                        <th>Línea</th>
+                        <th>Columna</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Los datos se insertarán aquí dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <script src="/Proyecto1/frontend/script.js"></script>
     <script type="module" src="/Proyecto1/Compilador/compilador.js"></script>
 </body>
