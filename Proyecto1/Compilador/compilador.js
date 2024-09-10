@@ -2,6 +2,7 @@
 
 import { parse } from './gramatica.js'
 import { InterpreterVisitor } from './interprete.js'
+import { StructC } from './structC.js'
 
 const editor = document.getElementById('codigofuente')
 const ejecutar = document.getElementById('ejecutar')
@@ -13,11 +14,12 @@ const modalSimbolos = document.getElementById('modal-simbolos')
 const closeButtons = document.getElementsByClassName('close')
 
 export let erroresCompilacion = []
-let tablaSimbolos = []
+export let tablaSimbolos = []
 
 ejecutar.addEventListener('click', () => {
     const codigoFuente = editor.value
     erroresCompilacion = [] // Limpiar errores de compilación
+    tablaSimbolos = [] // Limpiar tabla de símbolos
     //try {
         const sentencias = parse(codigoFuente)
         const interprete = new InterpreterVisitor()
@@ -28,6 +30,7 @@ ejecutar.addEventListener('click', () => {
         consola.innerHTML = interprete.consola
 
         console.log(erroresCompilacion)
+        console.log(tablaSimbolos)
         
     
     //} catch (error) {
@@ -111,6 +114,9 @@ function populateSimbolosTable() {
         row.insertCell().textContent = simbolo.columna
     })
 }
+
+
+
 
 
 

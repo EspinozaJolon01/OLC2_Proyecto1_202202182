@@ -1,5 +1,9 @@
 import { erroresCompilacion } from "./compilador.js";
 import { erroresReporte } from "./reports.js";
+
+
+
+
 export class Entorno {
     /**
      * @param {Entorno} padre
@@ -22,6 +26,7 @@ export class Entorno {
             
         }
         this.valores[nombre] = { valor, tipo,linea,columna };
+        
     }
 
     /**

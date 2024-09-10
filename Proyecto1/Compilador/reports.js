@@ -9,3 +9,15 @@ export class erroresReporte extends Error {
         this.columna = columna;
     }
 }
+
+
+export class tablaSimboloReport {
+    constructor(id,tipoSimbolo,tipoDato,Ambito,linea,columna){
+        this.id = id;
+        this.tipoSimbolo = tipoSimbolo;
+        this.tipoDato = tipoDato;
+        this.ambito = Ambito;
+        this.linea = linea; 
+        this.columna = columna;
+    }
+}

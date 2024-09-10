@@ -28,11 +28,11 @@ export class FuncionRemota extends Ejecutable {
     * @type {Invocable['invocar']}
     */
 
-    invocar(interprete, argumentos) {
+    invocar(interprete, argumentos, node) {
         const nuevoEntorno = new Entorno(this.clousure);
 
         this.node.params.forEach((parametro, i) => {
-            nuevoEntorno.setVariable(parametro.tipo,parametro.id, argumentos[i].valor);
+            nuevoEntorno.setVariable(parametro.tipo,parametro.id, argumentos[i].valor,node.location.start.line,node.location.start.column);
         });
 
 

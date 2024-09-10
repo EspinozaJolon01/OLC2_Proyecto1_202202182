@@ -8,9 +8,10 @@ import { Ejecutable } from "./Ejecutable.js";
 import { FuncionRemota } from "./remota.js";
 import { StructC } from "./structC.js";
 import { Instancia } from "./instancia.js";
-import { erroresReporte } from "./reports.js";
+import { erroresReporte,tablaSimboloReport } from "./reports.js";
 import { erroresCompilacion } from "./compilador.js";
 
+import { tablaSimbolos } from "./compilador.js";
 
 
 
@@ -603,7 +604,7 @@ export class InterpreterVisitor extends BaseVisitor {
         let tipoVariable =  node.tipo;
         const variable = node.id;
 
-        console.log(tipoVariable)
+        //console.log(tipoVariable)
 
         if(node.exp){
             
@@ -653,14 +654,15 @@ export class InterpreterVisitor extends BaseVisitor {
             }
 
             
-
-            return this.entornoActual.setVariable(tipoVariable, variable, valor.valor, node.location.start.line, node.location.start.column)
+            let tabla = new tablaSimboloReport(variable,"variable",tipoVariable,"Global",node.location.start.line,node.location.start.column);
+            tablaSimbolos.push(tabla);
+            return this.entornoActual.setVariable(tipoVariable, variable, valor.valor, node.location.start.line, node.location.start.column);
             
 
         }
-            const valorPorDefecto = null
 
-            this.entornoActual.setVariable(tipoVariable, variable, valorPorDefecto,node.location.start.line,node.location.start.column);
+
+            this.entornoActual.setVariable(tipoVariable, variable, null,node.location.start.line,node.location.start.column);
             return
 
     }
@@ -672,7 +674,8 @@ export class InterpreterVisitor extends BaseVisitor {
         var nombre = node.id
         const nombreVarible = node.exp.accept(this);
         
-
+        let tabla = new tablaSimboloReport(nombre,"variable",nombreVarible.tipo,"Global",node.location.start.line,node.location.start.column);
+        tablaSimbolos.push(tabla);
         this.entornoActual.setVariable(nombreVarible.tipo,nombre,nombreVarible.valor,node.location.start.line,node.location.start.column);
 
     }
@@ -720,7 +723,7 @@ export class InterpreterVisitor extends BaseVisitor {
     visitAsignacion(node) {
         // const valor = this.interpretar(node.asgn);
         const valor = node.asgn.accept(this);
-        console.log("aqui estoy "  + valor)
+        //console.log("aqui estoy "  + valor)
         this.entornoActual.assignVariable(node.id, valor,node.location.start.line,node.location.start.column);
 
         return valor;
@@ -849,9 +852,9 @@ export class InterpreterVisitor extends BaseVisitor {
             case 'typeof':
                 switch(exp.tipo){
                     case "int":
-                        console.log("aqui inicio" + exp.valor)
-                        console.log(node.Embe)
-                        console.log(exp.tipo)
+                        //console.log("aqui inicio" + exp.valor)
+                        //console.log(node.Embe)
+                        //console.log(exp.tipo)
                         return {valor: exp.tipo, tipo: "string"}
                     case "float":
                         return {valor: exp.tipo, tipo: "string"}
@@ -870,7 +873,7 @@ export class InterpreterVisitor extends BaseVisitor {
             case 'toUpperCase':
                 switch(exp.tipo){
                     case "string":
-                        console.log("aqui inicio" + exp.valor)
+                        //console.log("aqui inicio" + exp.valor)
                         //const manuysucla = exp.valor.toUpperCase();                        
                         
                         
@@ -884,7 +887,7 @@ export class InterpreterVisitor extends BaseVisitor {
             case 'toLowerCase':
                 switch(exp.tipo){
                     case "string":
-                        console.log("aqui inicio" + exp.valor)
+                        //console.log("aqui inicio" + exp.valor)
                         //const minuscula = exp.valor.toLowerCase();                        
                         
                         
@@ -899,10 +902,10 @@ export class InterpreterVisitor extends BaseVisitor {
                 switch(exp.tipo){
                         
                     case "string":
-                        console.log("aqui inicio --" + exp.valor)
-                        console.log(node.Embe)
-                        console.log(exp.tipo)
-                        console.log("aquí inicio: ---" + exp.valor);
+                        //console.log("aqui inicio --" + exp.valor)
+                        //console.log(node.Embe)
+                        //console.log(exp.tipo)
+                        //console.log("aquí inicio: ---" + exp.valor);
             
                         // Validar que el string contenga solo números, opcionalmente con un punto decimal
                         const regex = /^[+-]?(\d+(\.\d*)?|\.\d+)$/;
@@ -922,7 +925,7 @@ export class InterpreterVisitor extends BaseVisitor {
             case 'parseInt':
                 switch(exp.tipo){
                     case "string":
-                        console.log("aquí inicio: " + exp.valor);
+                        //console.log("aquí inicio: " + exp.valor);
             
                         // Validar que el string contenga solo números, opcionalmente con un punto decimal
                         const regex = /^[+-]?(\d+(\.\d*)?|\.\d+)$/;
@@ -944,22 +947,22 @@ export class InterpreterVisitor extends BaseVisitor {
                     case "int":
                         
             
-                        console.log("aqui estoy ------")
-                        console.log("aquí inicio: " +  exp.valor  + exp.tipo);
+                        //console.log("aqui estoy ------")
+                        //console.log("aquí inicio: " +  exp.valor  + exp.tipo);
                         //const valorString = toString(exp.valor);
                         return { valor: exp.valor.toString(), tipo: "string" };
                     case "boolean":
                         
             
-                        console.log("aqui estoy ------")
-                        console.log("aquí inicio: " +  exp.valor  + exp.tipo);
+                        //console.log("aqui estoy ------")
+                        //console.log("aquí inicio: " +  exp.valor  + exp.tipo);
                         //const valorString = toString(exp.valor);
                         return { valor: exp.valor.toString(), tipo: "string" };
                     case "float":
                         
             
-                        console.log("aqui estoy ------")
-                        console.log("aquí inicio: " +  exp.valor  + exp.tipo);
+                        //console.log("aqui estoy ------")
+                       //console.log("aquí inicio: " +  exp.valor  + exp.tipo);
                         //const valorString = toString(exp.valor);
                         return { valor: exp.valor.toString(), tipo: "string" };
 
@@ -1029,7 +1032,7 @@ export class InterpreterVisitor extends BaseVisitor {
      */
     visitTernario(node){
         const cond = node.validar.accept(this);
-        console.log(cond.tipo)
+        //console.log(cond.tipo)
 
         if(cond.tipo != "boolean"){
             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en ternario`);
@@ -1053,8 +1056,8 @@ export class InterpreterVisitor extends BaseVisitor {
         const lista1 = node.ArreTi.dato1; // Suponiendo que dato1.tipo es un array
         const lista2 = node.ArreTi.dato2; // Suponiendo que dato2 es un array
         
-        console.log("tipo del arreglo: " + tipos);
-        console.log("nombre del arreglo: " + idT);
+        //console.log("tipo del arreglo: " + tipos);
+        //console.log("nombre del arreglo: " + idT);
         
         // Si lista1 es un array, puedes concatenarlo con lista2
         if(tipos != lista1.tipo && (tipos != "float" && lista1.tipo != "int")){
@@ -1072,6 +1075,9 @@ export class InterpreterVisitor extends BaseVisitor {
             arry.push(element.valor)
             
         }
+
+        let tabla = new tablaSimboloReport(idT,"Arreglo",tipos,"Global",node.location.start.line,node.location.start.column);
+        tablaSimbolos.push(tabla);
         
         this.entornoActual.setVariable(tipos,idT,arry,node.location.start.line,node.location.start.column);
         return
@@ -1094,8 +1100,8 @@ export class InterpreterVisitor extends BaseVisitor {
         // console.log("tipo1: " + tipo1);
         // console.log("dimensiones: " + dimensiones.map(dim => dim.tipo).join(', '));
 
-        console.log("dimensiones: " + dimensiones.length);
-        console.log("dimensiones" + nD);
+       // console.log("dimensiones: " + dimensiones.length);
+        //console.log("dimensiones" + nD);
 
         if(nD != dimensiones.length){
             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: La cantidad de dimensiones no coincide con la cantidad de valores`);
@@ -1121,7 +1127,7 @@ export class InterpreterVisitor extends BaseVisitor {
         // Crear el arreglo multidimensional
         let crearArregloMultidimensional = (dimensiones, index = 0) => {
             if (index === dimensiones.length) {
-                return DatoSinArguemntoArreglo(tipo);
+                return DatoSinArguemntoArreglo(tipo,node);
             }
             return new Array(dimensiones[index].valor).fill().map(() => 
                 crearArregloMultidimensional(dimensiones, index + 1)
@@ -1130,6 +1136,9 @@ export class InterpreterVisitor extends BaseVisitor {
         
         
         let arry = crearArregloMultidimensional(dimensiones);
+
+        let tabla = new tablaSimboloReport(id,"Arreglo",tipo,"Global",node.location.start.line,node.location.start.column);
+        tablaSimbolos.push(tabla);
         this.entornoActual.setVariable(tipo, id, arry,node.location.start.line,node.location.start.column);
     
         return;
@@ -1146,17 +1155,20 @@ export class InterpreterVisitor extends BaseVisitor {
         const arregloAcopiar = node.exp.accept(this)
 
 
-        console.log("tipo: " + tipo)
-        console.log("copiaArreglo: " + copiaArreglo)
-        console.log("arregloAcopiar: " + arregloAcopiar.tipo)
+        //console.log("tipo: " + tipo)
+        //console.log("copiaArreglo: " + copiaArreglo)
+        //console.log("arregloAcopiar: " + arregloAcopiar.tipo)
         if(tipo != arregloAcopiar.tipo){
             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: El tipo de la variable no coincide con el tipo de los valores`);
             erroresCompilacion.push(errores);
         }
 
         const arryNuevo =  arregloAcopiar.valor.slice();
-        console.log("se realizo copia: " + arryNuevo);
+        //console.log("se realizo copia: " + arryNuevo);
 
+
+        let tabla = new tablaSimboloReport(copiaArreglo,"Arreglo",tipo,"Global",node.location.start.line,node.location.start.column);
+        tablaSimbolos.push(tabla);
         this.entornoActual.setVariable(tipo, copiaArreglo, arryNuevo,node.location.start.line,node.location.start.column);
 
         
@@ -1185,7 +1197,7 @@ export class InterpreterVisitor extends BaseVisitor {
                 return {valor:-1 , tipo:"int"}
             case ".length":
                 const length = arreglo.length;
-                console.log(length);
+                //console.log(length);
                 return { valor: length, tipo: "int" };
             case ".join":
                 let cadena ="";
@@ -1211,11 +1223,11 @@ export class InterpreterVisitor extends BaseVisitor {
 
         visitAccElem(node) {
             let arreglo = this.entornoActual.getVariable(node.id, node.location.start.line, node.location.start.column);
-            console.log("arreglo inicial:", arreglo);
+            //console.log("arreglo inicial:", arreglo);
         
             for (let i = 0; i < node.dimensiones.length; i++) {
                 const indice = node.dimensiones[i].accept(this);  // Accedemos a la Expresion dentro del par [Expresion]
-                console.log(`dimensión ${i + 1}, índice:`, indice);
+                //console.log(`dimensión ${i + 1}, índice:`, indice);
         
                 if (indice.tipo !== "int") {
                     let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El índice de acceso al arreglo debe ser de tipo int, pero se encontró: "${indice.tipo}" en la dimensión ${i + 1}.`);
@@ -1232,7 +1244,7 @@ export class InterpreterVisitor extends BaseVisitor {
                     erroresCompilacion.push(errores);
                 }
 
-                console.log("no se que es lo que hace"  +arreglo.valor[indice.valor])
+                //console.log("no se que es lo que hace"  +arreglo.valor[indice.valor])
         
                 arreglo = { valor: arreglo.valor[indice.valor], tipo: arreglo.tipo };
             }
@@ -1255,7 +1267,7 @@ export class InterpreterVisitor extends BaseVisitor {
             let currentArray = arreglo.valor;
         
             for (let i = 0; i < node.indices.length; i++) {
-                console.log(`node.indices[${i}]:`, node.indices[i]);
+                //console.log(`node.indices[${i}]:`, node.indices[i]);
                 const indice = node.indices[i].accept(this);
         
                 if (indice.tipo !== "int") {
@@ -1286,7 +1298,7 @@ export class InterpreterVisitor extends BaseVisitor {
                 }
             }
         
-            console.log("Asignación completada:", arreglo.valor);
+            //console.log("Asignación completada:", arreglo.valor);
             return;
         }
         
@@ -1358,6 +1370,8 @@ export class InterpreterVisitor extends BaseVisitor {
 
         try {
             this.entornoActual.setVariable(tipo, id, matrizProcesada, node.location.start.line, node.location.start.column);
+            let tabla = new tablaSimboloReport(id,"Arreglo",tipo,"Global",node.location.start.line,node.location.start.column);
+            tablaSimbolos.push(tabla);
         } catch (error) {
             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error al guardar la matriz en el entorno: ${error.message}`);
             erroresCompilacion.push(errores);
@@ -1487,6 +1501,8 @@ export class InterpreterVisitor extends BaseVisitor {
             }
 
             for (const valor of arreglo.valor) {
+                let tabla = new tablaSimboloReport(node.id,"variable",node.tipo,"Global",node.location.start.line,node.location.start.column);
+                tablaSimbolos.push(tabla);
                 this.entornoActual.setVariable(arreglo.tipo, node.id, valor, node.location.start.line, node.location.start.column);
                 node.stmt.accept(this);
 
@@ -1505,12 +1521,12 @@ export class InterpreterVisitor extends BaseVisitor {
         visitFunLlamada(node){
             const fun = node.funLlan.accept(this).valor;
 
-            console.log("fun: " + fun)
+            //console.log("fun: " + fun)
             
 
             const argums = node.args.map(arg => arg.accept(this));
 
-            console.log("argums: " + argums)    
+            //console.log("argums: " + argums)    
 
             if(!(fun instanceof Ejecutable)){
                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es posible llamar a una función que no sea ejecutable`);
@@ -1530,7 +1546,7 @@ export class InterpreterVisitor extends BaseVisitor {
                 }
             });
 
-            return fun.invocar(this, argums);
+            return fun.invocar(this, argums,node);
 
         }
 
@@ -1553,6 +1569,8 @@ export class InterpreterVisitor extends BaseVisitor {
             
 
             const funcion = new FuncionRemota(node,this.entornoActual);
+            let tabla = new tablaSimboloReport(node.id,"Funcion",node.tipo,"Global",node.location.start.line,node.location.start.column);
+            tablaSimbolos.push(tabla);
             this.entornoActual.setVariable(node.tipo, node.id, funcion,node.location.start.line,node.location.start.column);
         }
 
@@ -1561,12 +1579,12 @@ export class InterpreterVisitor extends BaseVisitor {
         */
         visitEstructura(node){
 
-            console.log("entro a estructura", node)
+            //console.log("entro a estructura", node)
             
             const numPropiedas = {};
 
             node.dcls.forEach(dcl => {
-                console.log("delcaracion", dcl);
+                //console.log("delcaracion", dcl);
                 //numPropiedas[dcl.id] = dcl.id;
                 numPropiedas[dcl.id] = {
                     tipo: dcl.tipo,
@@ -1579,6 +1597,8 @@ export class InterpreterVisitor extends BaseVisitor {
 
             const struct = new StructC(node.id, numPropiedas);
 
+            let tabla = new tablaSimboloReport(node.id,"Struct",node.id,"Global",node.location.start.line,node.location.start.column);
+            tablaSimbolos.push(tabla);
             this.entornoActual.setVariable(node.id,node.id, struct,node.location.start.line,node.location.start.column);    
 
         }
@@ -1606,7 +1626,8 @@ export class InterpreterVisitor extends BaseVisitor {
             }
 
             //const valor = new Instancia(new StructC(tipo, instancia.valor));
-            
+            let tabla = new tablaSimboloReport(id,"Instancia struct",tipo,"Global",node.location.start.line,node.location.start.column);
+            tablaSimbolos.push(tabla);
             this.entornoActual.setVariable(tipo, id, instancia.valor,node.location.start.line,node.location.start.column);
 
             return struc.invocar(this, instancia.valor.structC.propiedades);
@@ -1676,7 +1697,7 @@ export class InterpreterVisitor extends BaseVisitor {
 
             const instan = node.objetivo.accept(this);
 
-            console.log("instancia: " + instan.valor)
+            //console.log("instancia: " + instan.valor)
 
             if(!(instan.valor instanceof Instancia)){
                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`No es posible obtener una propiedad de algo que no es una instancia`);
@@ -1714,11 +1735,11 @@ export class InterpreterVisitor extends BaseVisitor {
             const struct = this.entornoActual.getVariable(node.dato,node.location.start.line,node.location.start.column);
             const arryPropiedad = [];
 
-            console.log("struct: " + struct.valor.structC.propiedades)
+            //console.log("struct: " + struct.valor.structC.propiedades)
             const structCProperties =  struct.valor.structC.propiedades;
             for (const key in structCProperties) {
                 arryPropiedad.push(key);
-                console.log(key);
+                //console.log(key);
             }
 
 
