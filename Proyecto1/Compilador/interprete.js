@@ -601,14 +601,14 @@ export class InterpreterVisitor extends BaseVisitor {
      */
     visitDeclaracionVariable(node) {
         let tipoVariable =  node.tipo;
-        const nombreVariable = node.id;
+        const variable = node.id;
 
         console.log(tipoVariable)
 
         if(node.exp){
             
             const valor = node.exp.accept(this)
-            let elemento = valor.valor
+            
 
             switch (tipoVariable) {
                 case "int":
@@ -646,57 +646,38 @@ export class InterpreterVisitor extends BaseVisitor {
                     }
                     break;
     
-                    case "var":
-                        // Determinar el tipo dinámicamente basado en el valor
-
-                        if (typeof valor.valor === 'number') {
-                            if (Number.isInteger(valor.valor)) {
-                                tipoVariable = valor.tipo;
-                            } else {
-                                tipoVariable = valor.tipo;
-                            }
-                        } else if (typeof valor.valor === 'string') {
-                            if (valor.valor.length === 1) {
-                                tipoVariable = valor.tipo;
-                            } else {
-                                tipoVariable = valor.tipo;
-                            }
-                        } else if (typeof valor.valor === 'boolean') {
-                            tipoVariable = valor.tipo;
-                        } else if(this.entornoActual.getVariable(valor.tipo,node.location.start.line,node.location.start.column).valor instanceof StructC){
-                            
-                            tipoVariable = valor.tipo;
-                        }else{
-                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El tipo del valor no coincide con el tipo ${tipoVariable}`);
-                            erroresCompilacion.push(errores);
-
-                        }
-                        break;;
+                    
                 default:
                     let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Tipo de dato no valido`);
                     erroresCompilacion.push(errores);
             }
 
-            console.log("fin: "+tipoVariable)
+            
 
-            this.entornoActual.setVariable(tipoVariable, nombreVariable, elemento,node.location.start.line,node.location.start.column);
-            return
+            return this.entornoActual.setVariable(tipoVariable, variable, valor.valor, node.location.start.line, node.location.start.column)
+            
 
         }
+            const valorPorDefecto = null
+
+            this.entornoActual.setVariable(tipoVariable, variable, valorPorDefecto,node.location.start.line,node.location.start.column);
+            return
 
     }
 /**
-      * @type {BaseVisitor['visitReferenciaVariable']}
+      * @type {BaseVisitor['visitDeclaracionSinAargumn']}
       */
 
     visitDeclaracionSinAargumn(node){
-        var tipo = node.tipo
-        const nombreVarible = node.id
-        const valorDefino = DatoSinArgu(node.tipo)
+        var nombre = node.id
+        const nombreVarible = node.exp.accept(this);
+        
 
-        this.entornoActual.setVariable(tipo,nombreVarible,valorDefino,node.location.start.line,node.location.start.column)
+        this.entornoActual.setVariable(nombreVarible.tipo,nombre,nombreVarible.valor,node.location.start.line,node.location.start.column);
 
     }
+
+    
 
 
 
@@ -981,6 +962,9 @@ export class InterpreterVisitor extends BaseVisitor {
                         console.log("aquí inicio: " +  exp.valor  + exp.tipo);
                         //const valorString = toString(exp.valor);
                         return { valor: exp.valor.toString(), tipo: "string" };
+
+                    case "char":
+                        return {valor: exp.valor.toString(), tipo: "string"}
                         
 
                     default:
@@ -1189,7 +1173,7 @@ export class InterpreterVisitor extends BaseVisitor {
 
 
         switch(node.op){
-            case "indexOf":
+            case ".indexOf":
                 const valor = node.bus.valor
                 for (let index = 0; index < arreglo.length; index++) {
                     const element = arreglo[index];
@@ -1199,11 +1183,11 @@ export class InterpreterVisitor extends BaseVisitor {
                     
                 }
                 return {valor:-1 , tipo:"int"}
-            case "length":
+            case ".length":
                 const length = arreglo.length;
                 console.log(length);
                 return { valor: length, tipo: "int" };
-            case "join":
+            case ".join":
                 let cadena ="";
                 for (let index = 0; index < arreglo.length; index++) {
                     cadena += arreglo[index].toString();
@@ -1699,7 +1683,7 @@ export class InterpreterVisitor extends BaseVisitor {
                 erroresCompilacion.push(errores);
             }
 
-            return instan.valor.get(node.propiedad);
+            return instan.valor.get(node.propiedad, node);
 
         }
 
@@ -1716,7 +1700,7 @@ export class InterpreterVisitor extends BaseVisitor {
 
             const valor = node.valor.accept(this);
 
-            instan.valor.set(node.propiedad, valor);
+            instan.valor.set(node.propiedad, valor, node);
 
             return valor;
 

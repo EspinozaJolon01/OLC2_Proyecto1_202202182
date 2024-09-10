@@ -58,14 +58,17 @@ programa = _ dcl:Declaracion* _ { return dcl }
 Declaracion = dcl:DeStruct _ { return dcl }
             / dcl:VarDcl _ { return dcl }
             / Inst:DeclaInst _ { return Inst }
-            / dcl:DeclaFun _ { return dcl }
             / stmt:Stmt _ { return stmt }
+            / dcl:DeclaFun _ { return dcl }
+            
 
-VarDcl = tipo:Tipo _ id:Identify _ "=" _ exp:Expresion _ ";" { return crearNodo('declaracionVariable', { tipo, id, exp }) }
-      / tipo:Tipo _ id:Identify _ ";" { return crearNodo('declaracionSinAargumn', {tipo, id})}
-      /Arreglos 
+VarDcl = Arreglos 
       /Matrices
-
+      /tipo:Tipo _ id:Identify _ exp:("=" _ exp: Expresion { return exp })? _ ";" { return crearNodo('declaracionVariable', { tipo, id, exp }) }
+      / "var" _ id:Identify _ "=" _ exp: Expresion _ ";" {return crearNodo('declaracionSinAargumn', {id, exp})}
+      // /tipo:Tipo _ id:Identify _ "=" _ exp:Expresion _ ";" { return crearNodo('declaracionVariable', { tipo, id, exp }) }
+      // / tipo:Tipo _ id:Identify _ ";" { return crearNodo('declaracionSinAargumn', {tipo, id})}
+      
 DeclaFun = tipo:(Tipo / "void") _ id:Identify _ "(" _ params:Parametros? _ ")" _ bloque:Bloque { return crearNodo('declaracionFuncion', { tipo, id, params: params || [], bloque }) }
 
 DeStruct  = "struct" _ id:Identify _ "{" _ dcls:BloStruct* _ "}" _ ";" { return crearNodo('estructura', { id, dcls }) }
@@ -79,7 +82,7 @@ Parametros = primerParametro:Params restoParametros:("," _ parametro:Params { re
 
 Params = tipo:Tipo dimensiones:Dimension? _ id:Identify { return { tipo, id, dim: dimensiones || "" }; }
 
-Dimension = "[" _ "]"+  { return text(); }
+Dimension = ("[" _ "]")*  { return text(); }
 
 
 Matrices = tipo:TipoArrays _ dimensiones:("[" _ "]")+ _ id:Identify _ "=" _ valores:ValoresMatriz _ ";" 
@@ -135,7 +138,7 @@ Tipo = "int" {return text()}
         / "string" {return text()}
         / "boolean"  {return text()}
         / "char" {return text()}
-        / "var" {return text()}
+        
 
 
 TipoArrays = "int" {return text()}
@@ -270,9 +273,9 @@ Multiplicacion = izq:Unaria expansion:(
 }
 
 Unaria = 
-        dati:Identify "." op:"indexOf" "("_ bus:Expresion? _")" _ {return crearNodo('accesoElem',{dat: crearNodo('referenciaVariable' , {id:dati}),op,bus})}
-        / dati:Identify "." op:"length" _ {return crearNodo('accesoElem',{dat: crearNodo('referenciaVariable' , {id:dati}),op, bus: undefined})}
-        / dati:Identify "." op:"join" _ "()"  {return crearNodo('accesoElem',{dat: crearNodo('referenciaVariable' , {id:dati}),op, bus: undefined})}
+        dati:Identify _ dimensiones:("[" exp:Expresion "]" {return exp})*  op:".indexOf" "("_ bus:Expresion? _")" _ {return crearNodo('accesoElem',{dat: crearNodo('accElem' , {id:dati,dimensiones}),op,bus})}
+        / dati:Identify _ dimensiones:("[" exp:Expresion "]" {return exp})*  op:".length" _ {return crearNodo('accesoElem',{dat: crearNodo('accElem' , {id:dati,dimensiones}),op,bus : undefined})}
+        / dati:Identify _ dimensiones:("[" exp:Expresion "]" {return exp})*  op:".join" _ "()"  {return crearNodo('accesoElem',{dat: crearNodo('accElem' , {id:dati,dimensiones}),op,bus : undefined})}
         / tipo:"Object.keys(" _ dato:Identify _ ")" {return crearNodo('funStruct',{tipo, dato})}
   / Embe:("typeof") _ dat:Valores { return crearNodo('embebidas', {Embe, exp: dat }) }
   / Embe: ("toUpperCase" /"toLowerCase" /"parsefloat"/"parseInt"/"toString") "(" _ dat:Valores _ ")" _ { return crearNodo('embebidas', {Embe, exp: dat }) }

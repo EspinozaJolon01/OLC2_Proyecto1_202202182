@@ -179,7 +179,7 @@ export class DeclaracionVariable extends expression  {
     * @param {Object} options
     * @param {string} options.tipo Identificador de la variable
  * @param {string} options.id Identificador de la variable
- * @param {expression } options.exp expression  de la variable
+ * @param {expression | undefined } options.exp expression  de la variable
     */
     constructor({ tipo, id, exp }) {
         super();
@@ -200,7 +200,7 @@ export class DeclaracionVariable extends expression  {
 
         /**
          * expression  de la variable
-         * @type {expression }
+         * @type {expression | undefined }
         */
         this.exp = exp;
 
@@ -218,24 +218,24 @@ export class DeclaracionSinAargumn extends expression  {
 
     /**
     * @param {Object} options
-    * @param {string} options.tipo Identificador de la variable
- * @param {string} options.id Identificador de la variable
+    * @param {string} options.id Identificador de la variable
+ * @param {expression } options.exp Identificador de la variable
     */
-    constructor({ tipo, id }) {
+    constructor({ id, exp }) {
         super();
         
         /**
          * Identificador de la variable
          * @type {string}
         */
-        this.tipo = tipo;
+        this.id = id;
 
 
         /**
          * Identificador de la variable
-         * @type {string}
+         * @type {expression }
         */
-        this.id = id;
+        this.exp = exp;
 
     }
 

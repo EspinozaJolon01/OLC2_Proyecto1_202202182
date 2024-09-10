@@ -17,23 +17,23 @@ export class Instancia  {
     }
 
 
-    set(nombre, valor) {
+    set(nombre, valor,nodo) {
         console.log("Instancia.set: ", nombre, valor);
         if (!(nombre in this.structC.propiedades)) {
             //throw new Error(`La propiedad ${nombre} no está definida en la estructura ${this.structC.nombre}`);
-            let error = new erroresReporte(this.nodo.location.start.line, this.nodo.location.start.column,`La propiedad ${nombre} no está definida en la estructura ${this.structC.nombre}`);
+            let error = new erroresReporte(nodo.location.start.line, this.nodo.location.start.column,`La propiedad ${nombre} no está definida en la estructura ${this.structC.nombre}`);
             erroresCompilacion.push(error);
         }
         this.structC.propiedades[nombre] = valor;
     }
 
-    get(nombre) {
+    get(nombre,nodo) {
         if(this.structC.propiedades.hasOwnProperty(nombre)){
             return this.structC.propiedades[nombre];
         }
 
         //throw new Error(`Propiedad no encontrada: ${nombre}`);
-        let error = new erroresReporte(this.nodo.location.start.line, this.nodo.location.start.column,`Propiedad no encontrada: ${nombre}`);
+        let error = new erroresReporte(nodo.location.start.line, this.nodo.location.start.column,`Propiedad no encontrada: ${nombre}`);
         erroresCompilacion.push(error);
     }
 }
