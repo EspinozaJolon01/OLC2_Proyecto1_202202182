@@ -1,5 +1,5 @@
 import { erroresCompilacion } from "../../index.js";
-import { erroresReporte } from "./reports.js";
+import { erroresReporte , buscarTablarReservada} from "./reports.js";
 
 
 
@@ -18,7 +18,16 @@ export class Entorno {
      * @param {any} valor
      */
     setVariable(tipo, nombre, valor,linea ,columna) {
-        // Verificar si la variable ya está definida en el entorno actual o en sus padres
+        
+        if(buscarTablarReservada(nombre)){
+            //throw new Error(`Error: No se puede declarar la variable ${nombre} porque es una palabra reservada`);
+            let errores = new erroresReporte(linea,columna,`Error: No se puede declarar la variable ${nombre} porque es una palabra reservada`);
+            erroresCompilacion.push(errores);
+            return
+        }
+
+
+
         if (this.valores[nombre] != undefined) {
             //throw new Error(`Error: La variable ${nombre} ya está definida`);
             let errores = new erroresReporte(linea,columna,`Error: La variable ${nombre} ya está definida`);
