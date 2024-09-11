@@ -176,7 +176,10 @@ EstructuraCase = "case" _ exp: Expresion _ ":" _ commands:(_ commands:Declaracio
 
 default = "default" _ ":" _ bloque:Declaracion* _  {return {bloque}}
 
-Identify = [a-zA-Z_][a-zA-Z0-9_]* { return text() }
+
+PalabrasReservadas = _ ("true" / "false") ![a-zA-Z0-9_] { return text(); }
+
+Identify = !PalabrasReservadas [a-zA-Z_][a-zA-Z0-9_]* { return text() }
     
 
 Expresion = Asignacion
@@ -356,6 +359,9 @@ Numero = [0-9]+( "." [0-9]+ )? { return text().includes('.') ? crearNodo('numero
 Intancia = _ tipo: Identify _ "{"_ atributos:( datAtri: DatoStruc _ datAtris:("," _ atriDat: DatoStruc { return atriDat })* _ { return [datAtri, ...datAtris] }) _ "}" { return crearNodo('contenidoStruct', { tipo, atributos }) }
 
 DatoStruc = id: Identify _ ":" _ exp: Expresion _ { return { id, exp } }
+
+
+
 
 
 // Definición de comentarios para omitirlos
