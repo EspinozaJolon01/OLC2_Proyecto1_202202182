@@ -1189,7 +1189,7 @@ return op
     var s0, s1, s2, s3, s4;
 
     s0 = peg$currPos;
-    s1 = peg$parseTipo();
+    s1 = peg$parseIdentify();
     if (s1 !== peg$FAILED) {
       s2 = peg$parseDimension();
       s3 = peg$parse_();

@@ -1435,6 +1435,7 @@ export class InterpreterVisitor extends BaseVisitor {
         if(tipos != lista1.tipo && (tipos != "float" && lista1.tipo != "int")){
             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`el dato del valor no es el mismo tipo`);
             erroresCompilacion.push(errores);
+            return  
         }
         arry.push(lista1.valor)
 
@@ -1443,6 +1444,7 @@ export class InterpreterVisitor extends BaseVisitor {
             if(tipos != element.tipo  && (tipos != "float" && element.tipo != "int")){
                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`el dato del valor no es el mismo tipo`);
                 erroresCompilacion.push(errores);
+                return  
             }
             arry.push(element.valor)
             
@@ -1478,21 +1480,25 @@ export class InterpreterVisitor extends BaseVisitor {
         if(nD != dimensiones.length){
             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: La cantidad de dimensiones no coincide con la cantidad de valores`);
             erroresCompilacion.push(errores);
+            return;
         }
     
         if (tipo != tipo1) {
             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: El tipo de la variable no coincide con el tipo de los valores`);
             erroresCompilacion.push(errores);
+            return;
         }
     
         for (const dimension of dimensiones) {
             if (dimension.valor < 0) {
                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: Las dimensiones de un arreglo no pueden ser negativas`);
                 erroresCompilacion.push(errores);
+                return;
             }
             if (dimension.tipo != "int") {
                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: Las dimensiones de un arreglo deben ser de tipo int`);
                 erroresCompilacion.push(errores);
+                return;
             }
         }
     
@@ -1533,6 +1539,7 @@ export class InterpreterVisitor extends BaseVisitor {
         if(tipo != arregloAcopiar.tipo){
             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: El tipo de la variable no coincide con el tipo de los valores`);
             erroresCompilacion.push(errores);
+            return;
         }
 
         const arryNuevo =  arregloAcopiar.valor.slice();
@@ -1604,16 +1611,19 @@ export class InterpreterVisitor extends BaseVisitor {
                 if (indice.tipo !== "int") {
                     let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El índice de acceso al arreglo debe ser de tipo int, pero se encontró: "${indice.tipo}" en la dimensión ${i + 1}.`);
                     erroresCompilacion.push(errores);
+                    return { valor: null, tipo: arreglo.tipo };
                 }
         
                 if (!Array.isArray(arreglo.valor)) {
                     let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Se esperaba un arreglo en la dimensión ${i + 1}, pero se encontró: "${typeof arreglo.valor}".`);
                     erroresCompilacion.push(errores);
+                    return { valor: null, tipo: arreglo.tipo };
                 }
         
                 if (indice.valor < 0 || indice.valor >= arreglo.valor.length) {
                     let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Índice fuera de rango en la dimensión ${i + 1}: ${indice.valor}. El rango válido es 0-${arreglo.valor.length - 1}.`);
                     erroresCompilacion.push(errores);
+                    return { valor: null, tipo: arreglo.tipo };
                 }
 
                 //console.log("no se que es lo que hace"  +arreglo.valor[indice.valor])
@@ -1645,16 +1655,19 @@ export class InterpreterVisitor extends BaseVisitor {
                 if (indice.tipo !== "int") {
                     let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El índice de acceso al arreglo debe ser de tipo int, pero se encontró: "${indice.tipo}" en la dimensión ${i + 1}.`);
                     erroresCompilacion.push(errores);
+                    return; 
                 }
         
                 if (!Array.isArray(currentArray)) {
                     let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Se esperaba un arreglo en la dimensión ${i + 1}, pero se encontró: "${typeof currentArray}".`);
                     erroresCompilacion.push(errores);
+                    return;
                 }           
         
                 if (indice.valor < 0 || indice.valor >= currentArray.length) {
                     let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Índice fuera de rango en la dimensión ${i + 1}: ${indice.valor}. El rango válido es 0-${currentArray.length - 1}.`);
                     erroresCompilacion.push(errores);
+                    return;
                 }
         
                 if (i === node.indices.length - 1) {
@@ -1662,6 +1675,7 @@ export class InterpreterVisitor extends BaseVisitor {
                     if (dato.tipo !== arreglo.tipo) {
                         let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El tipo del valor no coincide con el tipo del arreglo: se esperaba "${arreglo.tipo}" pero se encontró "${dato.tipo}".`);
                         erroresCompilacion.push(errores);
+                        return;
                     }
                     currentArray[indice.valor] = dato.valor;
                 } else {
@@ -1698,12 +1712,14 @@ export class InterpreterVisitor extends BaseVisitor {
         if (!Array.isArray(valores)) {
             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: Se esperaba un arreglo de valores para la matriz`);
             erroresCompilacion.push(errores);
+            return;
         }
 
         function validarTipo(valor, tipoEsperado) {
             if (valor.tipo !== tipoEsperado) {
                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: El tipo del valor no coincide con el tipo de la matriz: se esperaba "${tipoEsperado}" pero se encontró "${valor.tipo}"`);
                 erroresCompilacion.push(errores);
+                return;
             }
             return true;
         }
@@ -1715,6 +1731,7 @@ export class InterpreterVisitor extends BaseVisitor {
                 if (!validarTipo(dim, tipoEsperado)) {
                     let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: El tipo del valor no coincide con el tipo de la matriz: se esperaba "${tipoEsperado}" pero se encontró "${dim.tipo}"`);
                     erroresCompilacion.push(errores);
+                    return;
                 }
                 return dim.valor;  // Devolvemos solo el valor, no el objeto completo
             }
@@ -1726,6 +1743,7 @@ export class InterpreterVisitor extends BaseVisitor {
         } catch (error) {
             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error al procesar las dimensiones de la matriz: ${error.message}`);
             erroresCompilacion.push(errores);
+            return;
         }
 
         function validarDimensiones(arr, expectedDimensions) {
@@ -1738,6 +1756,7 @@ export class InterpreterVisitor extends BaseVisitor {
         if (!validarDimensiones(matrizProcesada, nD)) {
             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: Las dimensiones de la matriz no coinciden con las dimensiones especificadas`);
             erroresCompilacion.push(errores);
+            return;
         }
 
         try {
@@ -1747,6 +1766,7 @@ export class InterpreterVisitor extends BaseVisitor {
         } catch (error) {
             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error al guardar la matriz en el entorno: ${error.message}`);
             erroresCompilacion.push(errores);
+            return
         }
 
     }
@@ -1865,15 +1885,17 @@ export class InterpreterVisitor extends BaseVisitor {
             if (!Array.isArray(arreglo.valor)) {
                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: Se esperaba un arreglo para la instrucción forEach`);
                 erroresCompilacion.push(errores);
+                return;
             }
 
             if (node.tipo != arreglo.tipo) {
                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: El tipo del arreglo no coincide con el tipo esperado`);
                 erroresCompilacion.push(errores);
+                return;
             }
 
             for (const valor of arreglo.valor) {
-                let tabla = new tablaSimboloReport(node.id,"variable",node.tipo,"Global",node.location.start.line,node.location.start.column);
+                let tabla = new tablaSimboloReport(node.id,"variable",node.tipo,"ForEach",node.location.start.line,node.location.start.column);
                 tablaSimbolos.push(tabla);
                 this.entornoActual.setVariable(arreglo.tipo, node.id, valor, node.location.start.line, node.location.start.column);
                 node.stmt.accept(this);
@@ -1903,11 +1925,13 @@ export class InterpreterVisitor extends BaseVisitor {
             if(!(fun instanceof Ejecutable)){
                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es posible llamar a una función que no sea ejecutable`);
                 erroresCompilacion.push(errores);
+                return;
             }
 
             if(fun.aridad().length !== argums.length){
                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: La cantidad de argumentos no coincide con la cantidad de parámetros de la función`);
                 erroresCompilacion.push(errores);
+                return;
             }
 
             argums.forEach((arg1 , indic)=> {
@@ -1915,6 +1939,7 @@ export class InterpreterVisitor extends BaseVisitor {
                 if(tipo.tipo !== arg1.tipo){
                     let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: El tipo del argumento no coincide con el tipo del parámetro de la función`);
                     erroresCompilacion.push(errores);
+                    return;
                 }
             });
 
@@ -1936,6 +1961,7 @@ export class InterpreterVisitor extends BaseVisitor {
             if(nomParams.length  !== valorUnico.size){
                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No se permiten parámetros duplicados en la función`);
                 erroresCompilacion.push(errores);
+                return;
             }
 
             
@@ -2021,6 +2047,7 @@ export class InterpreterVisitor extends BaseVisitor {
                 //throw new Error(`${tipo} no es un struct`)
                 let error = new erroresReporte( node.location.start.line, node.location.start.column,"No es un struct");
                 erroresCompilacion.push(error);
+                return ;
             }
 
             atributos.forEach(atributo => {
@@ -2031,6 +2058,7 @@ export class InterpreterVisitor extends BaseVisitor {
                     //throw new Error(`El  atributo ${id} no no esta declarado en el struct`);
                     let error = new erroresReporte( node.location.start.line, node.location.start.column,"El atributo no esta declarado en el struct");
                     erroresCompilacion.push(error);
+                    return;
                 }
 
                 const dat = atributo.exp.accept(this);
@@ -2042,6 +2070,7 @@ export class InterpreterVisitor extends BaseVisitor {
                         
                         let error = new erroresReporte( node.location.start.line, node.location.start.column,"El tipo del atributo no coincide con el tipo del struct");
                         erroresCompilacion.push(error);
+                        return;
                     }
                 }
 
@@ -2074,6 +2103,7 @@ export class InterpreterVisitor extends BaseVisitor {
             if(!(instan.valor instanceof Instancia)){
                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`No es posible obtener una propiedad de algo que no es una instancia`);
                 erroresCompilacion.push(errores);
+                return;
             }
 
             return instan.valor.get(node.propiedad, node);
@@ -2089,6 +2119,7 @@ export class InterpreterVisitor extends BaseVisitor {
             if(!(instan.valor instanceof Instancia)){
                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`No es posible asignar una propiedad de algo que no es una instancia`);
                 erroresCompilacion.push(errores);
+                return;
             }
 
             const valor = node.valor.accept(this);
@@ -2106,6 +2137,8 @@ export class InterpreterVisitor extends BaseVisitor {
         visitFunStruct(node){
             const struct = this.entornoActual.getVariable(node.dato,node.location.start.line,node.location.start.column);
             const arryPropiedad = [];
+
+
 
             //console.log("struct: " + struct.valor.structC.propiedades)
             const structCProperties =  struct.valor.structC.propiedades;

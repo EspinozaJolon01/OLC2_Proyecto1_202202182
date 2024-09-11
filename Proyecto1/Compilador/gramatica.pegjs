@@ -80,7 +80,7 @@ BloStruct = tipo: ("int"/"float"/"string"/"boolean"/"char"/Identify) _ id: Ident
 Parametros = primerParametro:Params restoParametros:("," _ parametro:Params { return parametro; })* 
             { return [primerParametro, ...restoParametros]; }
 
-Params = tipo:Tipo dimensiones:Dimension? _ id:Identify { return { tipo, id, dim: dimensiones || "" }; }
+Params = tipo:Identify dimensiones:Dimension? _ id:Identify { return { tipo, id, dim: dimensiones || "" }; }
 
 Dimension = ("[" _ "]")*  { return text(); }
 
