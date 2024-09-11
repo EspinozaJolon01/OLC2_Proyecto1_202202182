@@ -1,1 +1,141 @@
-gramatica 
+programa = _ dcl:Declaracion* _
+
+Declaracion = dcl:DeStruct _
+            / dcl:VarDcl _
+            / Inst:DeclaInst _
+            / stmt:Stmt _
+            / dcl:DeclaFun _
+
+VarDcl = Arreglos 
+      /Matrices
+      /tipo:Tipo _ id:Identify _ exp:("=" _ exp: Expresion)? _ ";"
+      / "var" _ id:Identify _ "=" _ exp: Expresion _ ";"
+
+DeclaFun = tipo:(Tipo / "void") _ id:Identify _ "(" _ params:Parametros? _ ")" _ bloque:Bloque
+
+DeStruct  = "struct" _ id:Identify _ "{" _ dcls:BloStruct* _ "}" _ ";"
+
+BloStruct = tipo: ("int"/"float"/"string"/"boolean"/"char"/Identify) _ id: Identify _ ";" _
+
+Parametros = primerParametro:Params restoParametros:("," _ parametro:Params)*
+
+Params = tipo:Identify dimensiones:Dimension? _ id:Identify
+
+Dimension = ("[" _ "]")*
+
+Matrices = tipo:TipoArrays _ dimensiones:("[" _ "]")+ _ id:Identify _ "=" _ valores:ValoresMatriz _ ";"
+
+ValoresMatriz = "{" _ primerValor:ValorMatriz _ resto:("," _ ValorMatriz _)* _ "}"
+
+ValorMatriz = valor:ValoresMatriz
+  / exp: Expresion
+
+Arreglos = tipo:TipoArrays _ dimeAr:("[" _ "]")+ _ id:Identify _ "=" _ "new" _ tipo2:Tipo _ "[" _ dim:Expresion _ "]" dims:("[" _ Expresion _ "]")* _ ";"
+         / tipo:TipoArrays _ "[]" _ id:Identify _ "=" _ exp:Expresion _ ";"
+
+DeclaInst = tipo:Identify _ id:Identify _ "=" _ instan:Expresion _ ";"
+
+Tipo = "int"
+     / "float"
+     / "string"
+     / "boolean"
+     / "char"
+
+TipoArrays = "int"
+           / "float"
+           / "string"
+           / "boolean"
+           / "char"
+
+Stmt = "System.out.println(" _ exp: Expresion _ expM: ("," _ expM: Expresion _)* _ ")" _ ";"
+    / Bloque: Bloque
+    / "if" _ "(" _ cond:Expresion _ ")" _ stmtTrue:Stmt 
+      stmtFalse:(_ "else" _ stmtFalse:Stmt)?
+    / "while" _ "(" _ cond:Expresion _ ")" _ stmt:Stmt
+    / "for" _ "(" _ inicializacion:ForComienzo _ condicion:Expresion _ ";" _ incremento:Expresion _ ")" _ stmt:Stmt
+    / "switch" _ "("_ exp: Expresion _")"_ "{" _ cas:EstructuraCase* _ def:default? _ "}"
+    / "for" _ "(" _ tipo:TipoArrays _ id:Identify _ ":" _ id2:Identify _ ")" _ stmt:Stmt
+    / "break" _ ";"
+    / "continue" _ ";"
+    / "return" _ exp:Expresion? _ ";"
+    / exp:Expresion _ ";"
+
+Bloque = "{" _ dcls:Declaracion* _ "}"
+
+ForComienzo = dcl:VarDcl
+            / exp:Expresion _ ";"
+
+EstructuraCase = "case" _ exp: Expresion _ ":" _ commands:(_ commands:Declaracion _)* _ breakStatement:("break" _ ";")? _
+
+default = "default" _ ":" _ bloque:Declaracion* _
+
+Identify =  [a-zA-Z_][a-zA-Z0-9_]*
+
+Expresion = Asignacion
+
+Asignacion =  id:Identify _ indices:("[" exp:Expresion "]")+ _ "=" _ dato:Expresion
+            / asignado:FunLlamada _ "=" _ asgn:Asignacion
+            / id:Identify _ "+=" _ asgn:Expresion
+            / id:Identify _ "-=" _ asgn:Expresion
+            / AcceElemn
+
+AcceElemn = OpTenario
+
+OpTenario = validar:Log _ "?" _ cond1:Log _ ":" _ cond2:Log
+          / Log
+
+Log = izq:Igualacion expansion:(_ op:("&&" / "||") _ der:Igualacion)*
+
+Igualacion = izq:Comparacion expansion:(_ op:("!=" / "==") _ der:Comparacion)*
+
+Comparacion = izq:Suma expansion:(_ op:("<=" / ">=" / "<" / ">") _ der:Suma)*
+
+Suma = izq:Multiplicacion expansion:(_ op:("+" / "-") _ der:Multiplicacion)*
+
+Multiplicacion = izq:Unaria expansion:(_ op:("*" / "/" / "%") _ der:Unaria)*
+
+Unaria = dati:Identify _ dimensiones:("[" exp:Expresion "]")*  op:".indexOf" "("_ bus:Expresion? _")" _
+       / dati:Identify _ dimensiones:("[" exp:Expresion "]")*  op:".length" _
+       / dati:Identify _ dimensiones:("[" exp:Expresion "]")*  op:".join" _ "()"
+       / tipo:"Object.keys(" _ dato:Identify _ ")"
+       / Embe:("typeof") _ dat:Valores
+       / Embe: ("toUpperCase" /"toLowerCase" /"parsefloat"/"parseInt"/"toString") "(" _ dat:Valores _ ")" _
+       / id: Identify "++"
+       / op:"-" _ num:Unaria
+       / op:"!" _ num:Unaria
+       / id: Identify "--"
+       / Valores
+
+Valores =  Bool
+         / CadeString 
+         / Caracter
+         / FunLlamada
+
+FunLlamada = objetivoInicial:Numero operaciones:(
+    ("(" _ args:Argumens? _ ")" )
+    / ("." _ id:Identify _)
+  )*
+
+Argumens = arg:Expresion _ args:("," _ args:Expresion)*
+
+Bool = "true"
+     / "false"
+
+CadeString = "\"" chars:([^"]*) "\""
+
+Caracter = "'" char:[^'] "'"
+
+Numero = [0-9]+( "." [0-9]+ )?
+       / "(" _ exp:Expresion _ ")"
+       / instan:Intancia
+       / id:Identify _ dimensiones:("[" exp:Expresion "]")+
+       / id:Identify
+
+Intancia = _ tipo: Identify _ "{"_ atributos:( datAtri: DatoStruc _ datAtris:("," _ atriDat: DatoStruc)* _) _ "}"
+
+DatoStruc = id: Identify _ ":" _ exp: Expresion _
+
+Comentario = "//" [^\n]*
+           / "/*" (!"*/" .)* "*/"
+
+_ = (Comentario / [ \t\n\r])*
