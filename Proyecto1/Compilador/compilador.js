@@ -20,7 +20,7 @@ ejecutar.addEventListener('click', () => {
     const codigoFuente = editor.value
     erroresCompilacion = [] // Limpiar errores de compilación
     tablaSimbolos = [] // Limpiar tabla de símbolos
-    //try {
+    try {
         const sentencias = parse(codigoFuente)
         const interprete = new InterpreterVisitor()
         
@@ -31,21 +31,21 @@ ejecutar.addEventListener('click', () => {
 
         console.log(erroresCompilacion)
         console.log(tablaSimbolos)
-        // consola.innerHTML += `\n`
-        // if (erroresCompilacion.length > 0) {
-        //     erroresCompilacion.forEach(error => {
-        //         consola.innerHTML += `Error: ${error.message} at line ${error.linea}, column ${error.columna}\n`;
-        //     });
-        // }
+        consola.innerHTML += `\n`
+        if (erroresCompilacion.length > 0) {
+            erroresCompilacion.forEach(error => {
+                consola.innerHTML += `Error: ${error.message} at line ${error.linea}, column ${error.columna}\n`;
+            });
+        }
 
-    // } catch (error) {
-    //     if(error.location){
-    //         consola.innerHTML = 'Error: ' + error.message + ' at line ' + error.location.start.line + ' column ' + error.location.start.column
-    //     } else {
-    //         consola.innerHTML = 'Error: ' + error.message
-    //     }
+    } catch (error) {
+        if(error.location){
+            consola.innerHTML = 'Error: ' + error.message + ' at line ' + error.location.start.line + ' column ' + error.location.start.column
+        } else {
+            consola.innerHTML = 'Error: ' + error.message
+        }
 
-    //}
+    }
 })
 
 // Función para abrir modal

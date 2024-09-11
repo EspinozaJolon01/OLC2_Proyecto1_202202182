@@ -177,7 +177,7 @@ EstructuraCase = "case" _ exp: Expresion _ ":" _ commands:(_ commands:Declaracio
 default = "default" _ ":" _ bloque:Declaracion* _  {return {bloque}}
 
 
-PalabrasReservadas = _ ("true" / "false") ![a-zA-Z0-9_] { return text(); }
+PalabrasReservadas = _ ("true" / "false")  { return text(); }
 
 Identify = !PalabrasReservadas [a-zA-Z_][a-zA-Z0-9_]* { return text() }
     
