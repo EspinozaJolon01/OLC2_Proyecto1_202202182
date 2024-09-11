@@ -2,7 +2,7 @@
 
 import { parse } from './gramatica.js'
 import { InterpreterVisitor } from './interprete.js'
-import { StructC } from './structC.js'
+
 
 const editor = document.getElementById('codigofuente')
 const ejecutar = document.getElementById('ejecutar')
