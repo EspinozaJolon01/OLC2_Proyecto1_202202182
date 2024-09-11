@@ -220,7 +220,7 @@ export class InterpreterVisitor extends BaseVisitor {
                                     erroresCompilacion.push(errores);
                                     return {valor:null , tipo: "float"};
                                 }
-                                return {valor:Math.random(izq.valor / der.valor) , tipo: "float"};
+                                return {valor:izq.valor / der.valor , tipo: "float"};
                             
                             default:
                                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en /`);
@@ -237,14 +237,14 @@ export class InterpreterVisitor extends BaseVisitor {
                                     erroresCompilacion.push(errores);
                                     return {valor:null , tipo: "float"};
                                 }
-                                return {valor:Math.random(izq.valor / der.valor) , tipo: "float"};
+                                return {valor:izq.valor / der.valor , tipo: "float"};
                             case 'int':
                                 if(der.valor == null || izq.valor == null){
                                     let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en /`);
                                     erroresCompilacion.push(errores);
                                     return {valor:null , tipo: "float"};
                                 }
-                                return {valor:Math.random(izq.valor / der.valor) , tipo: "float"};
+                                return {valor:izq.valor / der.valor , tipo: "float"};
                             
                             default:
                                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en /`);
