@@ -1,7 +1,7 @@
 
 import {StructC} from './structC.js';
 import { erroresReporte } from "./reports.js";
-import { erroresCompilacion } from "./compilador.js";
+import { erroresCompilacion } from "../../index.js";
 
 export class Instancia  {
 

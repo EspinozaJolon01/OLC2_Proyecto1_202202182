@@ -1,7 +1,6 @@
 
 import {InterpreterVisitor} from "./interprete.js";
-import { erroresReporte } from "./reports.js";
-import { erroresCompilacion } from "./compilador.js";
+
 
 
 export class Ejecutable {

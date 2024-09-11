@@ -1,4 +1,4 @@
-import { erroresCompilacion } from "./compilador.js";
+import { erroresCompilacion } from "../../index.js";
 import { erroresReporte } from "./reports.js";
 
 

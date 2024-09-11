@@ -3,7 +3,7 @@ import { Entorno } from './entornos.js';
 import { BreakException } from './TransferCommands.js';
 import { ReturnException } from './TransferCommands.js';
 import { erroresReporte } from "./reports.js";
-import { erroresCompilacion } from "./compilador.js";
+import { erroresCompilacion } from "../../index.js";
 
 export class FuncionRemota extends Ejecutable {
 

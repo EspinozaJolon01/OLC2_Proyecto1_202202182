@@ -1,5 +1,5 @@
 import { erroresReporte } from "./reports.js";
-import { erroresCompilacion } from "./compilador.js";
+import { erroresCompilacion } from "../../index.js";
 
 
 

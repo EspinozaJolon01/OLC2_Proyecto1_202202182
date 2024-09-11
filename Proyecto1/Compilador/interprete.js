@@ -9,9 +9,9 @@ import { FuncionRemota } from "./remota.js";
 import { StructC } from "./structC.js";
 import { Instancia } from "./instancia.js";
 import { erroresReporte,tablaSimboloReport } from "./reports.js";
-import { erroresCompilacion } from "./compilador.js";
+import { erroresCompilacion } from "../../index.js";
 
-import { tablaSimbolos } from "./compilador.js";
+import { tablaSimbolos } from "../../index.js";
 
 
 
