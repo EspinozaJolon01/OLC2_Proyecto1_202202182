@@ -1049,6 +1049,15 @@ export class InterpreterVisitor extends BaseVisitor {
     visitDeclaracionSinAargumn(node){
         var nombre = node.id
         const nombreVarible = node.exp.accept(this);
+
+
+
+
+        if(nombreVarible.valor == null){
+            let error = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No se puede asignar un valor null a una variable`);
+            erroresCompilacion.push(error);
+            return this.entornoActual.setVariable(nombreVarible.tipo,nombre,null,node.location.start.line,node.location.start.column);
+        }
         
         let tabla = new tablaSimboloReport(nombre,"variable",nombreVarible.tipo,"Global",node.location.start.line,node.location.start.column);
         tablaSimbolos.push(tabla);
