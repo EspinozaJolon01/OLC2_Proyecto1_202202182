@@ -2,7 +2,7 @@ import { Entorno } from "./entornos.js";
 import { BaseVisitor } from "./Visitor.js";
 import nodos, { expression } from './nodos.js'
 
-import { DatoSinArgu , DatoSinArguemntoArreglo } from "./DeclaSinArgum.js";
+import {  DatoSinArguemntoArreglo } from "./DeclaSinArgum.js";
 import {BreakException, ContinueException, ReturnException} from "./TransferCommands.js"
 import { Ejecutable } from "./Ejecutable.js";
 import { FuncionRemota } from "./remota.js";
@@ -21,12 +21,7 @@ export class InterpreterVisitor extends BaseVisitor {
         super();
         this.entornoActual = new Entorno();
 
-
-
-
-
         this.consola = '';
-
 
         /**
          * @type {expression | null}
@@ -52,15 +47,24 @@ export class InterpreterVisitor extends BaseVisitor {
                 if(izq.tipo == "int"){
                     switch (der.tipo){
                         case 'int':
-
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en +`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "int"};
+                            }
                             return {valor:izq.valor + der.valor , tipo: "int"};
                         case 'float':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en +`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "float"};
+                            }
                             return {valor:izq.valor + der.valor , tipo: "float"};
                         
                         default:
-                            
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en +`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
 
                     }
                 }
@@ -68,24 +72,40 @@ export class InterpreterVisitor extends BaseVisitor {
                 if(izq.tipo == "float"){
                     switch (der.tipo){
                         case 'float':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en +`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "float"};
+                            }
                             return {valor:izq.valor + der.valor , tipo: "float"};
                         case 'int':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en +`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "float"};
+                            }
                             return {valor:izq.valor + der.valor , tipo: "float"};
                             
                         default:
-                            
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en +`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
                 if(izq.tipo == "string"){
                     switch (der.tipo){
                         case 'string':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en +`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "string"};
+                            }
                             return {valor:izq.valor + der.valor , tipo: "string"};
                     
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en +`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
 
@@ -93,83 +113,150 @@ export class InterpreterVisitor extends BaseVisitor {
                 if(izq.tipo == "int"){
                     switch (der.tipo){
                         case 'int':
-
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en -`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "int"};
+                            }
                             return {valor:izq.valor - der.valor , tipo: "int"};
                         case 'float':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en -`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "float"};
+                            }
                             return {valor:izq.valor - der.valor , tipo: "float"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en -`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
                 if(izq.tipo == "float"){
                     switch (der.tipo){
                         case 'float':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en -`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "float"};
+                            }
                             return {valor:izq.valor - der.valor , tipo: "float"};
                         case 'int':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en -`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "float"};
+                            }
                             return {valor:izq.valor - der.valor , tipo: "float"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en -`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
             case '*':
                 if(izq.tipo == "int"){
                     switch (der.tipo){
                         case 'int':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en *`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "int"};
+                            }
                             return {valor:izq.valor * der.valor , tipo: "int"};
                         case 'float':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en *`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "float"};
+                            }
                             return {valor:izq.valor * der.valor , tipo: "float"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en *`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
                 if(izq.tipo == "float"){
                     switch (der.tipo){
                         case 'float':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en *`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "float"};
+                            }
                             return {valor:izq.valor * der.valor , tipo: "float"};
                         case 'int':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en *`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "float"};
+                            }
                             return {valor:izq.valor * der.valor , tipo: "float"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en *`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
             case '/':
-                if(der != 0){
+                if(der.valor != 0){
                     if(izq.tipo == "int"){
                         switch (der.tipo){
                             case 'int':
+                                if(der.valor == null || izq.valor == null){
+                                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en /`);
+                                    erroresCompilacion.push(errores);
+                                    return {valor:null , tipo: "int"};
+                                }
                                 return {valor:Math.floor(izq.valor / der.valor) , tipo: "int"};
                             case 'float':
-                                return {valor:izq.valor / der.valor , tipo: "float"};
+                                if(der.valor == null || izq.valor == null){
+                                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en /`);
+                                    erroresCompilacion.push(errores);
+                                    return {valor:null , tipo: "float"};
+                                }
+                                return {valor:Math.random(izq.valor / der.valor) , tipo: "float"};
                             
                             default:
                                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en /`);
                                 erroresCompilacion.push(errores);
+                                return {valor:null , tipo: null};
                         }
                     }
 
                     if(izq.tipo == "float"){
                         switch (der.tipo){
                             case 'float':
-                                return {valor:izq.valor / der.valor , tipo: "float"};
+                                if(der.valor == null || izq.valor == null){
+                                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en /`);
+                                    erroresCompilacion.push(errores);
+                                    return {valor:null , tipo: "float"};
+                                }
+                                return {valor:Math.random(izq.valor / der.valor) , tipo: "float"};
                             case 'int':
-                                return {valor:izq.valor / der.valor , tipo: "float"};
+                                if(der.valor == null || izq.valor == null){
+                                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en /`);
+                                    erroresCompilacion.push(errores);
+                                    return {valor:null , tipo: "float"};
+                                }
+                                return {valor:Math.random(izq.valor / der.valor) , tipo: "float"};
                             
                             default:
                                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en /`);
                                 erroresCompilacion.push(errores);
+                                return {valor:null , tipo: null};
                         }
                     }
                 }else{
                     alert("No se puede divir dentro de 0")
-                    return null
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No se puede divir dentro de 0`);
+                    erroresCompilacion.push(errores);
+                    return {valor:null , tipo: null};
                 }
                 
             case '<=':
@@ -177,89 +264,154 @@ export class InterpreterVisitor extends BaseVisitor {
                 if(izq.tipo == "int"){
                     switch (der.tipo){
                         case 'int':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en <=`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor <= der.valor , tipo: "boolean"};
                         case 'float':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en <=`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor <= der.valor , tipo: "boolean"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en <=`);
                             erroresCompilacion.push(errores);}
+                            return {valor:null , tipo: null};
                 }
 
                 if(izq.tipo == "float"){
                     switch (der.tipo){
                         case 'float':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en <=`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor <= der.valor , tipo: "boolean"};
                         case 'int':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en <=`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor <= der.valor , tipo: "boolean"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en <=`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
 
                 if(izq.tipo == "char"){
                     switch (der.tipo){
                         case 'char':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en <=`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor <= der.valor , tipo: "boolean"};
 
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en <=`);    
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
             case '%':
-                if(der != 0){
+                if(der.valor != 0){
                     if(izq.tipo == "int"){
                         switch (der.tipo){
                             case 'int':
+                                if(der.valor == null || izq.valor == null){
+                                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en %`);
+                                    erroresCompilacion.push(errores);
+                                    return {valor:null , tipo: "int"};
+                                }
                                 return {valor:izq.valor % der.valor , tipo: "int"};
     
                             default:
                                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en %`); 
                                 erroresCompilacion.push(errores);
+                                return {valor:null , tipo: null};
                         }
                     }
                 }else{
                     alert("no puede divir entre un 0")
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No se puede divir dentro de 0`);
+                    erroresCompilacion.push(errores);
+                    return {valor:null , tipo: null};
                 }
                 
             case '>=' : 
                 if(izq.tipo == "int"){
                     switch (der.tipo){
                         case 'int':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en >=`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor >= der.valor , tipo: "boolean"};
                         case 'float':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en >=`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor >= der.valor , tipo: "boolean"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en >=`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
 
                 if(izq.tipo == "float"){
                     switch (der.tipo){
                         case 'float':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en >=`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor >= der.valor , tipo: "boolean"};
                         case 'int':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en >=`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor >= der.valor , tipo: "boolean"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en >=`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
 
                 if(izq.tipo == "char"){
                     switch (der.tipo){
                         case 'char':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en >=`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor >= der.valor , tipo: "boolean"};
 
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en >=`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
                 
@@ -267,122 +419,213 @@ export class InterpreterVisitor extends BaseVisitor {
                 if(izq.tipo == "int"){
                     switch (der.tipo){
                         case 'int':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en >`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor > der.valor , tipo: "boolean"};
                         case 'float':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en >`);
+                                erroresCompilacion.push(errores);
+
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor > der.valor , tipo: "boolean"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en >`); 
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
 
                 if(izq.tipo == "float"){
                     switch (der.tipo){
                         case 'float':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en >`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor > der.valor , tipo: "boolean"};
                         case 'int':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en >`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor > der.valor , tipo: "boolean"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en >`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
 
                 if(izq.tipo == "char"){
                     switch (der.tipo){
                         case 'char':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en >`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor > der.valor , tipo: "boolean"};
 
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en >`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
             case '<':
                 if(izq.tipo == "int"){
                     switch (der.tipo){
                         case 'int':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en <`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor < der.valor , tipo: "boolean"};
                         case 'float':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en <`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor < der.valor , tipo: "boolean"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en <`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
 
                 if(izq.tipo == "float"){
                     switch (der.tipo){
                         case 'float':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en <`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor < der.valor , tipo: "boolean"};
                         case 'int':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en <`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor < der.valor , tipo: "boolean"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en <`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
 
                 if(izq.tipo == "char"){
                     switch (der.tipo){
                         case 'char':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en <`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor < der.valor , tipo: "boolean"};
 
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en <`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
             case '&&':
                 if(izq.tipo == "boolean"){
                     switch (der.tipo){
                         case 'boolean':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en &&`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor && der.valor , tipo: "boolean"};
 
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en &&`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
             case '!=':
                 if(izq.tipo == "int"){
                     switch (der.tipo){
                         case 'int':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en !=`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor != der.valor , tipo: "boolean"};
                         case 'float':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en !=`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor != der.valor , tipo: "boolean"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en !=`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
 
                 if(izq.tipo == "float"){
                     switch (der.tipo){
                         case 'float':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en !=`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor != der.valor , tipo: "boolean"};
                         case 'int':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en !=`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor != der.valor , tipo: "boolean"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en !=`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
 
                 if(izq.tipo == "boolean"){
                     switch (der.tipo){
                         case 'boolean':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en !=`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor != der.valor , tipo: "boolean"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en !=`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
 
@@ -390,11 +633,17 @@ export class InterpreterVisitor extends BaseVisitor {
                 if(izq.tipo == "char"){
                     switch (der.tipo){
                         case 'char':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en !=`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor != der.valor , tipo: "boolean"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en !=`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
 
@@ -402,37 +651,65 @@ export class InterpreterVisitor extends BaseVisitor {
                 if(izq.tipo == "int"){
                     switch (der.tipo){
                         case 'int':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en ==`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor == der.valor , tipo: "boolean"};
                         case 'float':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en ==`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor == der.valor , tipo: "boolean"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en ==`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
 
                 if(izq.tipo == "float"){
                     switch (der.tipo){
                         case 'float':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en ==`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor == der.valor , tipo: "boolean"};
                         case 'int':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en ==`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor == der.valor , tipo: "boolean"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en ==`);
-                            erroresCompilacion.push(errores);   
+                            erroresCompilacion.push(errores);  
+                            return {valor:null , tipo: null}; 
                         }
                 }
 
                 if(izq.tipo == "boolean"){
                     switch (der.tipo){
                         case 'boolean':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en ==`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor == der.valor , tipo: "boolean"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en ==`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
 
@@ -440,57 +717,92 @@ export class InterpreterVisitor extends BaseVisitor {
                 if(izq.tipo == "char"){
                     switch (der.tipo){
                         case 'char':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en ==`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor == der.valor , tipo: "boolean"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en ==`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
             case '||':
                 if(izq.tipo == "boolean"){
                     switch (der.tipo){
                         case 'boolean':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en ||`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
                             return {valor:izq.valor || der.valor , tipo: "boolean"};
 
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en ||`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
             case '+=':
                 if(izq.tipo == "int"){
                     switch (der.tipo){
                         case 'int':
+                            if (der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en +=`); 
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "int"};
+                            }
                             return {valor:izq.valor + der.valor , tipo: "int"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en +=`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
                 
                 if(izq.tipo == "float"){
                     switch (der.tipo){
                         case 'float':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en +=`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "float"};
+                            }
                             return {valor:izq.valor + der.valor , tipo: "float"};
                         case 'int':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en +=`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "float"};
+                            }
                             return {valor:izq.valor + der.valor , tipo: "float"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en +=`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
 
                 if(izq.tipo == "string"){
                     switch (der.tipo){
                         case 'string':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en +=`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "string"};
+                            }
                             return {valor:izq.valor + der.valor , tipo: "string"};
                         
                         default:
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en +=`);
                             erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                     }
                 }
 
@@ -498,24 +810,41 @@ export class InterpreterVisitor extends BaseVisitor {
                     if(izq.tipo == "int"){
                         switch (der.tipo){
                             case 'int':
+                                if(der.valor == null || izq.valor == null){
+                                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en -=`);
+                                    erroresCompilacion.push(errores);
+                                    return {valor:null , tipo: "int"};
+                                }
                                 return {valor:izq.valor - der.valor , tipo: "int"};
                             
                             default:
                                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en -=`);
                                 erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "int"};
                         }
                     }
                     
                     if(izq.tipo == "float"){
                         switch (der.tipo){
                             case 'float':
+                                if(der.valor == null || izq.valor == null){
+                                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en -=`);
+                                    erroresCompilacion.push(errores);
+                                    return {valor:null , tipo: "float"};
+                                }
                                 return {valor:izq.valor - der.valor , tipo: "float"};
                             case 'int':
+                                if(der.valor == null || izq.valor == null){
+                                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en -=`);
+                                    erroresCompilacion.push(errores);
+                                    return {valor:null , tipo: "float"};
+                                }
                                 return {valor:izq.valor - der.valor , tipo: "float"};
                             
                             default:
                                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en -=`);
                                 erroresCompilacion.push(errores);
+                                return {valor:null , tipo: null};
                         }
                     }
 
@@ -523,6 +852,7 @@ export class InterpreterVisitor extends BaseVisitor {
             default:
                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: Operador no soportado: ${node.op}`);
                 erroresCompilacion.push(errores);
+                
         }
     }
 
@@ -536,42 +866,81 @@ export class InterpreterVisitor extends BaseVisitor {
         switch (node.op) {
             case '-':
                 if(exp.tipo == "int"){
+                    if(exp.valor == null){
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en -`);
+                        erroresCompilacion.push(errores);
+                        return {valor:null , tipo: exp.tipo};
+                    }
                     return {valor:-exp.valor , tipo: exp.tipo};
                 }else if(exp.tipo == "float"){
+                    if(exp.valor == null){
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en -`);
+                        erroresCompilacion.push(errores);
+                        return {valor:null , tipo: exp.tipo};
+                    }
                     return {valor:-exp.valor , tipo: exp.tipo};
                 }else{
                     let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en -`);
                     erroresCompilacion.push(errores);
+                    return {valor:null , tipo: exp.tipo};
                 }
                 
             case '!':
                     if(exp.tipo == "boolean"){
+                        if(exp.valor == null){
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en !`);
+                            erroresCompilacion.push(errores);
+                            return {valor:null , tipo: exp.tipo};
+                        }
                         return {valor:!exp.valor , tipo: exp.tipo};
                     }else{
                         let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en !`);
                         erroresCompilacion.push(errores);
+                        return {valor:null , tipo: exp.tipo};
                     }
                     
 
             case '++':
                 if(exp.tipo == "int"){
+                    if(exp.valor == null){
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en ++`);
+                        erroresCompilacion.push(errores);
+                        return {valor:null , tipo: exp.tipo};
+                    }
                     return {valor:exp.valor + 1, tipo: exp.tipo};
                 }else if(exp.tipo == "float"){
+                    if(exp.valor == null){
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en ++`);
+                        erroresCompilacion.push(errores);
+                        return {valor:null , tipo: exp.tipo};
+                    }
                     return {valor:-exp.valor + 1 , tipo: exp.tipo};
                 }else{
                     let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en ++`);
                     erroresCompilacion.push(errores);
+                    return {valor:null , tipo: exp.tipo};
                 }
                 
             
             case '--':
                 if(exp.tipo == "int"){
+                    if(exp.valor == null){
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en --`);
+                        erroresCompilacion.push(errores);
+                        return {valor:null , tipo: exp.tipo};
+                    }
                     return {valor:exp.valor - 1, tipo: exp.tipo};
                 }else if(exp.tipo == "float"){
+                    if(exp.valor == null){
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en --`);
+                        erroresCompilacion.push(errores);
+                        return {valor:null , tipo: exp.tipo};
+                    }
                     return {valor:exp.valor - 1 , tipo: exp.tipo};
                 }else{
                     let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en --`);
                     erroresCompilacion.push(errores);
+                    return {valor:null , tipo: exp.tipo};
                 }
                 
 
@@ -579,6 +948,7 @@ export class InterpreterVisitor extends BaseVisitor {
             default:
                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: Operador no soportado: ${node.op}`);
                 erroresCompilacion.push(errores);
+
         }
     }
 
@@ -616,7 +986,9 @@ export class InterpreterVisitor extends BaseVisitor {
                     if(tipoVariable != valor.tipo) {
                         let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El tipo del valor no coincide con el tipo ${tipoVariable}`);
                         erroresCompilacion.push(errores);
+                        return this.entornoActual.setVariable(tipoVariable, variable, null, node.location.start.line, node.location.start.column);
                     }
+
                     
                     break;
         
@@ -624,12 +996,14 @@ export class InterpreterVisitor extends BaseVisitor {
                     if(valor.tipo != "int" &&  tipoVariable != valor.tipo){
                         let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El tipo del valor no coincide con el tipo ${tipoVariable}`);
                         erroresCompilacion.push(errores);
+                        return this.entornoActual.setVariable(tipoVariable, variable, null, node.location.start.line, node.location.start.column);
                     }
                     break;
                 case "string":
                     if (tipoVariable != valor.tipo) {
                         let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El tipo del valor no coincide con el tipo ${tipoVariable}`);
                         erroresCompilacion.push(errores);
+                        return this.entornoActual.setVariable(tipoVariable, variable, null, node.location.start.line, node.location.start.column);
                     }
                     break;
         
@@ -637,6 +1011,7 @@ export class InterpreterVisitor extends BaseVisitor {
                     if (tipoVariable != valor.tipo) {
                         let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El tipo del valor no coincide con el tipo ${tipoVariable}`);
                         erroresCompilacion.push(errores);
+                        return this.entornoActual.setVariable(tipoVariable, variable, null, node.location.start.line, node.location.start.column);
                     }
                     break;
         
@@ -644,6 +1019,7 @@ export class InterpreterVisitor extends BaseVisitor {
                     if (tipoVariable != valor.tipo) {
                         let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El tipo del valor no coincide con el tipo ${tipoVariable}`);
                         erroresCompilacion.push(errores);
+                        return this.entornoActual.setVariable(tipoVariable, variable, null, node.location.start.line, node.location.start.column);
                     }
                     break;
     
@@ -852,9 +1228,6 @@ export class InterpreterVisitor extends BaseVisitor {
             case 'typeof':
                 switch(exp.tipo){
                     case "int":
-                        //console.log("aqui inicio" + exp.valor)
-                        //console.log(node.Embe)
-                        //console.log(exp.tipo)
                         return {valor: exp.tipo, tipo: "string"}
                     case "float":
                         return {valor: exp.tipo, tipo: "string"}
@@ -869,26 +1242,24 @@ export class InterpreterVisitor extends BaseVisitor {
                     default:
                         let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en typeof`);
                         erroresCompilacion.push(errores);
+                        return {valor: null, tipo: exp.tipo};
+                        
                 }
             case 'toUpperCase':
                 switch(exp.tipo){
-                    case "string":
-                        //console.log("aqui inicio" + exp.valor)
-                        //const manuysucla = exp.valor.toUpperCase();                        
-                        
-                        
+                    case "string":               
+
                         return {valor: exp.valor.toUpperCase(), tipo: "string"}
 
                     default:
                         let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en toUpperCase`);
                         erroresCompilacion.push(errores);
+                        return {valor: null, tipo: exp.tipo};
                 }
 
             case 'toLowerCase':
                 switch(exp.tipo){
-                    case "string":
-                        //console.log("aqui inicio" + exp.valor)
-                        //const minuscula = exp.valor.toLowerCase();                        
+                    case "string":                  
                         
                         
                         return {valor: exp.valor.toLowerCase(), tipo: "string"}
@@ -896,18 +1267,14 @@ export class InterpreterVisitor extends BaseVisitor {
                     default:
                         let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en toLowerCase`);
                         erroresCompilacion.push(errores);
+                        return {valor: null, tipo: exp.tipo};
                 }
 
             case 'parsefloat':
                 switch(exp.tipo){
                         
                     case "string":
-                        //console.log("aqui inicio --" + exp.valor)
-                        //console.log(node.Embe)
-                        //console.log(exp.tipo)
-                        //console.log("aquí inicio: ---" + exp.valor);
-            
-                        // Validar que el string contenga solo números, opcionalmente con un punto decimal
+
                         const regex = /^[+-]?(\d+(\.\d*)?|\.\d+)$/;
             
                         if (regex.test(exp.valor)) {
@@ -916,11 +1283,13 @@ export class InterpreterVisitor extends BaseVisitor {
                         } else {
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El valor '${exp.valor}' no es un número válido.`);
                             erroresCompilacion.push(errores);
+                            return { valor: null, tipo: exp.tipo };
                         }
 
                     default:
                         let errores = new erroresReporte(node.location.start.line,node.location.start.column,`No valido ese tipo de dato en parseFloat`);
                         erroresCompilacion.push(errores);
+                        return { valor: null, tipo: exp.tipo };
                 }
             case 'parseInt':
                 switch(exp.tipo){
@@ -936,34 +1305,26 @@ export class InterpreterVisitor extends BaseVisitor {
                         } else {
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`El valor '${exp.valor}' no es un número válido.`);
                             erroresCompilacion.push(errores);
+                            return { valor: null, tipo: exp.tipo };
                         }
 
                     default:
                         let errores = new erroresReporte(node.location.start.line,node.location.start.column,`No valido ese tipo de dato en parseInt`);
                         erroresCompilacion.push(errores);
+                        return { valor: null, tipo: exp.tipo };
                 }
             case 'toString':
                 switch(exp.tipo){
                     case "int":
-                        
-            
-                        //console.log("aqui estoy ------")
-                        //console.log("aquí inicio: " +  exp.valor  + exp.tipo);
-                        //const valorString = toString(exp.valor);
+
                         return { valor: exp.valor.toString(), tipo: "string" };
                     case "boolean":
                         
-            
-                        //console.log("aqui estoy ------")
-                        //console.log("aquí inicio: " +  exp.valor  + exp.tipo);
-                        //const valorString = toString(exp.valor);
+
                         return { valor: exp.valor.toString(), tipo: "string" };
                     case "float":
                         
-            
-                        //console.log("aqui estoy ------")
-                       //console.log("aquí inicio: " +  exp.valor  + exp.tipo);
-                        //const valorString = toString(exp.valor);
+
                         return { valor: exp.valor.toString(), tipo: "string" };
 
                     case "char":
@@ -973,12 +1334,14 @@ export class InterpreterVisitor extends BaseVisitor {
                     default:
                         let errores = new erroresReporte(node.location.start.line,node.location.start.column,`No valido ese tipo de dato en toString`);
                         erroresCompilacion.push(errores);
+                        return { valor: null, tipo: exp.tipo };
                 }
 
 
             default:
                 let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: Operador no soportado: ${node.Embe}`);
                 erroresCompilacion.push(errores);
+                
 
         }
 

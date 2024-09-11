@@ -31,22 +31,21 @@ ejecutar.addEventListener('click', () => {
 
         console.log(erroresCompilacion)
         console.log(tablaSimbolos)
-        
-    
-    //} catch (error) {
-        // if(error.location){
-        //     consola.innerHTML = 'Error: ' + error.message + ' at line ' + error.location.start.line + ' column ' + error.location.start.column
-        // } else {
-        //     consola.innerHTML = 'Error: ' + error.message
+        // consola.innerHTML += `\n`
+        // if (erroresCompilacion.length > 0) {
+        //     erroresCompilacion.forEach(error => {
+        //         consola.innerHTML += `Error: ${error.message} at line ${error.linea}, column ${error.columna}\n`;
+        //     });
         // }
-        
-        // // Almacenar el error para la tabla de errores
-        // erroresCompilacion = [{
-        //     message: error.message,
-        //     location: error.location,
-        //     type: 'Error de compilación'
-        // }]
-   // }
+
+    // } catch (error) {
+    //     if(error.location){
+    //         consola.innerHTML = 'Error: ' + error.message + ' at line ' + error.location.start.line + ' column ' + error.location.start.column
+    //     } else {
+    //         consola.innerHTML = 'Error: ' + error.message
+    //     }
+
+    //}
 })
 
 // Función para abrir modal

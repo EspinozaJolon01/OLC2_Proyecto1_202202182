@@ -23,6 +23,7 @@ export class Entorno {
             //throw new Error(`Error: La variable ${nombre} ya está definida`);
             let errores = new erroresReporte(linea,columna,`Error: La variable ${nombre} ya está definida`);
             erroresCompilacion.push(errores);
+            return;
             
         }
         this.valores[nombre] = { valor, tipo,linea,columna };
@@ -46,6 +47,7 @@ export class Entorno {
         //throw new Error(`Variable ${nombre} no definida`)
         let error = new erroresReporte(linea,columna,`Variable ${nombre} no definida`);
         erroresCompilacion.push(error);
+        return ;
 
     }
 
@@ -58,40 +60,20 @@ export class Entorno {
 
         if (bandera != undefined) {
 
-            if (bandera.tipo === "string" && valor.tipo !== "string") {
-                //throw new Error(`El tipo de la variable ${nombre} es 'string', y no coincide con el tipo del valor asignado`);
-                let error = new erroresReporte(linea,columna,`El tipo de la variable ${nombre} es 'string', y no coincide con el tipo del valor asignado`);
+            if(valor.tipo == "int" && bandera.tipo == "float"){
+                this.valores[nombre].valor = valor.valor;
+                this.valores[nombre].linea = valor.linea;
+                this.valores[nombre].columna = valor.columna;
+                return;
+            }else if(bandera.tipo != valor.tipo){
+                //throw new Error(`Error: No se puede asignar ${valor.tipo} a ${bandera.tipo}`);
+                let error = new erroresReporte(linea,columna,`Error: No se puede asignar ${valor.tipo} a ${bandera.tipo}`);
                 erroresCompilacion.push(error);
+                this.valores[nombre].valor = null;
+                return;
             }
 
-            if (bandera.tipo === "int" && valor.tipo !== "int") {
-                //throw new Error(`El tipo de la variable ${nombre} es 'int' y no coincide con el tipo del valor asignado.`);
-                let error = new erroresReporte(linea,columna,`El tipo de la variable ${nombre} es 'int' y no coincide con el tipo del valor asignado.`);
-                erroresCompilacion.push(error);
-            }
-
-
-            if (bandera.tipo === "float" && (valor.tipo !== "float" && valor.tipo !== "int")) {
-                //throw new Error(`El tipo de la variable ${nombre} es 'float' y no coincide con el tipo del valor asignado.`);
-                let error = new erroresReporte(linea,columna,`El tipo de la variable ${nombre} es 'float' y no coincide con el tipo del valor asignado.`);
-                erroresCompilacion.push(error);
-            }
-    
-
-            if (bandera.tipo === "char" && valor.tipo !== "char") {
-                //throw new Error(`El tipo de la variable ${nombre} es 'char' y no coincide con el tipo del valor asignado.`);
-                let error = new erroresReporte(linea,columna,`El tipo de la variable ${nombre} es 'char' y no coincide con el tipo del valor asignado.`);
-                erroresCompilacion.push(error);
-            }
-
-            if (bandera.tipo === "boolean" && valor.tipo !== "boolean") {
-                //throw new Error(`El tipo de la variable ${nombre} es 'boolean'  y no coincide con el tipo del valor asignado.`);
-                let error = new erroresReporte(linea,columna,`El tipo de la variable ${nombre} es 'boolean'  y no coincide con el tipo del valor asignado.`);
-                erroresCompilacion.push(error);
-            }
-    
             this.valores[nombre].valor = valor.valor;
-            this.valores[nombre].tipo = valor.tipo;
             this.valores[nombre].linea = valor.linea;
             this.valores[nombre].columna = valor.columna;
             return;
@@ -105,6 +87,7 @@ export class Entorno {
         //throw new Error(`Variable ${nombre} no definida`);
         let error = new erroresReporte(linea,columna,`Variable ${nombre} no definida`);
         erroresCompilacion.push(error);
+        return;
     }
 
 
@@ -128,6 +111,7 @@ export class Entorno {
             //throw new Error(`Variable ${nombre} no definida`);
             let errores = new erroresReporte(linea,columna,`Variable ${nombre} no definida`);
             erroresCompilacion.push(errores);
+            return;
         }
 
 

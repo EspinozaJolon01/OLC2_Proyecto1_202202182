@@ -42,6 +42,8 @@ export class FuncionRemota extends Ejecutable {
             
 
         try {
+
+            
             this.node.bloque.accept(interprete);
 
 
@@ -55,38 +57,40 @@ export class FuncionRemota extends Ejecutable {
                 
                 if(this.node.tipo === 'void' && error.value !== null){
 
-                    let error = new erroresReporte(this.nodo.location.start.line, this.nodo.location.start.column,`Una función de tipo 'void' no puede retornar un valor.`);
+                    let error = new erroresReporte(node.location.start.line, node.location.start.column,`Una función de tipo 'void' no puede retornar un valor.`);
                     erroresCompilacion.push(error);
-                }
-
-                if(this.node.tipo === 'void' && error.value === null){
+                    
+                }else if(this.node.tipo === 'void' && error.value === null){
                     return null;  
-                }
 
-
-                if(this.node.tipo !== error.value.tipo){
-                    let error = new erroresReporte(this.nodo.location.start.line, this.nodo.location.start.column,`El tipo de retorno de la función no coincide con el tipo de la función.`);
+                }else if(this.node.tipo !== error.value.tipo){
+                    let error = new erroresReporte(node.location.start.line, node.location.start.column,`El tipo de retorno de la función no coincide con el tipo de la función.`);
                     erroresCompilacion.push(error);
+                }else{
+                    return error.value;
                 }
-                return error.value;
+
             }
 
             if(this.node.tipo !== "void" && error instanceof BreakException){
-                let error = new erroresReporte(this.nodo.location.start.line, this.nodo.location.start.column,`La función ${this.node.id} debe retornar un valor`);
+                let error = new erroresReporte(node.location.start.line, node.location.start.column,`La función ${this.node.id} debe retornar un valor`);
                 erroresCompilacion.push(error);
+                
             }
 
             if(this.node.tipo !== "void" && error instanceof ContinueException){
-                let error = new erroresReporte(this.nodo.location.start.line, this.nodo.location.start.column,`La función ${this.node.id} debe retornar un valor`);
+                let error = new erroresReporte(node.location.start.line, node.location.start.column,`La función ${this.node.id} debe retornar un valor`);
                 erroresCompilacion.push(error);
+                
             }
 
             throw error;
         }
 
         if(this.node.tipo !== "void"){
-            let error = new erroresReporte(this.nodo.location.start.line, this.nodo.location.start.column,`La función ${this.node.id} debe retornar un valor`);
+            let error = new erroresReporte(node.location.start.line, node.location.start.column,`La función ${this.node.id} debe retornar un valor`);
             erroresCompilacion.push(error);
+            return;
         }
 
         interprete.entornoActual = entornoAntesDeEjecutar;
