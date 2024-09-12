@@ -71,7 +71,7 @@ VarDcl = Arreglos
       
 DeclaFun = tipo:(Tipo / "void") _ id:Identify _ "(" _ params:Parametros? _ ")" _ bloque:Bloque { return crearNodo('declaracionFuncion', { tipo, id, params: params || [], bloque }) }
 
-DeStruct  = "struct" _ id:Identify _ "{" _ dcls:BloStruct* _ "}" _ ";" { return crearNodo('estructura', { id, dcls }) }
+DeStruct  = "struct" _ id:Identify _ "{" _ dcls:BloStruct* _ "}" _ ";"? { return crearNodo('estructura', { id, dcls }) }
 
 
 BloStruct = tipo: ("int"/"float"/"string"/"boolean"/"char"/Identify) _ id: Identify _ ";" _ { return { tipo, id } }
@@ -149,7 +149,11 @@ TipoArrays = "int" {return text()}
 
 
 
-Stmt = "System.out.println(" _ exp: Expresion _ expM: ("," _ expM: Expresion _ { return expM } )* _ ")" _ ";" { return crearNodo('print', { exp, expM }) }
+
+
+expresiones = exp:Expresion resto:( _ "," _ expr:Expresion {return expr})* { return [exp, ...resto] }
+
+Stmt =  _ ("System.out.println" / "print") _ "(" _ exps:expresiones _ ")" _ ";" _ {return crearNodo('print', {exps})}
     / Bloque: Bloque { return Bloque }
     / "if" _ "(" _ cond:Expresion _ ")" _ stmtTrue:Stmt 
       stmtFalse:(

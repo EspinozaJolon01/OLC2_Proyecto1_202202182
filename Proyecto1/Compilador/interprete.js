@@ -1136,10 +1136,25 @@ export class InterpreterVisitor extends BaseVisitor {
       * @type {BaseVisitor['visitPrint']}
       */
     visitPrint(node) {
-        const valor = node.exp.accept(this);
-        this.consola += valor.valor + ' ';
-        node.expM.forEach(exp => this.consola += exp.accept(this).valor +  ' ')
-        this.consola += '\n'
+        const printValue = (valor) => {
+            if (valor.valor === null) {
+                return "null";
+            } else if (Array.isArray(valor.valor)) {
+                return  valor.valor.map(v => printValue({valor: v, tipo: valor.tipo})).join(', ') ;
+            } else if (valor.tipo === 'float') {
+                if (Number.isInteger(valor.valor)) {
+                return valor.valor.toFixed(1);
+                }
+            }
+            return valor.valor;
+            };
+        
+            const valores = node.exps.map(exp => {
+            const valor = exp.accept(this);
+            return printValue(valor);
+            });
+        
+        this.consola += valores.join('') + '\n';
         
     }
 
