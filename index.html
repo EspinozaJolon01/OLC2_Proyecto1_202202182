@@ -9,7 +9,9 @@
 </head>
 <body>
     <div class="container">
+        
         <header class="navbar">
+            <h1>JL</h1>
             <div class="navbar-botones">
                 <button id="ejecutar" class="navbar-btn">Ejecutar</button>
                 <button id="NuevoArchivo" class="navbar-btn">Nuevo Archivo</button>
@@ -28,11 +30,14 @@
             <section class="editors">
                 <h2>Entrada</h2>
                 <div class="input-area">
-                    <textarea id="codigofuente" class="code-editor" placeholder="Escribe tu código aquí..."></textarea>
+                    <!---<textarea id="codigofuente" class="code-editor" placeholder="Escribe tu código aquí..."></textarea>-->
+                    <div id="codigofuente" style="height: 90vh; width: 80vw;"></div>
                 </div>
                 <h2>Consola</h2>
                 <div class="console-area">
-                    <textarea id="consola" readonly class="console"></textarea>
+                    <!--- <textarea id="consola" readonly class="console"></textarea>-->
+                    <div id="consola" style="height: 90vh; width: 80vw;"></div>
+
                 </div>
             </section>
         </main>

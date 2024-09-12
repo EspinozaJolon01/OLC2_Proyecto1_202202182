@@ -1,10 +1,9 @@
+import * as monaco from 'https://cdn.jsdelivr.net/npm/monaco-editor@0.50.0/+esm'
 import { parse } from './Proyecto1/Compilador/gramatica.js'
 import { InterpreterVisitor } from './Proyecto1/Compilador/interprete.js'
 
-
-const editor = document.getElementById('codigofuente')
+let editor, consoleEditor;
 const ejecutar = document.getElementById('ejecutar')
-const consola = document.getElementById('consola')
 const reporteErroresBtn = document.getElementById('reporte-errores')
 const reporteSimbolosBtn = document.getElementById('reporte-simbolos')
 const modalErrores = document.getElementById('modal-errores')
@@ -22,6 +21,22 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentFile = null;
     const fileContents = {};
 
+    // Inicializar Monaco Editor
+    editor = monaco.editor.create(document.getElementById('codigofuente'), {
+        value: '',
+        language: 'java',
+        theme: 'vs-dark',
+        automaticLayout: true
+    });
+
+    consoleEditor = monaco.editor.create(document.getElementById('consola'), {
+        value: '',
+        language: 'java',
+        theme: 'vs-dark',
+        readOnly: true,
+        automaticLayout: true
+    });
+
     // Crear el input de archivo dinámicamente
     const fileInputElement = document.createElement('input');
     fileInputElement.type = 'file';
@@ -38,8 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
             reader.onload = function(e) {
                 const content = e.target.result;
                 currentFile = file.name;
-                editor.value = content;
+                editor.setValue(content);
                 fileContents[currentFile] = content;
+                addTab(currentFile);
             };
         
             reader.readAsText(file);
@@ -54,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Función para guardar el contenido del editor
     function saveFile() {
         if (currentFile) {
-            const content = editor.value;
+            const content = editor.getValue();
             const blob = new Blob([content], { type: 'text/oak' });
             const url = URL.createObjectURL(blob);
             const enlace = document.createElement('a');
@@ -66,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             const fileName = prompt('Ingrese el nombre del archivo:', 'archivo');
             if (fileName !== null) {
-                const content = editor.value;
+                const content = editor.getValue();
                 const blob = new Blob([content], { type: 'text/oak' });
                 const url = URL.createObjectURL(blob);
                 const enlace = document.createElement('a');
@@ -76,6 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 URL.revokeObjectURL(url);
                 fileContents[fileName] = content;
                 currentFile = fileName;
+                addTab(currentFile);
             }
         }
     }
@@ -86,30 +103,42 @@ document.addEventListener('DOMContentLoaded', () => {
     // Función para crear un nuevo archivo
     function createNewFile() {
         if (currentFile) {
-            fileContents[currentFile] = editor.value;
+            fileContents[currentFile] = editor.getValue();
         }
         const newFileName = `Archivo${Object.keys(fileContents).length + 1}`;
-       
-        const newTab = document.createElement('button');
-        newTab.className = 'tab';
-        newTab.textContent = newFileName;
-        newTab.dataset.file = newFileName;
-        newTab.addEventListener('click', () => {
-            switchFile(newFileName);
-        });
-        tabsContainer.appendChild(newTab);
         currentFile = newFileName;
         fileContents[newFileName] = '';
-        editor.value = '';
+        editor.setValue('');
+        addTab(newFileName);
+    }
+
+    // Función para añadir una nueva pestaña
+    function addTab(fileName) {
+        const newTab = document.createElement('button');
+        newTab.className = 'tab';
+        newTab.textContent = fileName;
+        newTab.dataset.file = fileName;
+        newTab.addEventListener('click', () => {
+            switchFile(fileName);
+        });
+        tabsContainer.appendChild(newTab);
+        switchFile(fileName);
     }
 
     // Cambiar el archivo actual
     function switchFile(fileName) {
         if (currentFile) {
-            fileContents[currentFile] = editor.value;
+            fileContents[currentFile] = editor.getValue();
         }
         currentFile = fileName;
-        editor.value = fileContents[fileName] || '';
+        editor.setValue(fileContents[fileName] || '');
+        // Actualizar la pestaña activa
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+            if (tab.dataset.file === fileName) {
+                tab.classList.add('active');
+            }
+        });
     }
 
     // Agregar funcionalidad al botón "Crear"
@@ -120,34 +149,35 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 ejecutar.addEventListener('click', () => {
-    const codigoFuente = editor.value
+    const codigoFuente = editor.getValue()
     erroresCompilacion = [] // Limpiar errores de compilación
     tablaSimbolos = [] // Limpiar tabla de símbolos
-    // try {
+    try {
         const sentencias = parse(codigoFuente)
         const interprete = new InterpreterVisitor()
         
         console.log({ sentencias })
         sentencias.forEach(sentencia => sentencia.accept(interprete))
         
-        consola.innerHTML = interprete.consola
+        consoleEditor.setValue(interprete.consola)
 
         console.log(erroresCompilacion)
         console.log(tablaSimbolos)
-        consola.innerHTML += `\n`
-        // if (erroresCompilacion.length > 0) {
-        //     erroresCompilacion.forEach(error => {
-        //         consola.innerHTML += `Error: ${error.message} at line ${error.linea}, column ${error.columna}\n`;
-        //     });
-        // }
+        
+        if (erroresCompilacion.length > 0) {
+            let errorMessages = erroresCompilacion.map(error => 
+                `Error: ${error.message} at line ${error.linea}, column ${error.columna}`
+            ).join('\n');
+            consoleEditor.setValue(consoleEditor.getValue() + '\n' + errorMessages);
+        }
 
-    // } catch (error) {
-    //     if(error.location){
-    //         consola.innerHTML = 'Error: ' + error.message + ' at line ' + error.location.start.line + ' column ' + error.location.start.column
-    //     } else {
-    //         consola.innerHTML = 'Error: ' + error.message
-    //     }
-    // }
+    } catch (error) {
+        if(error.location){
+            consoleEditor.setValue('Error: ' + error.message + ' at line ' + error.location.start.line + ' column ' + error.location.start.column)
+        } else {
+            consoleEditor.setValue('Error: ' + error.message)
+        }
+    }
 })
 
 // Función para abrir modal
