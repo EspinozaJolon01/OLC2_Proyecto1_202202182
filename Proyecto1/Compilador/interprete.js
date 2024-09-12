@@ -1088,6 +1088,8 @@ export class InterpreterVisitor extends BaseVisitor {
 
 
             this.entornoActual.setVariable(tipoVariable, variable, null,node.location.start.line,node.location.start.column);
+            let tabla = new tablaSimboloReport(variable,"variable",tipoVariable,"Global",node.location.start.line,node.location.start.column);
+            tablaSimbolos.push(tabla);
             return
 
     }
