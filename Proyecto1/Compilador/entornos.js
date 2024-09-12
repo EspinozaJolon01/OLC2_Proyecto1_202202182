@@ -27,7 +27,6 @@ export class Entorno {
         }
 
 
-
         if (this.valores[nombre] != undefined) {
             //throw new Error(`Error: La variable ${nombre} ya está definida`);
             let errores = new erroresReporte(linea,columna,`Error: La variable ${nombre} ya está definida`);

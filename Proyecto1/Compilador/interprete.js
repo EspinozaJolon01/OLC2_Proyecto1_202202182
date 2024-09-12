@@ -67,9 +67,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             return {valor:null , tipo: null};
 
                     }
-                }
-
-                if(izq.tipo == "float"){
+                }else if(izq.tipo == "float"){
                     switch (der.tipo){
                         case 'float':
                             if(der.valor == null || izq.valor == null){
@@ -91,8 +89,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
-                }
-                if(izq.tipo == "string"){
+                }else if(izq.tipo == "string"){
                     switch (der.tipo){
                         case 'string':
                             if(der.valor == null || izq.valor == null){
@@ -107,6 +104,10 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
+                }else{
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en +`);
+                    erroresCompilacion.push(errores);
+                    return {valor:null , tipo: null};
                 }
 
             case '-':
@@ -132,8 +133,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
-                }
-                if(izq.tipo == "float"){
+                }else if(izq.tipo == "float"){
                     switch (der.tipo){
                         case 'float':
                             if(der.valor == null || izq.valor == null){
@@ -155,6 +155,10 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
+                }else{
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en -`);
+                    erroresCompilacion.push(errores);
+                    return {valor:null , tipo: null};
                 }
             case '*':
                 if(izq.tipo == "int"){
@@ -179,8 +183,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
-                }
-                if(izq.tipo == "float"){
+                }else if(izq.tipo == "float"){
                     switch (der.tipo){
                         case 'float':
                             if(der.valor == null || izq.valor == null){
@@ -202,6 +205,10 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
+                }else{
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en *`);
+                    erroresCompilacion.push(errores);
+                    return {valor:null , tipo: null};
                 }
             case '/':
                 if(der.valor != 0){
@@ -227,9 +234,7 @@ export class InterpreterVisitor extends BaseVisitor {
                                 erroresCompilacion.push(errores);
                                 return {valor:null , tipo: null};
                         }
-                    }
-
-                    if(izq.tipo == "float"){
+                    }else if(izq.tipo == "float"){
                         switch (der.tipo){
                             case 'float':
                                 if(der.valor == null || izq.valor == null){
@@ -251,6 +256,10 @@ export class InterpreterVisitor extends BaseVisitor {
                                 erroresCompilacion.push(errores);
                                 return {valor:null , tipo: null};
                         }
+                    }else{
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en /`);
+                        erroresCompilacion.push(errores);
+                        return {valor:null , tipo: null};
                     }
                 }else{
                     alert("No se puede divir dentro de 0")
@@ -282,9 +291,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en <=`);
                             erroresCompilacion.push(errores);}
                             return {valor:null , tipo: null};
-                }
-
-                if(izq.tipo == "float"){
+                }else if(izq.tipo == "float"){
                     switch (der.tipo){
                         case 'float':
                             if(der.valor == null || izq.valor == null){
@@ -306,9 +313,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
-                }
-
-                if(izq.tipo == "char"){
+                }else if(izq.tipo == "char"){
                     switch (der.tipo){
                         case 'char':
                             if(der.valor == null || izq.valor == null){
@@ -323,6 +328,10 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
+                }else{
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en <=`);
+                    erroresCompilacion.push(errores);
+                    return {valor:null , tipo: null};
                 }
             case '%':
                 if(der.valor != 0){
@@ -341,6 +350,10 @@ export class InterpreterVisitor extends BaseVisitor {
                                 erroresCompilacion.push(errores);
                                 return {valor:null , tipo: null};
                         }
+                    }else{
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en %`);
+                        erroresCompilacion.push(errores);
+                        return {valor:null , tipo: null};
                     }
                 }else{
                     alert("no puede divir entre un 0")
@@ -372,9 +385,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
-                }
-
-                if(izq.tipo == "float"){
+                }else if(izq.tipo == "float"){
                     switch (der.tipo){
                         case 'float':
                             if(der.valor == null || izq.valor == null){
@@ -396,9 +407,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
-                }
-
-                if(izq.tipo == "char"){
+                }else if(izq.tipo == "char"){
                     switch (der.tipo){
                         case 'char':
                             if(der.valor == null || izq.valor == null){
@@ -413,6 +422,10 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
+                }else{
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en >=`);
+                    erroresCompilacion.push(errores);
+                    return {valor:null , tipo: null};
                 }
                 
             case '>' :
@@ -439,9 +452,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
-                }
-
-                if(izq.tipo == "float"){
+                }else if(izq.tipo == "float"){
                     switch (der.tipo){
                         case 'float':
                             if(der.valor == null || izq.valor == null){
@@ -463,9 +474,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
-                }
-
-                if(izq.tipo == "char"){
+                }else if(izq.tipo == "char"){
                     switch (der.tipo){
                         case 'char':
                             if(der.valor == null || izq.valor == null){
@@ -480,6 +489,10 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
+                }else{
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en >`);
+                    erroresCompilacion.push(errores);
+                    return {valor:null , tipo: null};
                 }
             case '<':
                 if(izq.tipo == "int"){
@@ -504,9 +517,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
-                }
-
-                if(izq.tipo == "float"){
+                }else if(izq.tipo == "float"){
                     switch (der.tipo){
                         case 'float':
                             if(der.valor == null || izq.valor == null){
@@ -528,9 +539,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
-                }
-
-                if(izq.tipo == "char"){
+                }else if(izq.tipo == "char"){
                     switch (der.tipo){
                         case 'char':
                             if(der.valor == null || izq.valor == null){
@@ -545,6 +554,10 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
+                }else{
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en <`);
+                    erroresCompilacion.push(errores);
+                    return {valor:null , tipo: null};
                 }
             case '&&':
                 if(izq.tipo == "boolean"){
@@ -562,6 +575,10 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
+                }else{
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en &&`);
+                    erroresCompilacion.push(errores);
+                    return {valor:null , tipo: null};
                 }
             case '!=':
                 if(izq.tipo == "int"){
@@ -586,9 +603,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
-                }
-
-                if(izq.tipo == "float"){
+                }else if(izq.tipo == "float"){
                     switch (der.tipo){
                         case 'float':
                             if(der.valor == null || izq.valor == null){
@@ -610,9 +625,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
-                }
-
-                if(izq.tipo == "boolean"){
+                }else if(izq.tipo == "boolean"){
                     switch (der.tipo){
                         case 'boolean':
                             if(der.valor == null || izq.valor == null){
@@ -627,10 +640,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
-                }
-
-
-                if(izq.tipo == "char"){
+                }else if(izq.tipo == "char"){
                     switch (der.tipo){
                         case 'char':
                             if(der.valor == null || izq.valor == null){
@@ -645,7 +655,26 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
+                }else if(izq.tipo == "string"){
+                    switch (der.tipo){
+                        case 'string':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en !=`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
+                            return {valor:izq.valor != der.valor , tipo: "boolean"};
+                        
+                        default:
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en !=`);
+                            erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
                 }
+            }else{
+                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en !=`);
+                erroresCompilacion.push(errores);
+                return {valor:null , tipo: null};
+            }
 
             case '==':
                 if(izq.tipo == "int"){
@@ -670,9 +699,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
-                }
-
-                if(izq.tipo == "float"){
+                }else if(izq.tipo == "float"){
                     switch (der.tipo){
                         case 'float':
                             if(der.valor == null || izq.valor == null){
@@ -694,9 +721,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);  
                             return {valor:null , tipo: null}; 
                         }
-                }
-
-                if(izq.tipo == "boolean"){
+                }else if(izq.tipo == "boolean"){
                     switch (der.tipo){
                         case 'boolean':
                             if(der.valor == null || izq.valor == null){
@@ -711,10 +736,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
-                }
-
-
-                if(izq.tipo == "char"){
+                }else if(izq.tipo == "char"){
                     switch (der.tipo){
                         case 'char':
                             if(der.valor == null || izq.valor == null){
@@ -729,7 +751,28 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
+                }else if(izq.tipo == "string"){
+                    switch (der.tipo){
+                        case 'string':
+                            if(der.valor == null || izq.valor == null){
+                                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en ==`);
+                                erroresCompilacion.push(errores);
+                                return {valor:null , tipo: "boolean"};
+                            }
+                            return {valor:izq.valor == der.valor , tipo: "boolean"};
+                        
+                        default:
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en ==`);
+                            erroresCompilacion.push(errores);
+                            return {valor:null , tipo: null};
+                    }
+                }else{
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en ==`);
+                    erroresCompilacion.push(errores);
+                    return {valor:null , tipo: null};
                 }
+
+                
             case '||':
                 if(izq.tipo == "boolean"){
                     switch (der.tipo){
@@ -746,6 +789,10 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
+                }else{
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en ||`);
+                    erroresCompilacion.push(errores);
+                    return {valor:null , tipo: null};
                 }
             case '+=':
                 if(izq.tipo == "int"){
@@ -763,9 +810,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
-                }
-                
-                if(izq.tipo == "float"){
+                }else if(izq.tipo == "float"){
                     switch (der.tipo){
                         case 'float':
                             if(der.valor == null || izq.valor == null){
@@ -787,9 +832,7 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
-                }
-
-                if(izq.tipo == "string"){
+                }else if(izq.tipo == "string"){
                     switch (der.tipo){
                         case 'string':
                             if(der.valor == null || izq.valor == null){
@@ -804,6 +847,10 @@ export class InterpreterVisitor extends BaseVisitor {
                             erroresCompilacion.push(errores);
                             return {valor:null , tipo: null};
                     }
+                }else{
+                    let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en +=`);
+                    erroresCompilacion.push(errores);
+                    return {valor:null , tipo: null};
                 }
 
                 case '-=':
@@ -822,9 +869,7 @@ export class InterpreterVisitor extends BaseVisitor {
                                 erroresCompilacion.push(errores);
                                 return {valor:null , tipo: "int"};
                         }
-                    }
-                    
-                    if(izq.tipo == "float"){
+                    }else if(izq.tipo == "float"){
                         switch (der.tipo){
                             case 'float':
                                 if(der.valor == null || izq.valor == null){
@@ -846,6 +891,10 @@ export class InterpreterVisitor extends BaseVisitor {
                                 erroresCompilacion.push(errores);
                                 return {valor:null , tipo: null};
                         }
+                    }else{
+                        let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion en -=`);
+                        erroresCompilacion.push(errores);
+                        return {valor:null , tipo: null};
                     }
 
 
@@ -1897,7 +1946,9 @@ export class InterpreterVisitor extends BaseVisitor {
             for (const valor of arreglo.valor) {
                 let tabla = new tablaSimboloReport(node.id,"variable",node.tipo,"ForEach",node.location.start.line,node.location.start.column);
                 tablaSimbolos.push(tabla);
+
                 this.entornoActual.setVariable(arreglo.tipo, node.id, valor, node.location.start.line, node.location.start.column);
+
                 node.stmt.accept(this);
 
                 this.entornoActual.eleiminar(node.id, node.location.start.line, node.location.start.column);
@@ -1991,7 +2042,11 @@ export class InterpreterVisitor extends BaseVisitor {
                 };
             });
 
-            
+            if(Object.keys(numPropiedas).length == 0){
+                let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No se permiten estructuras vacías`);
+                erroresCompilacion.push(errores);
+                return;
+            }
 
             const struct = new StructC(node.id, numPropiedas);
 
