@@ -910,6 +910,9 @@ return op
         s1 = peg$FAILED;
         if (peg$silentFails === 0) { peg$fail(peg$e3); }
       }
+      if (s1 === peg$FAILED) {
+        s1 = peg$parseIdentify();
+      }
     }
     if (s1 !== peg$FAILED) {
       s2 = peg$parse_();

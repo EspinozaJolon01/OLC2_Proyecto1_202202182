@@ -75,7 +75,7 @@ export class Entorno {
                 return;
             }else if(bandera.tipo != valor.tipo){
                 //throw new Error(`Error: No se puede asignar ${valor.tipo} a ${bandera.tipo}`);
-                let error = new erroresReporte(linea,columna,`Error: No se puede asignar ${valor.tipo} a ${bandera.tipo}`);
+                let error = new erroresReporte(linea,columna,`Error: No se puede asignar  ${valor.tipo} en ${bandera.tipo}`);
                 erroresCompilacion.push(error);
                 this.valores[nombre].valor = null;
                 return;

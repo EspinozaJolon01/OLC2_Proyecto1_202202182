@@ -69,7 +69,7 @@ VarDcl = Arreglos
       // /tipo:Tipo _ id:Identify _ "=" _ exp:Expresion _ ";" { return crearNodo('declaracionVariable', { tipo, id, exp }) }
       // / tipo:Tipo _ id:Identify _ ";" { return crearNodo('declaracionSinAargumn', {tipo, id})}
       
-DeclaFun = tipo:(Tipo / "void") _ id:Identify _ "(" _ params:Parametros? _ ")" _ bloque:Bloque { return crearNodo('declaracionFuncion', { tipo, id, params: params || [], bloque }) }
+DeclaFun = tipo:(Tipo / "void" / Identify) _ id:Identify _ "(" _ params:Parametros? _ ")" _ bloque:Bloque { return crearNodo('declaracionFuncion', { tipo, id, params: params || [], bloque }) }
 
 DeStruct  = "struct" _ id:Identify _ "{" _ dcls:BloStruct* _ "}" _ ";"? { return crearNodo('estructura', { id, dcls }) }
 
