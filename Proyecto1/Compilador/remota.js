@@ -75,6 +75,7 @@ export class FuncionRemota extends Ejecutable {
             if(this.node.tipo !== "void" && error instanceof BreakException){
                 let error = new erroresReporte(node.location.start.line, node.location.start.column,`La función ${this.node.id} debe retornar un valor`);
                 erroresCompilacion.push(error);
+                return;
                 
             }
 

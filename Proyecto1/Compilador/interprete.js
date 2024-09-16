@@ -41,6 +41,10 @@ export class InterpreterVisitor extends BaseVisitor {
         const izq = node.izq.accept(this);
         const der = node.der.accept(this);
 
+        if (izq === undefined || der === undefined) {
+            return {valor: null, tipo: null};
+        }
+
         switch (node.op) {
             case '+':
 
@@ -1142,7 +1146,7 @@ export class InterpreterVisitor extends BaseVisitor {
             if (valor.valor === null) {
                 return "null";
             } else if (Array.isArray(valor.valor)) {
-                return  valor.valor.map(v => printValue({valor: v, tipo: valor.tipo})).join(', ') ;
+                return  valor.valor.map(v => printValue({valor: v, tipo: valor.tipo})).join(',') ;
             } else if (valor.tipo === 'float') {
                 if (Number.isInteger(valor.valor)) {
                 return valor.valor.toFixed(1);
@@ -1156,7 +1160,7 @@ export class InterpreterVisitor extends BaseVisitor {
             return printValue(valor);
             });
         
-        this.consola += valores.join('') + '\n';
+        this.consola += valores.join(' ') + '\n'
         
     }
 
@@ -1322,7 +1326,12 @@ export class InterpreterVisitor extends BaseVisitor {
                 }
             case 'toUpperCase':
                 switch(exp.tipo){
-                    case "string":               
+                    case "string":        
+                        if(exp.valor == null){
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en toUpperCase`);
+                            erroresCompilacion.push(errores);
+                            return {valor:null , tipo: exp.tipo};
+                        }
 
                         return {valor: exp.valor.toUpperCase(), tipo: "string"}
 
@@ -1334,7 +1343,12 @@ export class InterpreterVisitor extends BaseVisitor {
 
             case 'toLowerCase':
                 switch(exp.tipo){
-                    case "string":                  
+                    case "string":      
+                        if(exp.valor == null){
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en toLowerCase`);
+                            erroresCompilacion.push(errores);
+                            return {valor:null , tipo: exp.tipo};
+                        }            
                         
                         
                         return {valor: exp.valor.toLowerCase(), tipo: "string"}
@@ -1349,6 +1363,12 @@ export class InterpreterVisitor extends BaseVisitor {
                 switch(exp.tipo){
                         
                     case "string":
+
+                        if(exp.valor == null){
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en parseFloat`);
+                            erroresCompilacion.push(errores);
+                            return {valor:null , tipo: exp.tipo};
+                        }
 
                         const regex = /^[+-]?(\d+(\.\d*)?|\.\d+)$/;
             
@@ -1370,7 +1390,13 @@ export class InterpreterVisitor extends BaseVisitor {
                 switch(exp.tipo){
                     case "string":
                         //console.log("aquí inicio: " + exp.valor);
-            
+
+                        if(exp.valor == null){
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en parseInt`);
+                            erroresCompilacion.push(errores);
+                            return {valor:null , tipo: exp.tipo};
+                        }
+
                         // Validar que el string contenga solo números, opcionalmente con un punto decimal
                         const regex = /^[+-]?(\d+(\.\d*)?|\.\d+)$/;
             
@@ -1391,18 +1417,36 @@ export class InterpreterVisitor extends BaseVisitor {
             case 'toString':
                 switch(exp.tipo){
                     case "int":
+                        if(exp.valor == null){
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en toString`);
+                            erroresCompilacion.push(errores);
+                            return {valor:null , tipo: exp.tipo};
+                        }
 
                         return { valor: exp.valor.toString(), tipo: "string" };
                     case "boolean":
-                        
+                        if(exp.valor == null){
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en toString`);
+                            erroresCompilacion.push(errores);
+                            return {valor:null , tipo: exp.tipo};
+                        }
 
                         return { valor: exp.valor.toString(), tipo: "string" };
                     case "float":
-                        
+                        if(exp.valor == null){
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en toString`);
+                            erroresCompilacion.push(errores);
+                            return {valor:null , tipo: exp.tipo};
+                        }
 
                         return { valor: exp.valor.toString(), tipo: "string" };
 
                     case "char":
+                        if(exp.valor == null){
+                            let errores = new erroresReporte(node.location.start.line,node.location.start.column,`Error: No es valida esa operacion con valor null en toString`);
+                            erroresCompilacion.push(errores);
+                            return {valor:null , tipo: exp.tipo};
+                        }
                         return {valor: exp.valor.toString(), tipo: "string"}
                         
 
